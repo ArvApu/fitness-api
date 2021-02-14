@@ -2,12 +2,29 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Auth\AuthManager;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
+use Tymon\JWTAuth\JWTGuard;
 
 class AuthenticationController extends Controller
 {
+
+    /**
+     * @var JWTGuard
+     */
+    private $guard;
+
+    /**
+     * AuthenticationController constructor.
+     * @param AuthManager $authManager
+     */
+    public function __construct(AuthManager $authManager)
+    {
+        $this->guard = $authManager->guard('api');
+    }
+
     /**
      * Login to system
      *
@@ -22,11 +39,43 @@ class AuthenticationController extends Controller
             'password' => ['required', 'string',],
         ]);
 
-        if (! $token = auth()->attempt($credentials)) {
+        if (! $token = $this->guard->attempt($credentials)) {
             return new JsonResponse(['error' => 'Unauthorized'], JsonResponse::HTTP_UNAUTHORIZED);
         }
 
         return $this->respondWithToken($token);
+    }
+
+    /**
+     * Log out from the system
+     *
+     * @return JsonResponse
+     */
+    public function logout(): JsonResponse
+    {
+        $this->guard->logout();
+
+        return new JsonResponse(['message' => 'Successfully logged out']);
+    }
+
+    /**
+     * Refresh token
+     *
+     * @return JsonResponse
+     */
+    public function refresh(): JsonResponse
+    {
+        return $this->respondWithToken($this->guard->refresh());
+    }
+
+    /**
+     * Current authorised user information
+     *
+     * @return JsonResponse
+     */
+    public function me(): JsonResponse
+    {
+        return new JsonResponse($this->guard->user());
     }
 
     /**
@@ -40,7 +89,7 @@ class AuthenticationController extends Controller
         return new JsonResponse([
             'access_token' => $token,
             'token_type' => 'bearer',
-            'expires_in' => auth()->factory()->getTTL() * 60
+            'expires_in' => $this->guard->factory()->getTTL() * 60
         ]);
     }
 }

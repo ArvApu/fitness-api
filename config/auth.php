@@ -63,11 +63,7 @@ return [
         'users' => [
             'driver' => 'eloquent',
             'model' => App\Models\User::class,
-        ],
-        'oauth_users' => [
-            'driver' => 'oauth_users',
-            'table' => 'users',
-        ],
+        ]
     ],
 
 ];
