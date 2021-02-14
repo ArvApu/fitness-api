@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Contracts\Hashing\Hasher;
 use Illuminate\Contracts\Mail\Mailer;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Validation\ValidationException;
 
 class RegistrationController extends Controller
@@ -18,10 +18,10 @@ class RegistrationController extends Controller
      * @param User $user
      * @param Hasher $hasher
      * @param Mailer $mailer
-     * @return Response
+     * @return JsonResponse
      * @throws ValidationException
      */
-    public function register(Request $request, User $user, Hasher $hasher, Mailer $mailer): Response
+    public function register(Request $request, User $user, Hasher $hasher, Mailer $mailer): JsonResponse
     {
         $data = $this->validate($request, [
             'first_name' => ['required', 'string', 'between:3,64'],
@@ -48,6 +48,6 @@ class RegistrationController extends Controller
             // TODO: throw exception
         }
 
-        return response(['message' => 'User successfully registered. Please login.'], 201);
+        return new JsonResponse(['message' => 'User successfully registered. Please login.'], JsonResponse::HTTP_CREATED);
     }
 }
