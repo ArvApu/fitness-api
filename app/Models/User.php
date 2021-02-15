@@ -18,9 +18,9 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
  * @property string $last_name
  * @property string $password
  * @property $last_login_at
+ * @property $email_verified_at
  * @property $created_at
  * @property $updated_at
- * @property $deleted_at
  * @property Exercise[] $exercises
  * @property Workout[] $workouts
  * @package App\Models
