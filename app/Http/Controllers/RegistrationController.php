@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\UserActivation;
+use App\Mail\ConfirmEmail;
 use App\Models\User;
 use Illuminate\Contracts\Hashing\Hasher;
 use Illuminate\Contracts\Mail\Mailer;
@@ -43,7 +43,7 @@ class RegistrationController extends Controller
         ]));
 
         try {
-             $mailer->to($data['email'])->send(new UserActivation($token));
+             $mailer->to($data['email'])->send(new ConfirmEmail($token));
         } catch (\Swift_SwiftException $e) {
             $user->delete();
             // TODO: throw exception

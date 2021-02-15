@@ -6,7 +6,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class UserActivation extends Mailable
+class ConfirmEmail extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -30,9 +30,9 @@ class UserActivation extends Mailable
      *
      * @return $this
      */
-    public function build(): UserActivation
+    public function build(): ConfirmEmail
     {
-        return $this->view('emails.user_activation')
+        return $this->view('emails.confirm_email')
             ->with([
                 'token' => $this->token,
                 'url' => config('app.url'),
