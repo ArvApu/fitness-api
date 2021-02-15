@@ -34,8 +34,7 @@ class ConfirmEmail extends Mailable
     {
         return $this->view('emails.confirm_email')
             ->with([
-                'token' => $this->token,
-                'url' => config('app.url'),
+                'url' => url('email/confirm/' . $this->token),
             ]);
     }
 }
