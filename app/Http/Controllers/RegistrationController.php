@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\UserActivation;
 use App\Models\User;
 use Illuminate\Contracts\Hashing\Hasher;
 use Illuminate\Contracts\Mail\Mailer;
@@ -42,7 +43,7 @@ class RegistrationController extends Controller
         ]));
 
         try {
-            // TODO: $mailer->to($data['email'])->send(new UserActivation($token));
+             $mailer->to($data['email'])->send(new UserActivation($token));
         } catch (\Swift_SwiftException $e) {
             $user->delete();
             // TODO: throw exception
