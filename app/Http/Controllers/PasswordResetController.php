@@ -44,8 +44,6 @@ class PasswordResetController extends Controller
             return new JsonResponse(['error' => 'Password reset cannot be send at this moment.'], JsonResponse::HTTP_SERVICE_UNAVAILABLE);
         }
 
-        // TODO: Add command that deletes expired password resets
-
         return new JsonResponse(['message' => 'Email confirmation sent.']);
     }
 

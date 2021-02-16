@@ -22,6 +22,7 @@ class RegistrationController extends Controller
      * @param Mailer $mailer
      * @return JsonResponse
      * @throws ValidationException
+     * @throws \Exception
      */
     public function register(Request $request, User $user, Hasher $hasher, Mailer $mailer): JsonResponse
     {
