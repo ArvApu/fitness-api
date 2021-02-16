@@ -6,7 +6,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class ConfirmEmail extends Mailable
+class VerifyEmail extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -30,11 +30,12 @@ class ConfirmEmail extends Mailable
      *
      * @return $this
      */
-    public function build(): ConfirmEmail
+    public function build(): VerifyEmail
     {
-        return $this->view('emails.confirm_email')
+        return $this->subject('Email verification')
+            ->view('emails.verify_email')
             ->with([
-                'url' => url('email/confirm/' . $this->token),
+                'url' => url('email/verify/' . $this->token),
             ]);
     }
 }
