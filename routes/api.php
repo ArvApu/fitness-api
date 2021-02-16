@@ -12,4 +12,5 @@ $router->group(['middleware' => 'auth'], function () use($router) {
     $router->post('/logout', 'AuthenticationController@logout');
     $router->post('/refresh', 'AuthenticationController@refresh');
     $router->get('/me', 'AuthenticationController@me');
+    $router->post('/email/verification/resend', 'EmailVerificationController@resend');
 });
