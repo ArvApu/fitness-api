@@ -46,7 +46,7 @@ class RegistrationController extends Controller
              $mailer->to($data['email'])->send(new ConfirmEmail($token));
         } catch (\Swift_SwiftException $e) {
             $user->delete();
-            // TODO: throw exception
+            return new JsonResponse(['error' => 'Registration is unavailable.'], JsonResponse::HTTP_SERVICE_UNAVAILABLE);
         }
 
         return new JsonResponse(['message' => 'User successfully registered. Please login.'], JsonResponse::HTTP_CREATED);

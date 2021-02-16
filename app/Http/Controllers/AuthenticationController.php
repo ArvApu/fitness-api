@@ -40,7 +40,7 @@ class AuthenticationController extends Controller
         ]);
 
         if (! $token = $this->guard->attempt($credentials)) {
-            return new JsonResponse(['error' => 'Unauthorized'], JsonResponse::HTTP_UNAUTHORIZED);
+            return new JsonResponse(['error' => 'Bad credentials.'], JsonResponse::HTTP_UNAUTHORIZED);
         }
 
         return $this->respondWithToken($token);

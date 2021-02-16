@@ -43,7 +43,7 @@ class ResetPassword extends Mailable
             ->view('emails.reset_password')
             ->with([
                 'expiration' => $this->expiration,
-                'url' => url('password/change/' . $this->token),
+                'url' => url('password/reset/' . $this->token),
             ]);
     }
 }
