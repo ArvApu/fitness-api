@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+
 /**
  * Class Workout
  * @property integer $id
@@ -16,6 +18,8 @@ namespace App\Models;
  */
 class Workout extends Model
 {
+    use HasFactory;
+
     /**
      * @inheritdoc
      */
