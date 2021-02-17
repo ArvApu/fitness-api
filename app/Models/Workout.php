@@ -17,6 +17,13 @@ namespace App\Models;
 class Workout extends Model
 {
     /**
+     * @inheritdoc
+     */
+    protected $fillable = [
+        'author_id', 'name', 'description', 'type', 'is_private'
+    ];
+
+    /**
      * Get the author of this workout.
      */
     public function author(): \Illuminate\Database\Eloquent\Relations\BelongsTo
