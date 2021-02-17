@@ -13,4 +13,14 @@ abstract class TestCase extends BaseTestCase
     {
         return require __DIR__.'/../bootstrap/app.php';
     }
+
+    public function assertDatabaseHas(string $table, array $data): TestCase
+    {
+        return $this->seeInDatabase($table, $data);
+    }
+
+    public function assertDatabaseMissing(string $table, array $data): TestCase
+    {
+        return $this->missingFromDatabase($table, $data);
+    }
 }
