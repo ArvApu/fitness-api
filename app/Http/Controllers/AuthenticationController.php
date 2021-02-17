@@ -10,7 +10,6 @@ use Tymon\JWTAuth\JWTGuard;
 
 class AuthenticationController extends Controller
 {
-
     /**
      * @var JWTGuard
      */

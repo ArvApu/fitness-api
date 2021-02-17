@@ -13,4 +13,11 @@ $router->group(['middleware' => 'auth'], function () use($router) {
     $router->post('/refresh', 'AuthenticationController@refresh');
     $router->get('/me', 'AuthenticationController@me');
     $router->post('/email/verification/resend', 'EmailVerificationController@resend');
+
+
+    $router->get('/exercises', 'ExerciseController@all');
+    $router->get('/exercises/{id:\d+}', 'ExerciseController@single');
+    $router->post('/exercises', 'ExerciseController@store');
+    $router->put('/exercises/{id:\d+}', 'ExerciseController@update');
+    $router->delete('/exercises/{id:\d+}', 'ExerciseController@destroy');
 });
