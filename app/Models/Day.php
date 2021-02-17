@@ -12,5 +12,8 @@ namespace App\Models;
  */
 class Day extends Model
 {
-
+    /**
+     * @inheritdoc
+     */
+    public $timestamps = false;
 }

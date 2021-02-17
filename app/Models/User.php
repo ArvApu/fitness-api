@@ -66,4 +66,20 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     {
         return [];
     }
+
+    /**
+     * Get all user's created exercises.
+     */
+    public function exercises(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Exercise::class, 'author_id');
+    }
+
+    /**
+     * Get all user's created workouts.
+     */
+    public function workouts(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Workout::class, 'author_id');
+    }
 }

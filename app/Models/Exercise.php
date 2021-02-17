@@ -15,5 +15,11 @@ namespace App\Models;
  */
 class Exercise extends Model
 {
-
+    /**
+     * Get the author of this exercise.
+     */
+    public function author(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(User::class, 'author_id');
+    }
 }
