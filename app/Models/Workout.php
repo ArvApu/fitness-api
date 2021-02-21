@@ -34,4 +34,20 @@ class Workout extends Model
     {
         return $this->belongsTo(User::class, 'author_id');
     }
+
+    /**
+     * The exercises that belong to the workout.
+     */
+    public function exercises(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(Workout::class)->using(WorkoutExercise::class);
+    }
+
+    /**
+     * Days that this workout has assigned.
+     */
+    public function days(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(Day::class)->using(WorkoutDay::class);
+    }
 }
