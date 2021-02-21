@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateWorkoutsExercisesTable extends Migration
+class CreateWorkoutExerciseTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateWorkoutsExercisesTable extends Migration
      */
     public function up()
     {
-        Schema::create('workouts_exercises', function (Blueprint $table) {
+        Schema::create('workout_exercise', function (Blueprint $table) {
             $table->unsignedBigInteger('workout_id');
             $table->unsignedBigInteger('exercise_id');
             $table->unsignedInteger('reps')->comment('Number of repetitions of exercise for this workout');
@@ -33,6 +33,6 @@ class CreateWorkoutsExercisesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('workouts_exercises');
+        Schema::dropIfExists('workout_exercise');
     }
 }

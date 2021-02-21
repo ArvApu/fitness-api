@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateWorkoutDaysTable extends Migration
+class CreateWorkoutDayTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateWorkoutDaysTable extends Migration
      */
     public function up()
     {
-        Schema::create('workout_days', function (Blueprint $table) {
+        Schema::create('workout_day', function (Blueprint $table) {
             $table->unsignedBigInteger('workout_id');
             $table->unsignedBigInteger('day_id');
 

@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Exercise;
 use App\Models\Workout;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 
 class WorkoutController extends Controller
 {
@@ -28,7 +30,7 @@ class WorkoutController extends Controller
     public function all(): JsonResponse
     {
         return new JsonResponse(
-            $this->workout->get()
+            $this->workout->with('exercises')->get()
         );
     }
 
@@ -62,6 +64,38 @@ class WorkoutController extends Controller
         $workout = $this->workout->create($data);
 
         return new JsonResponse($workout, JsonResponse::HTTP_CREATED);
+    }
+
+    /**
+     * Assign exercises to a workout
+     *
+     * @param Request $request
+     * @param int $id
+     * @return JsonResponse
+     * @throws \Illuminate\Validation\ValidationException
+     */
+    public function assignExercises(Request $request, int $id): JsonResponse
+    {
+        $workout = $this->workout->findOrFail($id);
+
+        $data = $this->validate($request, [
+            'exercises' => [ 'required', 'array', 'max:10'],
+            'exercises.*.id' => ['required', 'integer', 'distinct', 'exists:exercises'],
+            'exercises.*.reps' => ['required', 'integer', 'min:1'],
+            'exercises.*.sets' => ['required', 'integer', 'min:1'],
+            'exercises.*.rest' => ['required', 'integer', 'min:0'],
+        ]);
+
+        $exercises = new Collection($data['exercises']);
+
+
+        $keyed = $exercises->mapWithKeys(function ($exercise) {
+            return [take($exercise, 'id') => $exercise];
+        });
+
+        $workout->exercises()->syncWithoutDetaching($keyed);
+
+        return new JsonResponse(null, JsonResponse::HTTP_NO_CONTENT);
     }
 
     /**

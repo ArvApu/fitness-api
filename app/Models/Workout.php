@@ -40,7 +40,9 @@ class Workout extends Model
      */
     public function exercises(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
-        return $this->belongsToMany(Exercise::class, WorkoutExercise::class);
+        return $this->belongsToMany(Exercise::class, WorkoutExercise::class)->withPivot([
+            'reps', 'sets', 'rest'
+        ]);
     }
 
     /**

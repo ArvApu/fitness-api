@@ -23,6 +23,7 @@ $router->group(['middleware' => 'auth'], function () use($router) {
     $router->get('/workouts', 'WorkoutController@all');
     $router->get('/workouts/{id:\d+}', 'WorkoutController@single');
     $router->post('/workouts', 'WorkoutController@store');
+    $router->post('/workouts/{id:\d+}/exercises', 'WorkoutController@assignExercises');
     $router->put('/workouts/{id:\d+}', 'WorkoutController@update');
     $router->delete('/workouts/{id:\d+}', 'WorkoutController@destroy');
 });
