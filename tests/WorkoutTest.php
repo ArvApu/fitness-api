@@ -1,7 +1,9 @@
 <?php
 
+use App\Models\Exercise;
 use App\Models\User;
 use App\Models\Workout;
+use App\Models\WorkoutExercise;
 use Laravel\Lumen\Testing\DatabaseMigrations;
 
 class WorkoutTest extends TestCase
@@ -61,6 +63,44 @@ class WorkoutTest extends TestCase
         $this->response->assertJsonFragment($payload);
 
         $this->assertDatabaseHas((new Workout)->getTable(), $payload);
+    }
+
+    public function test_assign_exercises()
+    {
+        $user = User::factory()->create();
+
+        $this->actingAs($user);
+
+        /** @var Workout $workout */
+        $workout = Workout::factory()
+            ->for($user, 'author')
+            ->create();
+
+        /** @var Exercise $exercise1 */
+        $exercise1 = Exercise::factory()->for($user, 'author')->create();
+        /** @var Exercise $exercise2 */
+        $exercise2 = Exercise::factory()->for($user, 'author')->create();
+
+        $payload = [
+            'exercises' => [
+                ['id' => $exercise1->id, 'sets' => 5, 'reps' => 10, 'rest' => 30],
+                ['id' => $exercise2->id, 'sets' => 2, 'reps' => 15, 'rest' => 45],
+            ]
+        ];
+
+        $this->post("$this->resource/$workout->id/exercises", $payload);
+
+        $this->response->assertStatus(204);
+
+        foreach ($payload['exercises'] as $exercise) {
+            $this->assertDatabaseHas((new WorkoutExercise())->getTable(), [
+                'workout_id' => $workout->id,
+                'exercise_id' => $exercise['id'],
+                'sets' => $exercise['sets'],
+                'reps' => $exercise['reps'],
+                'rest' => $exercise['rest'],
+            ]);
+        }
     }
 
     public function test_update()
