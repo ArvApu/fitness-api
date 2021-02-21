@@ -40,7 +40,7 @@ class Workout extends Model
      */
     public function exercises(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
-        return $this->belongsToMany(Workout::class)->using(WorkoutExercise::class);
+        return $this->belongsToMany(Exercise::class, WorkoutExercise::class);
     }
 
     /**
@@ -48,6 +48,6 @@ class Workout extends Model
      */
     public function days(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
-        return $this->belongsToMany(Day::class)->using(WorkoutDay::class);
+        return $this->belongsToMany(Day::class, WorkoutDay::class);
     }
 }

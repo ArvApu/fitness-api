@@ -22,6 +22,6 @@ class Day extends Model
      */
     public function workouts(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
-        return $this->belongsToMany(Workout::class)->using(WorkoutDay::class);
+        return $this->belongsToMany(Workout::class, WorkoutDay::class);
     }
 }
