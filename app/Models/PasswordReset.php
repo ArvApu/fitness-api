@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+
 /**
  * Class PasswordReset
  * @property integer $id
@@ -12,6 +14,8 @@ namespace App\Models;
  */
 class PasswordReset extends Model
 {
+    use HasFactory;
+
     /**
      * The attributes that are mass assignable.
      *
