@@ -42,7 +42,7 @@ class RegistrationController extends Controller
         $token = encrypt(json_encode([
             'user_id' => $user->id,
             'email' => $user->email,
-            'expires_at' => Carbon::now()->addMinutes(config('auth.email_verification_timeout')),
+            'expires_at' => Carbon::now()->addMinutes(config('auth.email_verification_timeout'))->toDateTimeString(),
         ]));
 
         try {

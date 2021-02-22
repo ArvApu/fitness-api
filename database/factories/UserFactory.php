@@ -32,4 +32,16 @@ class UserFactory extends Factory
             'email_verified_at' => Carbon::now(),
         ];
     }
+
+    /**
+     * Define the model's default state.
+     *
+     * @return UserFactory
+     */
+    public function unverified(): UserFactory
+    {
+        return $this->state([
+            'email_verified_at' => null,
+        ]);
+    }
 }

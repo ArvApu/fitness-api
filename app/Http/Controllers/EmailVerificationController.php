@@ -24,7 +24,8 @@ class EmailVerificationController extends Controller
     public function verify(User $user, string $token): JsonResponse
     {
         try {
-            $data = json_decode(decrypt($token));  // TODO: maybe token data should be in object, object constructor must resolve decryption and data.
+            // TODO: maybe token data should be in object, object constructor must resolve decryption and data validation.
+            $data = json_decode(decrypt($token));
         } catch (DecryptException $exception) {
             throw new BadRequestHttpException('Bad token.');
         }
@@ -33,7 +34,7 @@ class EmailVerificationController extends Controller
             throw new BadRequestHttpException('Invalid token data.');
         }
 
-        if($data->expires_at < Carbon::now()) {
+        if(Carbon::now()->greaterThan($data->expires_at)) {
             throw new BadRequestHttpException('Email verification is expired.');
         }
 
@@ -59,7 +60,7 @@ class EmailVerificationController extends Controller
         $token = encrypt(json_encode([
             'user_id' => $user->id,
             'email' => $user->email,
-            'expires_at' => Carbon::now()->addMinutes(config('auth.email_verification_timeout')),
+            'expires_at' => Carbon::now()->addMinutes(config('auth.email_verification_timeout'))->toDateTimeString(),
         ]));
 
         try {
