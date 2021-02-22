@@ -15,7 +15,7 @@ class CreateUsersTable extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->enum('role', ['admin', 'trainer', 'user']);
+            $table->enum('role', ['admin', 'trainer', 'user'])->default('user');
             $table->string('first_name', 64);
             $table->string('last_name', 64);
             $table->string('email', '128')->unique();
