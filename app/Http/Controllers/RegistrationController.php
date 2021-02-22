@@ -10,6 +10,7 @@ use Illuminate\Contracts\Mail\Mailer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 
 class RegistrationController extends Controller
 {
@@ -48,7 +49,7 @@ class RegistrationController extends Controller
             $mailer->to($data['email'])->send(new VerifyEmail($token));
         } catch (\Swift_SwiftException $e) {
             $user->delete();
-            return new JsonResponse(['error' => 'Registration is unavailable.'], JsonResponse::HTTP_SERVICE_UNAVAILABLE);
+            throw new ServiceUnavailableHttpException(null ,'Registration is unavailable.');
         }
 
         return new JsonResponse(['message' => 'User successfully registered. Please login.'], JsonResponse::HTTP_CREATED);

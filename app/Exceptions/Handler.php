@@ -98,7 +98,7 @@ class Handler extends ExceptionHandler
             return $error;
         }
 
-        $exception = str_replace('HttpException','',$classname);
+        $exception = str_replace('HttpException','', $classname);
         $default = preg_replace('/(?<!^)[A-Z]/', ' $0', $exception);
 
         return ucfirst(strtolower($default)).'.';

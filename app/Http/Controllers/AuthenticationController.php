@@ -7,6 +7,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 use Tymon\JWTAuth\JWTGuard;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class AuthenticationController extends Controller
 {
@@ -39,7 +40,7 @@ class AuthenticationController extends Controller
         ]);
 
         if (! $token = $this->guard->attempt($credentials)) {
-            return new JsonResponse(['error' => 'Bad credentials.'], JsonResponse::HTTP_UNAUTHORIZED);
+            throw new HttpException(JsonResponse::HTTP_UNAUTHORIZED, 'Bad credentials.');
         }
 
         return $this->respondWithToken($token);
@@ -53,7 +54,6 @@ class AuthenticationController extends Controller
     public function logout(): JsonResponse
     {
         $this->guard->logout();
-
         return new JsonResponse(['message' => 'Successfully logged out']);
     }
 

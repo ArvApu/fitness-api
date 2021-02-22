@@ -9,6 +9,8 @@ use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Contracts\Mail\Mailer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 
 class EmailVerificationController extends Controller
 {
@@ -24,15 +26,15 @@ class EmailVerificationController extends Controller
         try {
             $data = json_decode(decrypt($token));  // TODO: maybe token data should be in object, object constructor must resolve decryption and data.
         } catch (DecryptException $exception) {
-            return new JsonResponse(['error' => 'Bad token.'], JsonResponse::HTTP_BAD_REQUEST);
+            throw new BadRequestHttpException('Bad token.');
         }
 
         if($data === null) {
-            return new JsonResponse(['error' => 'Invalid token data.'], JsonResponse::HTTP_BAD_REQUEST);
+            throw new BadRequestHttpException('Invalid token data.');
         }
 
         if($data->expires_at < Carbon::now()) {
-            return new JsonResponse(['error' => 'Email verification is expired.'], JsonResponse::HTTP_BAD_REQUEST);
+            throw new BadRequestHttpException('Email verification is expired.');
         }
 
         $user->where('email', '=', $data->email)->update([
@@ -54,10 +56,6 @@ class EmailVerificationController extends Controller
         /** @var User $user */
         $user = $request->user();
 
-        if($user === null) {
-            return new JsonResponse(['error' => 'Unauthorized.'], JsonResponse::HTTP_UNAUTHORIZED);
-        }
-
         $token = encrypt(json_encode([
             'user_id' => $user->id,
             'email' => $user->email,
@@ -67,7 +65,7 @@ class EmailVerificationController extends Controller
         try {
             $mailer->to($user->email)->send(new VerifyEmail($token));
         } catch (\Swift_SwiftException $e) {
-            return new JsonResponse(['error' => 'Email service unavailable.'], JsonResponse::HTTP_SERVICE_UNAVAILABLE);
+            throw new ServiceUnavailableHttpException(null, 'Email service unavailable.');
         }
 
         return new JsonResponse(['message' => 'User email verifications was resent.']);

@@ -12,6 +12,8 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 
 class PasswordResetController extends Controller
 {
@@ -41,7 +43,7 @@ class PasswordResetController extends Controller
         try {
             $mailer->to($request->input('email'))->send(new ResetPassword($token, $expiration));
         } catch (\Swift_SwiftException $e) {
-            return new JsonResponse(['error' => 'Password reset cannot be send at this moment.'], JsonResponse::HTTP_SERVICE_UNAVAILABLE);
+            throw new ServiceUnavailableHttpException(null, 'Password reset cannot be send at this moment.');
         }
 
         return new JsonResponse(['message' => 'Email confirmation sent.']);
@@ -68,7 +70,7 @@ class PasswordResetController extends Controller
             ->where('expires_at', '>', Carbon::now())->first();
 
         if($passwordReset == null) {
-            return new JsonResponse(['error' => 'Password reset is expired.'], JsonResponse::HTTP_BAD_REQUEST);
+            throw new BadRequestHttpException('Password reset is expired.');
         }
 
         $user->where('email', '=', $passwordReset->email)->update([
