@@ -4,6 +4,7 @@ namespace App\Exceptions;
 
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Validation\ValidationException;
 use Laravel\Lumen\Exceptions\Handler as ExceptionHandler;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -49,6 +50,52 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Throwable $exception)
     {
+        if ($exception instanceof HttpException) {
+            return $this->renderHttpException($exception);
+        }
+
+        if ($exception instanceof ModelNotFoundException) {
+            return new JsonResponse(['error' => 'Resource not found.',], JsonResponse::HTTP_NOT_FOUND);
+        }
+
         return parent::render($request, $exception);
+    }
+
+    /**
+     * Render http exception
+     *
+     * @param HttpException $exception
+     * @return JsonResponse
+     */
+    private function renderHttpException(HttpException $exception): JsonResponse
+    {
+        try {
+            $className = (new \ReflectionClass($exception))->getShortName();
+        } catch (\ReflectionException $e) {
+            return new JsonResponse(['error' => 'Server error.', JsonResponse::HTTP_INTERNAL_SERVER_ERROR]);
+        }
+
+        return new JsonResponse([
+            'error' => $this->resolveErrorMessage($exception->getMessage(), $className),
+        ], $exception->getStatusCode());
+    }
+
+    /**
+     * Resolve error message
+     *
+     * @param string|null $error
+     * @param string $classname
+     * @return string
+     */
+    private function resolveErrorMessage(?string $error, string $classname): string
+    {
+        if(!empty($error)) {
+            return $error;
+        }
+
+        $exception = str_replace('HttpException','',$classname);
+        $default = preg_replace('/(?<!^)[A-Z]/', ' $0', $exception);
+
+        return ucfirst(strtolower($default)).'.';
     }
 }
