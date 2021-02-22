@@ -50,12 +50,17 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Throwable $exception)
     {
+        if (config('app.debug')) {
+            return parent::render($request, $exception);
+        }
+
         if ($exception instanceof HttpException) {
             return $this->renderHttpException($exception);
         }
 
         if ($exception instanceof ModelNotFoundException) {
-            return new JsonResponse(['error' => 'Resource not found.',], JsonResponse::HTTP_NOT_FOUND);
+            $model = str_replace('App\\Models\\','', $exception->getModel());
+            return new JsonResponse(['error' => "$model resource not found."], JsonResponse::HTTP_NOT_FOUND);
         }
 
         return parent::render($request, $exception);
