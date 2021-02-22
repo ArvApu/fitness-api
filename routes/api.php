@@ -26,4 +26,10 @@ $router->group(['middleware' => 'auth'], function () use($router) {
     $router->post('/workouts/{id:\d+}/exercises', 'WorkoutController@assignExercises');
     $router->put('/workouts/{id:\d+}', 'WorkoutController@update');
     $router->delete('/workouts/{id:\d+}', 'WorkoutController@destroy');
+
+    $router->get('/days', 'DayController@all');
+    $router->get('/days/{id:\d+}', 'DayController@single');
+    $router->post('/days', 'DayController@store');
+    $router->put('/days/{id:\d+}', 'DayController@update');
+    $router->delete('/days/{id:\d+}', 'DayController@destroy');
 });

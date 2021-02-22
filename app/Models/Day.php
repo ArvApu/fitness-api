@@ -12,6 +12,14 @@ namespace App\Models;
  */
 class Day extends Model
 {
+
+    /**
+     * @inheritdoc
+     */
+    protected $fillable = [
+        'title', 'information', 'date',
+    ];
+
     /**
      * @inheritdoc
      */
