@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+
 /**
  * Class Day
  * @property integer $id
@@ -12,6 +14,7 @@ namespace App\Models;
  */
 class Day extends Model
 {
+    use HasFactory;
 
     /**
      * @inheritdoc
