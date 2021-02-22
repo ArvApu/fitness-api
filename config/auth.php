@@ -108,11 +108,11 @@ return [
     | Email Verification Timeout
     |--------------------------------------------------------------------------
     |
-    | Here you may define the amount of seconds before a email verification
+    | Here you may define the amount of minutes before a email verification
     | times out and the user must re-send their email verification via the
     | email verification resend endpoint. By default, the timeout lasts for an hour.
     |
     */
 
-    'email_verification_timeout' => 10800,
+    'email_verification_timeout' => 60,
 ];

@@ -10,6 +10,7 @@ use Illuminate\Contracts\Hashing\Hasher;
 use Illuminate\Contracts\Mail\Mailer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -73,11 +74,15 @@ class PasswordResetController extends Controller
             throw new BadRequestHttpException('Password reset is expired.');
         }
 
-        $user->where('email', '=', $passwordReset->email)->update([
-            'password' => $hasher->make($request->input('password')),
-        ]);
+        $password = $hasher->make($request->input('password'));
 
-        $passwordReset->delete(); // TODO: make transaction (user update and password reset delete is atomic action)
+        DB::transaction(function () use($user, $passwordReset, $password) {
+            $user->where('email', '=', $passwordReset->email)->update([
+                'password' => $password,
+            ]);
+
+            $passwordReset->delete();
+        });
 
         return new JsonResponse(['message' => 'Password changed.']);
     }
