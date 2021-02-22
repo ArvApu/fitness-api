@@ -82,7 +82,7 @@ class Handler extends ExceptionHandler
 
         return new JsonResponse([
             'error' => $this->resolveErrorMessage($exception->getMessage(), $className),
-        ], $exception->getStatusCode());
+        ], $exception->getStatusCode(), $exception->getHeaders());
     }
 
     /**
