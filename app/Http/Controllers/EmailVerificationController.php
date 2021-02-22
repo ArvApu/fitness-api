@@ -59,7 +59,7 @@ class EmailVerificationController extends Controller
         $token = encrypt(json_encode([
             'user_id' => $user->id,
             'email' => $user->email,
-            'expires_at' => Carbon::now()->addMinutes(60), // TODO: set expiration via configuration
+            'expires_at' => Carbon::now()->addMinutes(config('auth.email_verification_timeout')),
         ]));
 
         try {
