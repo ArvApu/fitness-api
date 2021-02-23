@@ -23,12 +23,13 @@ class ExerciseController extends Controller
     }
 
     /**
+     * @param Request $request
      * @return JsonResponse
      */
-    public function all(): JsonResponse
+    public function all(Request $request): JsonResponse
     {
         return new JsonResponse(
-            $this->exercise->get()
+            $this->exercise->filter($request->query())->get()
         );
     }
 

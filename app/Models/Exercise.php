@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Filters\Filterable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
@@ -17,7 +18,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  */
 class Exercise extends Model
 {
-    use HasFactory;
+    use HasFactory, Filterable;
 
     /**
      * @inheritdoc
