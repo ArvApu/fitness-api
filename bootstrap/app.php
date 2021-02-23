@@ -62,6 +62,7 @@ $app->configure('app');
 $app->configure('mail');
 $app->configure('jwt');
 $app->configure('cors');
+$app->configure('eloquentfilter');
 
 /*
 |--------------------------------------------------------------------------
@@ -97,6 +98,7 @@ $app->register(App\Providers\AuthServiceProvider::class);
 $app->register(Illuminate\Mail\MailServiceProvider::class);
 $app->register(Tymon\JWTAuth\Providers\LumenServiceProvider::class);
 $app->register(Fruitcake\Cors\CorsServiceProvider::class);
+$app->register(EloquentFilter\LumenServiceProvider::class);
 
 /*
 |--------------------------------------------------------------------------
