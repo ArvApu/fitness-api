@@ -12,20 +12,6 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 class MessageController extends Controller
 {
     /**
-     * @var Message
-     */
-    private $message;
-
-    /**
-     * MessageController constructor.
-     * @param Message $message
-     */
-    public function __construct(Message $message)
-    {
-        $this->message = $message;
-    }
-
-    /**
      * @param Request $request
      * @param int $id
      * @return JsonResponse
@@ -52,12 +38,13 @@ class MessageController extends Controller
 
     /**
      * @param Request $request
+     * @param Message $message
      * @param User $user
      * @param int $to
      * @return JsonResponse
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function send(Request $request, User $user, int $to): JsonResponse
+    public function send(Request $request, Message $message, User $user, int $to): JsonResponse
     {
         $this->validate($request, [
             'message' => ['required', 'string', 'max:255'],
@@ -67,7 +54,7 @@ class MessageController extends Controller
             throw new BadRequestHttpException('User that should receive message does not exist');
         }
 
-        $message = $this->message->create([
+        $message = $message->create([
             'sender_id' => $request->user()->id,
             'receiver_id' => $to,
             'message' => $request->input('message'),
