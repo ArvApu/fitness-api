@@ -32,4 +32,7 @@ $router->group(['middleware' => 'auth'], function () use($router) {
     $router->post('/days', 'DayController@store');
     $router->put('/days/{id:\d+}', 'DayController@update');
     $router->delete('/days/{id:\d+}', 'DayController@destroy');
+
+    $router->get('/messages/{id:\d+}', 'MessageController@getByUser');
+    $router->post('/messages/{to:\d+}', 'MessageController@send');
 });
