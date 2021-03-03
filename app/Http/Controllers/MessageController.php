@@ -23,17 +23,17 @@ class MessageController extends Controller
 
         $sent = $user->sentMessages()
             ->where('receiver_id', '=', $id)
-            ->orderBy('created_at', 'desc')
+            ->orderBy('created_at')
             ->get();
 
         $received = $user->receivedMessages()
             ->where('sender_id', '=', $id)
-            ->orderBy('created_at', 'desc')
+            ->orderBy('created_at')
             ->get();
 
         $all = $sent->merge($received);
 
-        return new JsonResponse($all->sortByDesc('created_at')->values());
+        return new JsonResponse($all->sortBy('created_at')->values());
     }
 
     /**
