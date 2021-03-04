@@ -85,6 +85,11 @@ class AuthenticationController extends Controller
      */
     protected function respondWithToken(string $token): JsonResponse
     {
+        /** @var \App\Models\User $user */
+        $user = $this->guard->user();
+
+        $user->loggedIn();
+
         return new JsonResponse([
             'access_token' => $token,
             'token_type' => 'bearer',

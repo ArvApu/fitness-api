@@ -90,4 +90,13 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     {
         return $this->hasMany(Message::class, 'receiver_id');
     }
+
+    /**
+     * Update user last login status
+     */
+    public function loggedIn(): void
+    {
+        $this->last_login_at = $this->freshTimestamp();
+        $this->save();
+    }
 }
