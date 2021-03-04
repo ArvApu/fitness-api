@@ -16,6 +16,7 @@ class CreateUsersTable extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->enum('role', ['admin', 'trainer', 'user'])->default('user');
+            $table->unsignedBigInteger('trainer_id')->nullable();
             $table->string('first_name', 64);
             $table->string('last_name', 64);
             $table->string('email', '128')->unique();
@@ -23,6 +24,8 @@ class CreateUsersTable extends Migration
             $table->timestamp('last_login_at')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->timestamps();
+
+            $table->foreign('trainer_id')->references('id')->on('users')->onDelete('set null');
         });
     }
 
