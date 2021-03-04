@@ -3,11 +3,11 @@
 namespace App\Events;
 
 use App\Models\Message;
-use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
+use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class MessageSent extends Event implements ShouldBroadcast
+class SendMessage extends Event implements ShouldBroadcast
 {
     use InteractsWithSockets;
 
@@ -30,12 +30,12 @@ class MessageSent extends Event implements ShouldBroadcast
     public function broadcastOn()
     {
         return [
-            new Channel('user.channel.'.$this->channel), // TODO: use private channel
+            new PrivateChannel('user.'.$this->channel),
         ];
     }
 
     public function broadcastAs()
     {
-        return 'message.sent';
+        return 'send.message';
     }
 }

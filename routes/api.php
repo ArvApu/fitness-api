@@ -9,6 +9,9 @@ $router->post('/password/reset/{token}', 'PasswordResetController@reset');
 $router->post('/email/verify/{token}', 'EmailVerificationController@verify');
 
 $router->group(['middleware' => 'auth'], function () use($router) {
+    $router->get('/broadcasting/auth', 'BroadcastController@authenticate');
+    $router->post('/broadcasting/auth', 'BroadcastController@authenticate');
+
     $router->post('/logout', 'AuthenticationController@logout');
     $router->post('/refresh', 'AuthenticationController@refresh');
     $router->get('/me', 'AuthenticationController@me');

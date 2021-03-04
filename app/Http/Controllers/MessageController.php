@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Events\MessageSent;
+use App\Events\SendMessage;
 use App\Models\Message;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
@@ -60,7 +60,7 @@ class MessageController extends Controller
             'message' => $request->input('message'),
         ]);
 
-        event(new MessageSent($message, $to));
+        event(new SendMessage($message, $to));
 
         return new JsonResponse($message, JsonResponse::HTTP_CREATED);
     }
