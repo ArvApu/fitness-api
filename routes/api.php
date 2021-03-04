@@ -35,4 +35,6 @@ $router->group(['middleware' => 'auth'], function () use($router) {
 
     $router->get('/messages/{id:\d+}', 'MessageController@getByUser');
     $router->post('/messages/{to:\d+}', 'MessageController@send');
+
+    $router->get('/users', 'UserController@all');
 });

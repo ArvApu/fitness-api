@@ -60,7 +60,7 @@ class MessageController extends Controller
             'message' => $request->input('message'),
         ]);
 
-        event(new MessageSent($message));
+        event(new MessageSent($message, $to));
 
         return new JsonResponse($message, JsonResponse::HTTP_CREATED);
     }

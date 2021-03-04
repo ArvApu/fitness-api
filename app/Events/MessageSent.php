@@ -16,20 +16,26 @@ class MessageSent extends Event implements ShouldBroadcast
      */
     public $message;
 
-    public function __construct(Message $message)
+    /**
+     * @var string
+     */
+    private $channel;
+
+    public function __construct(Message $message, string $channel)
     {
         $this->message = $message;
+        $this->channel = $channel;
     }
 
     public function broadcastOn()
     {
         return [
-            new Channel('testing'), // TODO: use private channel
+            new Channel('user.channel.'.$this->channel), // TODO: use private channel
         ];
     }
 
     public function broadcastAs()
     {
-        return 'message-sent';
+        return 'message.sent';
     }
 }
