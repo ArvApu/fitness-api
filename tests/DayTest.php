@@ -9,12 +9,24 @@ class DayTest extends TestCase
 {
     use DatabaseMigrations;
 
+    /**
+     * @var string
+     */
     private $resource = '/days';
+
+    /**
+     * @inheritDoc
+     */
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $user = User::factory()->create();
+        $this->actingAs($user);
+    }
 
     public function test_get_all()
     {
-        $this->actingAs(User::factory()->create());
-
         $days = Day::factory()->count(10)->create();
 
         $this->get($this->resource);
@@ -25,8 +37,6 @@ class DayTest extends TestCase
 
     public function test_get_single()
     {
-        $this->actingAs(User::factory()->create());
-
         /** @var Day $day */
         $day = Day::factory()->create();
 
@@ -38,8 +48,6 @@ class DayTest extends TestCase
 
     public function test_store()
     {
-        $this->actingAs(User::factory()->create());
-
         $payload = [
             'title' => 'Test day',
             'information' => 'This is only for testing',
@@ -56,8 +64,6 @@ class DayTest extends TestCase
 
     public function test_update()
     {
-        $this->actingAs(User::factory()->create());
-
         /** @var Day $day */
         $day = Day::factory()->create();
 
@@ -80,12 +86,8 @@ class DayTest extends TestCase
 
     public function test_delete()
     {
-        $user = User::factory()->create();
-
         /** @var Day $day */
         $day = Day::factory()->create();
-
-        $this->actingAs($user);
 
         $this->delete("$this->resource/$day->id");
 

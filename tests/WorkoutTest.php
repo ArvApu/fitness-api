@@ -10,18 +10,33 @@ class WorkoutTest extends TestCase
 {
     use DatabaseMigrations;
 
+    /**
+     * @var string
+     */
     private $resource = '/workouts';
+
+    /**
+     * @var User
+     */
+    private $user;
+
+    /**
+     * @inheritDoc
+     */
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->user = User::factory()->create();
+        $this->actingAs($this->user);
+    }
 
     public function test_get_all()
     {
-        $user = User::factory()->create();
-
         $workouts = Workout::factory()
             ->count(10)
-            ->for($user, 'author')
+            ->for($this->user, 'author')
             ->create();
-
-        $this->actingAs($user);
 
         $this->get($this->resource);
 
@@ -31,14 +46,10 @@ class WorkoutTest extends TestCase
 
     public function test_get_single()
     {
-        $user = User::factory()->create();
-
         /** @var Workout $workout */
         $workout = Workout::factory()
-            ->for($user, 'author')
+            ->for($this->user, 'author')
             ->create();
-
-        $this->actingAs($user);
 
         $this->get("$this->resource/$workout->id");
 
@@ -48,8 +59,6 @@ class WorkoutTest extends TestCase
 
     public function test_store()
     {
-        $this->actingAs(User::factory()->create());
-
         $payload = [
             'name' => 'Test workout',
             'description' => 'This is a test workout',
@@ -67,19 +76,15 @@ class WorkoutTest extends TestCase
 
     public function test_assign_exercises()
     {
-        $user = User::factory()->create();
-
-        $this->actingAs($user);
-
         /** @var Workout $workout */
         $workout = Workout::factory()
-            ->for($user, 'author')
+            ->for($this->user, 'author')
             ->create();
 
         /** @var Exercise $exercise1 */
-        $exercise1 = Exercise::factory()->for($user, 'author')->create();
+        $exercise1 = Exercise::factory()->for($this->user, 'author')->create();
         /** @var Exercise $exercise2 */
-        $exercise2 = Exercise::factory()->for($user, 'author')->create();
+        $exercise2 = Exercise::factory()->for($this->user, 'author')->create();
 
         $payload = [
             'exercises' => [
@@ -105,13 +110,9 @@ class WorkoutTest extends TestCase
 
     public function test_update()
     {
-        $user = User::factory()->create();
-
-        $this->actingAs($user);
-
         /** @var Workout $workout */
         $workout = Workout::factory()
-            ->for($user, 'author')
+            ->for($this->user, 'author')
             ->create();
 
         $payload = [
@@ -134,14 +135,10 @@ class WorkoutTest extends TestCase
 
     public function test_delete()
     {
-        $user = User::factory()->create();
-
         /** @var Workout $workout */
         $workout = Workout::factory()
-            ->for($user, 'author')
+            ->for($this->user, 'author')
             ->create();
-
-        $this->actingAs($user);
 
         $this->delete("$this->resource/$workout->id");
 

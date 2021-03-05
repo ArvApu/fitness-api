@@ -8,18 +8,33 @@ class ExerciseTest extends TestCase
 {
     use DatabaseMigrations;
 
+    /**
+     * @var string
+     */
     private $resource = '/exercises';
+
+    /**
+     * @var User
+     */
+    private $user;
+
+    /**
+     * @inheritDoc
+     */
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->user = User::factory()->create();
+        $this->actingAs($this->user);
+    }
 
     public function test_get_all()
     {
-        $user = User::factory()->create();
-
         $exercises = Exercise::factory()
             ->count(10)
-            ->for($user, 'author')
+            ->for($this->user, 'author')
             ->create();
-
-        $this->actingAs($user);
 
         $this->get($this->resource);
 
@@ -29,14 +44,10 @@ class ExerciseTest extends TestCase
 
     public function test_get_single()
     {
-        $user = User::factory()->create();
-
         /** @var Exercise $exercise */
         $exercise = Exercise::factory()
-            ->for($user, 'author')
+            ->for($this->user, 'author')
             ->create();
-
-        $this->actingAs($user);
 
         $this->get("$this->resource/$exercise->id");
 
@@ -46,8 +57,6 @@ class ExerciseTest extends TestCase
 
     public function test_store()
     {
-        $this->actingAs(User::factory()->create());
-
         $payload = [
             'name' => 'Test exercise',
             'description' => 'This is a test exercise',
@@ -64,13 +73,9 @@ class ExerciseTest extends TestCase
 
     public function test_update()
     {
-        $user = User::factory()->create();
-
-        $this->actingAs($user);
-
         /** @var Exercise $exercise */
         $exercise = Exercise::factory()
-            ->for($user, 'author')
+            ->for($this->user, 'author')
             ->create();
 
         $payload = [
@@ -92,14 +97,10 @@ class ExerciseTest extends TestCase
 
     public function test_delete()
     {
-        $user = User::factory()->create();
-
         /** @var Exercise $exercise */
         $exercise = Exercise::factory()
-            ->for($user, 'author')
+            ->for($this->user, 'author')
             ->create();
-
-        $this->actingAs($user);
 
         $this->delete("$this->resource/$exercise->id");
 
