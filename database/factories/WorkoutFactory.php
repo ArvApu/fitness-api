@@ -30,8 +30,6 @@ class WorkoutFactory extends Factory
     }
 
     /**
-     * Define the model's default state.
-     *
      * @return WorkoutFactory
      */
     public function private(): WorkoutFactory

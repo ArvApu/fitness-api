@@ -2,17 +2,17 @@
 
 namespace Database\Factories;
 
-use App\Models\Exercise;
+use App\Models\Message;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class ExerciseFactory extends Factory
+class MessageFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
      *
      * @var string
      */
-    protected $model = Exercise::class;
+    protected $model = Message::class;
 
     /**
      * Define the model's default state.
@@ -22,19 +22,18 @@ class ExerciseFactory extends Factory
     public function definition()
     {
         return [
-            'name' => $this->faker->word,
-            'description' => $this->faker->words(10, true),
-            'is_private' => false,
+            'message' => $this->faker->words(5, true),
+            'is_seen' => false,
         ];
     }
 
     /**
-     * @return ExerciseFactory
+     * @return MessageFactory
      */
-    public function private(): ExerciseFactory
+    public function seen(): MessageFactory
     {
         return $this->state([
-            'is_private' => true,
+            'is_seen' => true,
         ]);
     }
 }
