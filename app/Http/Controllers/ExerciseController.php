@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Exercise;
-use Illuminate\Http\JsonResponse;
+use App\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class ExerciseController extends Controller
@@ -29,7 +29,7 @@ class ExerciseController extends Controller
     public function all(Request $request): JsonResponse
     {
         return new JsonResponse(
-            $this->exercise->filter($request->query())->get()
+            $this->exercise->filter($request->query())->paginate()
         );
     }
 

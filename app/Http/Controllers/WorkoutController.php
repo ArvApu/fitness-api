@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Workout;
-use Illuminate\Http\JsonResponse;
+use App\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 
@@ -29,7 +29,7 @@ class WorkoutController extends Controller
     public function all(): JsonResponse
     {
         return new JsonResponse(
-            $this->workout->with('exercises')->get()
+            $this->workout->with('exercises')->paginate()
         );
     }
 

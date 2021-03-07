@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Day;
-use Illuminate\Http\JsonResponse;
+use App\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class DayController extends Controller
@@ -28,7 +28,7 @@ class DayController extends Controller
     public function all(): JsonResponse
     {
         return new JsonResponse(
-            $this->day->get()
+            $this->day->paginate()
         );
     }
 

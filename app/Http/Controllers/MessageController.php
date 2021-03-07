@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Events\SendMessage;
 use App\Models\Message;
 use App\Models\User;
-use Illuminate\Http\JsonResponse;
+use App\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 

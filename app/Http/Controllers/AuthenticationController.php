@@ -3,10 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Auth\AuthManager;
-use Illuminate\Http\JsonResponse;
+use App\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
-use Tymon\JWTAuth\Exceptions\TokenBlacklistedException;
 use Tymon\JWTAuth\Exceptions\TokenInvalidException;
 use Tymon\JWTAuth\JWTGuard;
 use Symfony\Component\HttpKernel\Exception\HttpException;
