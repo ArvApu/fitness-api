@@ -39,7 +39,9 @@ class ExerciseTest extends TestCase
         $this->get($this->resource);
 
         $this->response->assertStatus(200);
-        $this->response->assertJson($exercises->toArray());
+        $this->response->assertJson([
+            'data' => $exercises->toArray()
+        ]);
     }
 
     public function test_get_single()

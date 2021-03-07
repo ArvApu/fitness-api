@@ -32,7 +32,9 @@ class DayTest extends TestCase
         $this->get($this->resource);
 
         $this->response->assertStatus(200);
-        $this->response->assertJson($days->toArray());
+        $this->response->assertJson([
+            'data' => $days->toArray()
+        ]);
     }
 
     public function test_get_single()
