@@ -10,14 +10,12 @@ class UserController extends Controller
 {
     /**
      * @param Request $request
-     * @param User $user
      * @return JsonResponse
      */
-    public function all(Request $request, User $user): JsonResponse
+    public function all(Request $request): JsonResponse
     {
-        return new JsonResponse(
-            $user->where('id', '!=', $request->user()->id)
-                ->get()
-        );
+        /** @var User $user */
+        $user = $request->user();
+        return new JsonResponse($user->getRelatedUsers());
     }
 }

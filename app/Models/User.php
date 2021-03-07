@@ -6,6 +6,7 @@ use Illuminate\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Collection;
 use Laravel\Lumen\Auth\Authorizable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
@@ -13,6 +14,7 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
  * Class User
  * @property integer $id
  * @property string $role
+ * @property integer $trainer_id
  * @property string $email
  * @property string $first_name
  * @property string $last_name
@@ -92,11 +94,43 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     }
 
     /**
+     * Get clients of this user (trainer).
+     */
+    public function clients(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(User::class, 'trainer_id');
+    }
+
+    /**
+     * Get trainer of this user (client).
+     */
+    public function trainer(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(User::class, 'trainer_id');
+    }
+
+    /**
      * Update user last login status
      */
     public function loggedIn(): void
     {
         $this->last_login_at = $this->freshTimestamp();
         $this->save();
+    }
+
+    /**
+     * Return list of related users
+     */
+    public function getRelatedUsers(): Collection
+    {
+        if($this->role === 'admin') {
+            return $this->get();
+        }
+
+        if($this->role === 'trainer') {
+            return $this->clients()->get();
+        }
+
+        return $this->trainer()->get();
     }
 }
