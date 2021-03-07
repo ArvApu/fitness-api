@@ -23,7 +23,7 @@ class UserFactory extends Factory
     public function definition()
     {
         return [
-            'role' => 'admin',
+            'role' => 'user',
             'first_name' => $this->faker->firstName,
             'last_name' => $this->faker->lastName,
             'email' => $this->faker->unique()->safeEmail,
@@ -40,6 +40,26 @@ class UserFactory extends Factory
     {
         return $this->state([
             'email_verified_at' => null,
+        ]);
+    }
+
+    /**
+     * @return UserFactory
+     */
+    public function trainer(): UserFactory
+    {
+        return $this->state([
+            'role' => 'trainer',
+        ]);
+    }
+
+    /**
+     * @return UserFactory
+     */
+    public function admin(): UserFactory
+    {
+        return $this->state([
+            'role' => 'admin',
         ]);
     }
 }
