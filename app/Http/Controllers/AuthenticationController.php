@@ -6,6 +6,8 @@ use Illuminate\Auth\AuthManager;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
+use Tymon\JWTAuth\Exceptions\TokenBlacklistedException;
+use Tymon\JWTAuth\Exceptions\TokenInvalidException;
 use Tymon\JWTAuth\JWTGuard;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
@@ -43,6 +45,11 @@ class AuthenticationController extends Controller
             throw new HttpException(JsonResponse::HTTP_UNAUTHORIZED, 'Bad credentials.');
         }
 
+        /** @var \App\Models\User $user */
+        $user = $this->guard->user();
+
+        $user->loggedIn();
+
         return $this->respondWithToken($token);
     }
 
@@ -64,7 +71,11 @@ class AuthenticationController extends Controller
      */
     public function refresh(): JsonResponse
     {
-        return $this->respondWithToken($this->guard->refresh());
+        try {
+            return $this->respondWithToken($this->guard->refresh());
+        } catch (TokenInvalidException $e) {
+            throw new HttpException(JsonResponse::HTTP_UNAUTHORIZED, 'Invalid token.');
+        }
     }
 
     /**
@@ -85,11 +96,6 @@ class AuthenticationController extends Controller
      */
     protected function respondWithToken(string $token): JsonResponse
     {
-        /** @var \App\Models\User $user */
-        $user = $this->guard->user();
-
-        $user->loggedIn();
-
         return new JsonResponse([
             'access_token' => $token,
             'token_type' => 'bearer',

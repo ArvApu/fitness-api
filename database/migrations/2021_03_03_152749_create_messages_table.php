@@ -20,6 +20,9 @@ class CreateMessagesTable extends Migration
             $table->string('message');
             $table->boolean('is_seen')->default(false);
             $table->timestamp('created_at');
+
+            $table->foreign('sender_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('receiver_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
