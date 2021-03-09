@@ -12,6 +12,8 @@ $router->post('/password/reset/{token}', 'PasswordResetController@reset');
 
 $router->post('/email/verify/{token}', 'EmailVerificationController@verify');
 
+$router->post('/users/invite/{token}', 'UserInvitationController@confirm');
+
 $router->group(['middleware' => 'auth'], function () use($router) {
     $router->get('/broadcasting/auth', 'BroadcastController@authenticate');
     $router->post('/broadcasting/auth', 'BroadcastController@authenticate');
@@ -44,4 +46,6 @@ $router->group(['middleware' => 'auth'], function () use($router) {
     $router->post('/messages/{to:\d+}', 'MessageController@send');
 
     $router->get('/users', 'UserController@all');
+
+    $router->post('/users/invite', 'UserInvitationController@invite');
 });

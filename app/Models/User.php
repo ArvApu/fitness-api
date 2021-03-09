@@ -35,7 +35,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      * @inheritdoc
      */
     protected $fillable = [
-        'email', 'first_name', 'last_name', 'password'
+        'email', 'first_name', 'last_name', 'password', 'role', 'trainer_id'
     ];
 
     /**
@@ -132,5 +132,13 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         }
 
         return $this->trainer()->get();
+    }
+
+    /**
+     * Get user's full name
+     */
+    public function getFullName(): string
+    {
+        return "{$this->first_name} {$this->last_name}";
     }
 }
