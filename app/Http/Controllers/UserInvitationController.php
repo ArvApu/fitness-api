@@ -16,14 +16,13 @@ class UserInvitationController extends Controller
     /**
      * @param Request $request
      * @param Mailer $mailer
-     * @param User $user
      * @return JsonResponse
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function invite(Request $request, Mailer $mailer, User $user): JsonResponse
+    public function invite(Request $request, Mailer $mailer): JsonResponse
     {
         $data = $this->validate($request, [
-            'email' => ['required']
+            'email' => ['required', 'email']
         ]);
 
         /** @var User $user */
