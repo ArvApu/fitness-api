@@ -97,4 +97,22 @@ class RegistrationTest extends TestCase
 
         $this->response->assertStatus(400);
     }
+
+    public function test_registration_of_invited_user_with_invalid_token_data()
+    {
+        $token = encrypt(json_encode([
+            'for' => 'some.other.user@mail.org',
+        ]));
+
+        $this->post('/register', [
+            'first_name' => 'Doe',
+            'last_name' => 'John',
+            'email' => 'doe.john.f@fake.mail.com',
+            'password' => 'password123',
+            'password_confirmation' => 'password123',
+            'token' => $token,
+        ]);
+
+        $this->response->assertStatus(400);
+    }
 }
