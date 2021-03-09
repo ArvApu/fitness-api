@@ -28,6 +28,13 @@ class Exercise extends Model
     ];
 
     /**
+     * @inheritdoc
+     */
+    protected $casts = [
+        'is_private' => 'boolean',
+    ];
+
+    /**
      * Get the author of this exercise.
      */
     public function author(): \Illuminate\Database\Eloquent\Relations\BelongsTo

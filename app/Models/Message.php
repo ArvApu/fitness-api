@@ -33,6 +33,13 @@ class Message extends Model
     /**
      * @inheritdoc
      */
+    protected $casts = [
+        'is_seen' => 'boolean',
+    ];
+
+    /**
+     * @inheritdoc
+     */
     public static function boot()
     {
         parent::boot();
