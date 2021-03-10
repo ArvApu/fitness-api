@@ -8,15 +8,17 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * Class WorkoutLog
  * @property integer $id
  * @property integer $user_id
- * @property integer $workout_id
- * @property string $status
+ * @property integer $exercise_id
+ * @property integer $workout_log_id
+ * @property integer $weight
+ * @property integer $sets_count
+ * @property integer $sets_done
  * @property string $comment
- * @property string $difficulty
  * @property $created_at
  * @property $updated_at
  * @package App\Models
  */
-class WorkoutLog extends Model
+class ExerciseLog extends Model
 {
     use HasFactory;
 
@@ -24,7 +26,7 @@ class WorkoutLog extends Model
      * @inheritdoc
      */
     protected $fillable = [
-        'user_id', 'workout_id', 'status', 'comment', 'difficulty'
+        'user_id', 'exercise_id', 'workout_log_id', 'weight', 'sets_count', 'sets_done', 'comment'
     ];
 
     /**
@@ -36,18 +38,18 @@ class WorkoutLog extends Model
     }
 
     /**
-     * Get workout of this log
+     * Get exercise of this log
      */
-    public function workout(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function exercise(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo(Workout::class, 'workout_id');
+        return $this->belongsTo(Exercise::class, 'exercise_id');
     }
 
     /**
      * Get workout of this log
      */
-    public function exerciseLogs(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function workoutLog(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->hasMany(ExerciseLog::class, 'workout_log_id');
+        return $this->belongsTo(WorkoutLog::class, 'workout_log_id');
     }
 }

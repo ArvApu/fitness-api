@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\JsonResponse;
+use App\Models\User;
 use App\Models\WorkoutLog;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class WorkoutLogController extends Controller
 {
@@ -33,24 +35,58 @@ class WorkoutLogController extends Controller
     }
 
     /**
+     * @param int $id
+     * @return JsonResponse
+     */
+    public function single(int $id): JsonResponse
+    {
+        return new JsonResponse(
+            $this->workoutLog->with('exerciseLogs')->findOrFail($id)
+        );
+    }
+
+    /**
      * @param Request $request
      * @return JsonResponse
      * @throws \Illuminate\Validation\ValidationException
      */
     public function store(Request $request): JsonResponse
     {
-        $data = $this->validate($request, [
-            'workout_id' => ['required', 'integer', 'exists:workouts,id', 'max:100'],
+        $this->validate($request, [
+            'workout_id' => ['required', 'integer', 'exists:workouts,id'],
             'status' => ['required', 'string', 'in:missed,interrupted,completed'],
             'comment' => ['sometimes', 'string', 'max:100'],
             'difficulty' => ['required', 'string', 'in:easy,moderate,hard,exhausting'],
+            'exercise_logs' => ['sometimes', 'array', 'max:10'],
+            'exercise_logs.*.exercise_id' => ['required', 'integer', 'distinct', 'exists:exercises,id'],
+            'exercise_logs.*.weight' => ['required', 'integer', 'min:0'],
+            'exercise_logs.*.sets_count' => ['required', 'integer', 'min:1'],
+            'exercise_logs.*.sets_done' => ['required', 'integer', 'min:1', 'lte:exercise_logs.*.sets_count'],
         ]);
 
-        $data['user_id'] = $request->user()->id;
+        $log = DB::transaction(function () use($request) {
 
-        $workout = $this->workoutLog->create($data);
+            /** @var User $user */
+            $user = $request->user();
 
-        return new JsonResponse($workout, JsonResponse::HTTP_CREATED);
+            $exerciseLogs = $request->input('exercise_logs', []);
+
+            foreach ($exerciseLogs as &$exerciseLog) {
+                $exerciseLog['user_id'] = $user->id;
+            }
+
+            /** @var WorkoutLog $log */
+            $log = $user->workoutLogs()->create(
+                $request->only(['workout_id', 'status', 'comment', 'difficulty'])
+            );
+
+            $log->exerciseLogs()->createMany($exerciseLogs);
+
+            return $log;
+        });
+
+
+        return new JsonResponse($log, JsonResponse::HTTP_CREATED);
     }
 
     /**

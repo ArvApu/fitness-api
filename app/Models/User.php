@@ -114,7 +114,15 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      */
     public function workoutLogs(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany(User::class, 'user_id');
+        return $this->hasMany(WorkoutLog::class, 'user_id');
+    }
+
+    /**
+     * Get this user's workout logs
+     */
+    public function exerciseLogs(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(ExerciseLog::class, 'user_id');
     }
 
     /**
