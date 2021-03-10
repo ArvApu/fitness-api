@@ -29,7 +29,7 @@ class WorkoutController extends Controller
     public function all(): JsonResponse
     {
         return new JsonResponse(
-            $this->workout->with('exercises')->paginate()
+            $this->workout->paginate()
         );
     }
 
@@ -40,7 +40,7 @@ class WorkoutController extends Controller
     public function single(int $id): JsonResponse
     {
         return new JsonResponse(
-            $this->workout->findOrFail($id)
+            $this->workout->with('exercises')->findOrFail($id)
         );
     }
 
