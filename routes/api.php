@@ -48,4 +48,8 @@ $router->group(['middleware' => 'auth'], function () use($router) {
     $router->get('/users', 'UserController@all');
 
     $router->post('/users/invite', 'UserInvitationController@invite');
+
+    $router->get('/workouts/logs', 'WorkoutLogController@all');
+    $router->post('/workouts/logs', 'WorkoutLogController@store');
+    $router->delete('/workouts/logs/{id:\d+}', 'WorkoutLogController@destroy');
 });

@@ -110,6 +110,14 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     }
 
     /**
+     * Get this user's workout logs
+     */
+    public function workoutLogs(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(User::class, 'user_id');
+    }
+
+    /**
      * Update user last login status
      */
     public function loggedIn(): void

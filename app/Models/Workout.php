@@ -59,4 +59,12 @@ class Workout extends Model
     {
         return $this->belongsToMany(Day::class, WorkoutDay::class);
     }
+
+    /**
+     * Get this workout's logs
+     */
+    public function logs(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(WorkoutLog::class, 'workout_id');
+    }
 }
