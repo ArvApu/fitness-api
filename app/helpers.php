@@ -27,3 +27,31 @@ if ( ! function_exists('take'))
         return null;
     }
 }
+
+
+if ( ! function_exists('ui_url'))
+{
+    /**
+     * Generate a url for the application's ui.
+     *
+     * @param string|null $path
+     * @param array $query
+     * @param string|null $schema
+     * @param int|null $port
+     * @return mixed
+     */
+    function ui_url(string $path = null, array $query = [], string $schema = null, int $port = null): string
+    {
+        $url = env('APP_UI_URL', 'http://localhost');
+        if (null !== $port) {
+            $url .= ':' . $port;
+        }
+        if (null !== $path) {
+            $url .= '/' . ltrim($path, '/');
+        }
+        if (! empty($query)) {
+            $url .= '?' . http_build_query($query);
+        }
+        return (null === $schema ? $url : ($schema . '://' . $url));
+    }
+}

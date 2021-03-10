@@ -24,7 +24,6 @@ class EmailVerificationController extends Controller
     public function verify(User $user, string $token): JsonResponse
     {
         try {
-            // TODO: maybe token data should be in object, object constructor must resolve decryption and data validation.
             $data = json_decode(decrypt($token));
         } catch (DecryptException $exception) {
             throw new BadRequestHttpException('Bad token.');
