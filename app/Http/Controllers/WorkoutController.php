@@ -6,6 +6,7 @@ use App\Models\Workout;
 use App\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
 
 class WorkoutController extends Controller
 {
@@ -87,6 +88,9 @@ class WorkoutController extends Controller
 
         $exercises = new Collection($data['exercises']);
 
+        if($workout->exercises()->count() + $exercises->count() > 10) {
+            throw new ConflictHttpException('Workout can only have 10 exercises assigned.');
+        }
 
         $keyed = $exercises->mapWithKeys(function ($exercise) {
             return [take($exercise, 'id') => $exercise];
