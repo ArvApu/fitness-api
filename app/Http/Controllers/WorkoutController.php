@@ -81,9 +81,9 @@ class WorkoutController extends Controller
         $data = $this->validate($request, [
             'exercises' => [ 'required', 'array', 'max:10'],
             'exercises.*.id' => ['required', 'integer', 'distinct', 'exists:exercises'],
-            'exercises.*.reps' => ['required', 'integer', 'min:1'],
-            'exercises.*.sets' => ['required', 'integer', 'min:1'],
-            'exercises.*.rest' => ['required', 'integer', 'min:0'],
+            'exercises.*.reps' => ['required', 'integer', 'min:1', 'max:65000'],
+            'exercises.*.sets' => ['required', 'integer', 'min:1', 'max:65000'],
+            'exercises.*.rest' => ['required', 'integer', 'min:0', 'max:65000'],
         ]);
 
         $exercises = new Collection($data['exercises']);

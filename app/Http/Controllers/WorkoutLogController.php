@@ -59,9 +59,9 @@ class WorkoutLogController extends Controller
             'difficulty' => ['required', 'string', 'in:easy,moderate,hard,exhausting'],
             'exercise_logs' => ['sometimes', 'array', 'max:10'],
             'exercise_logs.*.exercise_id' => ['required', 'integer', 'distinct', 'exists:exercises,id'],
-            'exercise_logs.*.weight' => ['required', 'integer', 'min:0'],
-            'exercise_logs.*.sets_count' => ['required', 'integer', 'min:1'],
-            'exercise_logs.*.sets_done' => ['required', 'integer', 'min:1', 'lte:exercise_logs.*.sets_count'],
+            'exercise_logs.*.weight' => ['required', 'integer', 'min:0', 'max:65000'],
+            'exercise_logs.*.sets_count' => ['required', 'integer', 'min:1', 'max:65000'],
+            'exercise_logs.*.sets_done' => ['required', 'integer', 'min:1', 'lte:exercise_logs.*.sets_count', 'max:65000'],
         ]);
 
         $log = DB::transaction(function () use($request) {
