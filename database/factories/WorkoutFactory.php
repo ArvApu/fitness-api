@@ -25,17 +25,6 @@ class WorkoutFactory extends Factory
             'name' => $this->faker->word,
             'description' => $this->faker->words(10, true),
             'type' => $this->faker->randomElement(['weight', 'cardio', 'hiit', 'recovery', 'general']),
-            'is_private' => false,
         ];
-    }
-
-    /**
-     * @return WorkoutFactory
-     */
-    public function private(): WorkoutFactory
-    {
-        return $this->state([
-            'is_private' => true,
-        ]);
     }
 }

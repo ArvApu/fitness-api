@@ -27,14 +27,10 @@ class ExerciseController extends Controller
      * @param Request $request
      * @return JsonResponse
      */
-    public function all(Request $request): JsonResponse
+    public function all(): JsonResponse
     {
         /** @var \App\Models\User $user */
-        $user = $request->user();
-
-        if($user->isAdmin()) {
-            return new JsonResponse($this->exercise->paginate());
-        }
+        $user = Auth::user();
 
         $trainerId = $user->isTrainer() ? $user->id : $user->trainer_id;
 
@@ -51,10 +47,6 @@ class ExerciseController extends Controller
     {
         /** @var \App\Models\User $user */
         $user = Auth::user();
-
-        if($user->isAdmin()) {
-            return new JsonResponse($this->exercise->findOrFail($id));
-        }
 
         $trainerId = $user->isTrainer() ? $user->id : $user->trainer_id;
 

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Traits\Owned;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
@@ -18,7 +19,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  */
 class Workout extends Model
 {
-    use HasFactory;
+    use HasFactory, Owned;
 
     /**
      * @inheritdoc
@@ -66,5 +67,13 @@ class Workout extends Model
     public function logs(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(WorkoutLog::class, 'workout_id');
+    }
+
+    /**
+     * @inheritdoc
+     */
+    protected function getUserIdColumn(): string
+    {
+        return 'author_id';
     }
 }

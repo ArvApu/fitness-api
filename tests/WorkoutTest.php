@@ -65,7 +65,6 @@ class WorkoutTest extends TestCase
             'name' => 'Test workout',
             'description' => 'This is a test workout',
             'type' => 'hiit',
-            'is_private' => false,
         ];
 
         $this->post($this->resource, $payload);
@@ -121,7 +120,6 @@ class WorkoutTest extends TestCase
             'name' => 'Test workout',
             'description' => 'This is a test workout',
             'type' => 'hiit',
-            'is_private' => false,
         ];
 
         $this->put("$this->resource/$workout->id", $payload);

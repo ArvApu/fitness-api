@@ -6,6 +6,7 @@ use App\Models\Workout;
 use App\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
 
 class WorkoutController extends Controller
@@ -29,8 +30,13 @@ class WorkoutController extends Controller
      */
     public function all(): JsonResponse
     {
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+
+        $trainerId = $user->isTrainer() ? $user->id : $user->trainer_id;
+
         return new JsonResponse(
-            $this->workout->paginate()
+            $this->workout->ownedBy($trainerId)->paginate()
         );
     }
 
@@ -40,8 +46,13 @@ class WorkoutController extends Controller
      */
     public function single(int $id): JsonResponse
     {
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+
+        $trainerId = $user->isTrainer() ? $user->id : $user->trainer_id;
+
         return new JsonResponse(
-            $this->workout->with('exercises')->findOrFail($id)
+            $this->workout->ownedBy($trainerId)->findOrFail($id)
         );
     }
 
@@ -56,7 +67,6 @@ class WorkoutController extends Controller
             'name' => ['required', 'string', 'max:100'],
             'description' => ['required', 'string', 'max:255'],
             'type' => ['required', 'string', 'in:weight,cardio,hiit,recovery,general'],
-            'is_private' => ['required', 'boolean'],
         ]);
 
         $data['author_id'] = $request->user()->id;
@@ -77,6 +87,8 @@ class WorkoutController extends Controller
     public function assignExercises(Request $request, int $id): JsonResponse
     {
         $workout = $this->workout->findOrFail($id);
+
+        // TODO: check if exercises belongs to user assigning them
 
         $data = $this->validate($request, [
             'exercises' => [ 'required', 'array', 'max:10'],
@@ -113,10 +125,9 @@ class WorkoutController extends Controller
             'name' => ['sometimes', 'string', 'max:100'],
             'description' => ['sometimes', 'string', 'max:255'],
             'type' => ['sometimes', 'string', 'in:weight,cardio,hiit,recovery,general'],
-            'is_private' => ['sometimes', 'boolean'],
         ]);
 
-        $workout = $this->workout->findOrFail($id);
+        $workout = $this->workout->owned()->findOrFail($id);
         $workout->update($data);
 
         return new JsonResponse($workout);
@@ -129,7 +140,7 @@ class WorkoutController extends Controller
      */
     public function destroy(int $id): JsonResponse
     {
-        $this->workout->findOrFail($id)->delete();
+        $this->workout->owned()->findOrFail($id)->delete();
 
         return new JsonResponse(null, JsonResponse::HTTP_NO_CONTENT);
     }

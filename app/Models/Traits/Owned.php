@@ -23,8 +23,16 @@ trait Owned
      */
     public function scopeOwnedBy(Builder $query, ?int $userId = null): Builder
     {
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+
+        if($user->isAdmin()) {
+            return $query;
+        }
+
         $column = $this->getUserIdColumn();
-        $userId = is_null($userId) ? Auth::id() : $userId;
+        $userId = is_null($userId) ? $user->id : $userId;
+
         return $query->where($column, '=', $userId);
     }
 

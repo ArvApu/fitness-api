@@ -19,7 +19,6 @@ class CreateWorkoutsTable extends Migration
             $table->string('name', 100);
             $table->string('description');
             $table->enum('type', ['weight', 'cardio', 'hiit', 'recovery', 'general']);
-            $table->boolean('is_private');
             $table->timestamps();
 
             $table->foreign('author_id')->references('id')->on('users')->onDelete('cascade');

@@ -26,14 +26,4 @@ class ExerciseFactory extends Factory
             'description' => $this->faker->words(10, true),
         ];
     }
-
-    /**
-     * @return ExerciseFactory
-     */
-    public function private(): ExerciseFactory
-    {
-        return $this->state([
-            'is_private' => true,
-        ]);
-    }
 }
