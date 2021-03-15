@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Filters\Filterable;
+use App\Models\Traits\Owned;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
@@ -11,20 +12,19 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property integer $author_id
  * @property string $name
  * @property string $description
- * @property boolean $is_private
  * @property $created_at
  * @property $updated_at
  * @package App\Models
  */
 class Exercise extends Model
 {
-    use HasFactory, Filterable;
+    use HasFactory, Filterable, Owned;
 
     /**
      * @inheritdoc
      */
     protected $fillable = [
-        'author_id', 'name', 'description', 'is_private'
+        'author_id', 'name', 'description'
     ];
 
     /**
@@ -56,5 +56,13 @@ class Exercise extends Model
     public function logs(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(ExerciseLog::class, 'exercise_id');
+    }
+
+    /**
+     * @inheritdoc
+     */
+    protected function getUserIdColumn(): string
+    {
+        return 'author_id';
     }
 }

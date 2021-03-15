@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Exercise;
 use App\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ExerciseController extends Controller
 {
@@ -28,8 +29,17 @@ class ExerciseController extends Controller
      */
     public function all(Request $request): JsonResponse
     {
+        /** @var \App\Models\User $user */
+        $user = $request->user();
+
+        if($user->isAdmin()) {
+            return new JsonResponse($this->exercise->paginate());
+        }
+
+        $trainerId = $user->isTrainer() ? $user->id : $user->trainer_id;
+
         return new JsonResponse(
-            $this->exercise->filter($request->query())->paginate()
+            $this->exercise->ownedBy($trainerId)->paginate()
         );
     }
 
@@ -39,8 +49,17 @@ class ExerciseController extends Controller
      */
     public function single(int $id): JsonResponse
     {
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+
+        if($user->isAdmin()) {
+            return new JsonResponse($this->exercise->findOrFail($id));
+        }
+
+        $trainerId = $user->isTrainer() ? $user->id : $user->trainer_id;
+
         return new JsonResponse(
-            $this->exercise->findOrFail($id)
+            $this->exercise->ownedBy($trainerId)->findOrFail($id)
         );
     }
 
@@ -54,7 +73,6 @@ class ExerciseController extends Controller
         $data = $this->validate($request, [
             'name' => ['required', 'string', 'max:100'],
             'description' => ['required', 'string', 'max:255'],
-            'is_private' => ['required', 'boolean'],
         ]);
 
         $data['author_id'] = $request->user()->id;
@@ -75,10 +93,9 @@ class ExerciseController extends Controller
         $data = $this->validate($request, [
             'name' => ['sometimes', 'string', 'max:100'],
             'description' => ['sometimes', 'string', 'max:255'],
-            'is_private' => ['sometimes', 'boolean'],
         ]);
 
-        $exercise = $this->exercise->findOrFail($id);
+        $exercise = $this->exercise->owned()->findOrFail($id);
         $exercise->update($data);
 
         return new JsonResponse($exercise);
@@ -91,7 +108,7 @@ class ExerciseController extends Controller
      */
     public function destroy(int $id): JsonResponse
     {
-        $this->exercise->findOrFail($id)->delete();
+        $this->exercise->owned()->findOrFail($id)->delete();
 
         return new JsonResponse(null, JsonResponse::HTTP_NO_CONTENT);
     }

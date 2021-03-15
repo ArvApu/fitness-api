@@ -18,7 +18,6 @@ class CreateExercisesTable extends Migration
             $table->unsignedBigInteger('author_id');
             $table->string('name', 100);
             $table->string('description');
-            $table->boolean('is_private');
             $table->timestamps();
 
             $table->foreign('author_id')->references('id')->on('users')->onDelete('cascade');

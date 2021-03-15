@@ -24,7 +24,6 @@ class ExerciseFactory extends Factory
         return [
             'name' => $this->faker->word,
             'description' => $this->faker->words(10, true),
-            'is_private' => false,
         ];
     }
 

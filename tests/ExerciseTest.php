@@ -62,7 +62,6 @@ class ExerciseTest extends TestCase
         $payload = [
             'name' => 'Test exercise',
             'description' => 'This is a test exercise',
-            'is_private' => false,
         ];
 
         $this->post($this->resource, $payload);
@@ -83,7 +82,6 @@ class ExerciseTest extends TestCase
         $payload = [
             'name' => 'Test exercise',
             'description' => 'This is a test exercise',
-            'is_private' => false,
         ];
 
         $this->put("$this->resource/$exercise->id", $payload);
