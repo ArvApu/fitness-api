@@ -157,4 +157,20 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     {
         return "{$this->first_name} {$this->last_name}";
     }
+
+    /**
+     * Check if this user is trainer
+     */
+    public function isTrainer(): bool
+    {
+        return $this->role === 'trainer';
+    }
+
+    /**
+     * Check if this user is admin
+     */
+    public function isAdmin(): bool
+    {
+        return $this->role === 'admin';
+    }
 }
