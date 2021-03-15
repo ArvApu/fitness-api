@@ -137,17 +137,17 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     /**
      * Return list of related users
      */
-    public function getRelatedUsers(): Collection
+    public function getRelatedUsers()
     {
         if($this->role === 'admin') {
-            return $this->get();
+            return $this->where('id', '!=', $this->id);
         }
 
         if($this->role === 'trainer') {
-            return $this->clients()->get();
+            return $this->clients();
         }
 
-        return $this->trainer()->get();
+        return $this->trainer();
     }
 
     /**

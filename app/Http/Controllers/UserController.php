@@ -4,18 +4,17 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Http\JsonResponse;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
     /**
-     * @param Request $request
      * @return JsonResponse
      */
-    public function all(Request $request): JsonResponse
+    public function all(): JsonResponse
     {
         /** @var User $user */
-        $user = $request->user();
-        return new JsonResponse($user->getRelatedUsers());
+        $user = Auth::user();
+        return new JsonResponse($user->getRelatedUsers()->paginate());
     }
 }
