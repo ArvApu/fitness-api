@@ -33,7 +33,7 @@ class EventController extends Controller
     public function all(): JsonResponse
     {
         return new JsonResponse(
-            $this->event->paginate()
+            $this->event->get()
         );
     }
 

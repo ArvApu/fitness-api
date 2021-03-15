@@ -40,9 +40,7 @@ class EventTest extends TestCase
         $this->get($this->resource);
 
         $this->response->assertStatus(200);
-        $this->response->assertJson([
-            'data' => $events->toArray()
-        ]);
+        $this->response->assertJson($events->toArray());
     }
 
     public function test_get_single()
