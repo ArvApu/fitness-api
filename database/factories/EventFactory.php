@@ -2,18 +2,18 @@
 
 namespace Database\Factories;
 
-use App\Models\Day;
+use App\Models\Event;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class DayFactory extends Factory
+class EventFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
      *
      * @var string
      */
-    protected $model = Day::class;
+    protected $model = Event::class;
 
     /**
      * Define the model's default state.
@@ -25,7 +25,8 @@ class DayFactory extends Factory
         return [
             'title' => $this->faker->words(2, true),
             'information' => $this->faker->words(5, true),
-            'date' => Carbon::now(),
+            'start_time' => Carbon::now(),
+            'end_time' => Carbon::now()->addMinutes(60),
         ];
     }
 }

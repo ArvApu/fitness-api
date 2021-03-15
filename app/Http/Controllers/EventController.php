@@ -2,24 +2,24 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Day;
+use App\Models\Event;
 use App\Http\JsonResponse;
 use Illuminate\Http\Request;
 
-class DayController extends Controller
+class EventController extends Controller
 {
     /**
-     * @var Day
+     * @var Event
      */
-    private $day;
+    private $event;
 
     /**
-     * DayController constructor.
-     * @param Day $day
+     * EventController constructor.
+     * @param Event $event
      */
-    public function __construct(Day $day)
+    public function __construct(Event $event)
     {
-        $this->day = $day;
+        $this->event = $event;
     }
 
     /**
@@ -28,7 +28,7 @@ class DayController extends Controller
     public function all(): JsonResponse
     {
         return new JsonResponse(
-            $this->day->paginate()
+            $this->event->paginate()
         );
     }
 
@@ -39,7 +39,7 @@ class DayController extends Controller
     public function single(int $id): JsonResponse
     {
         return new JsonResponse(
-            $this->day->findOrFail($id)
+            $this->event->findOrFail($id)
         );
     }
 
@@ -51,12 +51,14 @@ class DayController extends Controller
     public function store(Request $request): JsonResponse
     {
         $data = $this->validate($request, [
+            'attendee_id' => ['required', 'integer', 'exists:users,id'],
             'title' => ['required', 'string', 'max:100'],
             'information' => ['required', 'string', 'max:255'],
-            'date' => ['required', 'date'],
+            'start_time' => ['required', 'date_format:Y-m-d H:i:s'],
+            'end_time' => ['required', 'date_format:Y-m-d H:i:s', 'after:start_time'],
         ]);
 
-        $day = $this->day->create($data);
+        $day = $this->event->create($data);
 
         return new JsonResponse($day, JsonResponse::HTTP_CREATED);
     }
@@ -70,12 +72,12 @@ class DayController extends Controller
     public function update(Request $request, int $id): JsonResponse
     {
         $data = $this->validate($request, [
+            'attendee_id' => ['sometimes', 'integer', 'exists:users,id'],
             'title' => ['sometimes', 'string', 'max:100'],
             'information' => ['sometimes', 'string', 'max:255'],
-            'date' => ['sometimes', 'date'],
         ]);
 
-        $day = $this->day->findOrFail($id);
+        $day = $this->event->findOrFail($id);
         $day->update($data);
 
         return new JsonResponse($day);
@@ -88,7 +90,7 @@ class DayController extends Controller
      */
     public function destroy(int $id): JsonResponse
     {
-        $this->day->findOrFail($id)->delete();
+        $this->event->findOrFail($id)->delete();
 
         return new JsonResponse(null, JsonResponse::HTTP_NO_CONTENT);
     }

@@ -56,9 +56,9 @@ class Workout extends Model
     /**
      * Days that this workout has assigned.
      */
-    public function days(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    public function events(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->belongsToMany(Day::class, WorkoutDay::class);
+        return $this->hasMany(Event::class, 'workout_id');
     }
 
     /**

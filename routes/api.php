@@ -36,11 +36,11 @@ $router->group(['middleware' => 'auth'], function () use($router) {
     $router->put('/workouts/{id:\d+}', 'WorkoutController@update');
     $router->delete('/workouts/{id:\d+}', 'WorkoutController@destroy');
 
-    $router->get('/days', 'DayController@all');
-    $router->get('/days/{id:\d+}', 'DayController@single');
-    $router->post('/days', 'DayController@store');
-    $router->put('/days/{id:\d+}', 'DayController@update');
-    $router->delete('/days/{id:\d+}', 'DayController@destroy');
+    $router->get('/events', 'EventController@all');
+    $router->get('/events/{id:\d+}', 'EventController@single');
+    $router->post('/events', 'EventController@store');
+    $router->put('/events/{id:\d+}', 'EventController@update');
+    $router->delete('/events/{id:\d+}', 'EventController@destroy');
 
     $router->get('/messages/{id:\d+}', 'MessageController@getByUser');
     $router->post('/messages/{to:\d+}', 'MessageController@send');
