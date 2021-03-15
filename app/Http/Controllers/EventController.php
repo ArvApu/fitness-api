@@ -4,7 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\Event;
 use App\Http\JsonResponse;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
+use Spatie\IcalendarGenerator\Components\Calendar;
+use Spatie\IcalendarGenerator\Components\Event as CEvent;
 
 class EventController extends Controller
 {
@@ -93,5 +98,39 @@ class EventController extends Controller
         $this->event->findOrFail($id)->delete();
 
         return new JsonResponse(null, JsonResponse::HTTP_NO_CONTENT);
+    }
+
+    /**
+     * Export events to icalendar file
+     *
+     * @return Response
+     */
+    public function export(): Response
+    {
+        /** @var User $user */
+        $user = Auth::user();
+
+        $cal = Calendar::create($user->first_name.' calendar');
+
+        $events = $this->event->getFromThisDay();
+
+        /** @var Event $event */
+        foreach ($events as $event) {
+            $cal->event(
+                CEvent::create()
+                    ->name($event->title)
+                    ->description($event->information)
+                    ->createdAt($event->created_at)
+                    ->startsAt($event->start_time)
+                    ->endsAt($event->end_time)
+                    ->transparent()
+            );
+        }
+
+        return new Response($cal->get(), 200, [
+            'Content-Type' => 'text/calendar',
+            'charset' => 'utf-8',
+            'Content-Disposition' => 'attachment; filename="calendar.ics"',
+        ]);
     }
 }

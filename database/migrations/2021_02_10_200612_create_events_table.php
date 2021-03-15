@@ -22,6 +22,7 @@ class CreateEventsTable extends Migration
             $table->string('information');
             $table->datetime('start_time');
             $table->datetime('end_time');
+            $table->timestamps();
 
             $table->foreign('attendee_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('organizer_id')->references('id')->on('users')->onDelete('set null');

@@ -38,6 +38,7 @@ $router->group(['middleware' => 'auth'], function () use($router) {
 
     $router->get('/events', 'EventController@all');
     $router->get('/events/{id:\d+}', 'EventController@single');
+    $router->get('/events/export', 'EventController@export');
     $router->post('/events', 'EventController@store');
     $router->put('/events/{id:\d+}', 'EventController@update');
     $router->delete('/events/{id:\d+}', 'EventController@destroy');
