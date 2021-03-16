@@ -28,12 +28,22 @@ class EventController extends Controller
     }
 
     /**
+     * @param Request $request
      * @return JsonResponse
+     * @throws \Illuminate\Validation\ValidationException
      */
-    public function all(): JsonResponse
+    public function all(Request $request): JsonResponse
     {
+        $this->validate($request, [
+            'start_date' => ['required', 'before:end_date', 'date'],
+            'end_date' => ['required', 'date'],
+        ]);
+
         return new JsonResponse(
-            $this->event->get()
+            $this->event
+                ->where('start_time', '>=', $request->input('start_date'))
+                ->where('start_time', '<=', $request->input('end_date'))
+                ->get()
         );
     }
 
