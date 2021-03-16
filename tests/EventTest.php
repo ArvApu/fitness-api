@@ -20,13 +20,18 @@ class EventTest extends TestCase
     private $user;
 
     /**
+     * @var User
+     */
+    private $trainer;
+
+    /**
      * @inheritDoc
      */
     protected function setUp(): void
     {
         parent::setUp();
-
-        $this->user = User::factory()->create();
+        $this->trainer = User::factory()->trainer()->create();
+        $this->user = User::factory()->for($this->trainer, 'trainer')->create();
         $this->actingAs($this->user);
     }
 
@@ -37,7 +42,10 @@ class EventTest extends TestCase
             ->count(10)
             ->create();
 
-        $this->get($this->resource);
+        $this->get($this->resource.'?start_date='.
+            Carbon::yesterday()->toDateString() .'&end_date='.
+            Carbon::tomorrow()->toDateString()
+        );
 
         $this->response->assertStatus(200);
         $this->response->assertJson($events->toArray());
@@ -52,6 +60,98 @@ class EventTest extends TestCase
 
         $this->response->assertStatus(200);
         $this->response->assertJson($event->toArray());
+    }
+
+    public function test_export()
+    {
+         Event::factory()
+            ->for($this->user, 'attendee')
+            ->count(10)
+            ->create();
+
+        $this->get($this->resource.'/export');
+
+        $this->response->assertStatus(200);
+
+        $this->assertEquals(
+            'text/calendar; charset=UTF-8',
+            $this->response->headers->get('Content-Type')
+        );
+
+        $this->assertEquals(
+            'attachment; filename="calendar.ics"',
+            $this->response->headers->get('Content-Disposition')
+        );
+    }
+
+    public function test_get_all_for_trainer()
+    {
+        $this->actingAs($this->trainer);
+
+        $events = Event::factory()
+            ->for($this->user, 'attendee')
+            ->count(10)
+            ->create();
+
+        $this->get($this->resource.'?start_date='.
+            Carbon::yesterday()->toDateString().'&end_date='.
+            Carbon::tomorrow()->toDateString().'&user_id='.$this->user->id
+        );
+
+        $this->response->assertStatus(200);
+        $this->response->assertJson($events->toArray());
+    }
+
+    public function test_get_all_for_trainer_without_specifying_client()
+    {
+        $this->actingAs($this->trainer);
+
+        Event::factory()
+            ->for($this->user, 'attendee')
+            ->count(10)
+            ->create();
+
+        $this->get($this->resource.'?start_date='.
+            Carbon::yesterday()->toDateString().'&end_date='.
+            Carbon::tomorrow()->toDateString()
+        );
+
+        $this->response->assertStatus(422);
+    }
+
+    public function test_forbid_get_all_for_invalid_trainer()
+    {
+        $this->actingAs(User::factory()->trainer()->create());
+
+        Event::factory()
+            ->for($this->user, 'attendee')
+            ->count(10)
+            ->create();
+
+        $this->get($this->resource.'?start_date='.
+            Carbon::yesterday()->toDateString().'&end_date='.
+            Carbon::tomorrow()->toDateString().'&user_id='.$this->user->id
+        );
+
+        $this->response->assertStatus(403);
+    }
+
+    public function test_get_all_for_admin()
+    {
+        $this->actingAs(User::factory()->admin()->create());
+
+        $events = Event::factory()
+            ->for($this->user, 'attendee')
+            ->count(10)
+            ->create();
+
+        $this->get($this->resource.'?start_date='.
+            Carbon::yesterday()->toDateString().'&end_date='.
+            Carbon::tomorrow()->toDateString().'&user_id='.$this->user->id
+        );
+
+        $this->response->assertStatus(200);
+        $this->response->assertJson($events->toArray());
     }
 
     public function test_store()
