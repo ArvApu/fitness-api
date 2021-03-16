@@ -5,11 +5,12 @@ namespace App\Http\Controllers;
 use App\Models\Event;
 use App\Http\JsonResponse;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Auth;
 use Spatie\IcalendarGenerator\Components\Calendar;
 use Spatie\IcalendarGenerator\Components\Event as CEvent;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 class EventController extends Controller
 {
@@ -113,16 +114,28 @@ class EventController extends Controller
     /**
      * Export events to icalendar file
      *
+     * @param Request $request
      * @return Response
+     * @throws \Illuminate\Validation\ValidationException
      */
-    public function export(): Response
+    public function export(Request $request): Response
     {
         /** @var User $user */
-        $user = Auth::user();
+        $user = $request->user();
+
+        if($user->isTrainer() || $user->isAdmin()) {
+            $this->validate($request, [
+                'user_id' => ['required', 'exists:users,id']
+            ]);
+
+            $user = $this->getClient($request->input('user_id'), $user);
+        }
 
         $cal = Calendar::create($user->first_name.' calendar');
 
-        $events = $this->event->getFromThisDay();
+        $events = $user->events()->where('end_time', '>=', Carbon::today())
+            ->limit(500) // To be sure that too much data will not be retrieved
+            ->get();
 
         /** @var Event $event */
         foreach ($events as $event) {
@@ -142,5 +155,24 @@ class EventController extends Controller
             'charset' => 'utf-8',
             'Content-Disposition' => 'attachment; filename="calendar.ics"',
         ]);
+    }
+
+    /**
+     * Get trainer's client
+     *
+     * @param int $clientId
+     * @param User $trainer
+     * @return User
+     */
+    protected function getClient(int $clientId, User $trainer): User
+    {
+        /** @var User $client */
+        $client = $trainer->findOrFail($clientId);
+
+        if(!$trainer->isAdmin() && !$trainer->hasClient($client)) {
+            throw new AccessDeniedHttpException('Client not available');
+        }
+
+        return $client;
     }
 }

@@ -25,6 +25,10 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
  * @property $updated_at
  * @property Exercise[] $exercises
  * @property Workout[] $workouts
+ * @property User $trainer
+ * @property User[] $clients
+ * @property Event[] $events
+ * @property Event[] $organisedEvents
  * @package App\Models
  */
 class User extends Model implements AuthenticatableContract, AuthorizableContract, JWTSubject
@@ -126,6 +130,22 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     }
 
     /**
+     * Get this user's events
+     */
+    public function events(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Event::class, 'attendee_id');
+    }
+
+    /**
+     * Get this user's events
+     */
+    public function organizedEvents(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Event::class, 'organizer_id');
+    }
+
+    /**
      * Update user last login status
      */
     public function loggedIn(): void
@@ -172,5 +192,24 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     public function isAdmin(): bool
     {
         return $this->role === 'admin';
+    }
+
+    /**
+     * Check if this user's role is 'user'.
+     */
+    public function isUser(): bool
+    {
+        return $this->role === 'user';
+    }
+
+    /**
+     * Check if trainer has client.
+     * @param User $client
+     * @return bool
+     */
+    public function hasClient(User $client): bool
+    {
+        return !$this->isUser() && // Simple user can't have a client
+            $this->clients()->where('id', '=', $client->id)->exists();
     }
 }

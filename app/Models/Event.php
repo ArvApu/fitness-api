@@ -2,9 +2,7 @@
 
 namespace App\Models;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Support\Collection;
 
 /**
  * Class Day
@@ -62,15 +60,5 @@ class Event extends Model
     public function organizer(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(User::class, 'organizer_id');
-    }
-
-    /**
-     * Get events from this day
-     */
-    public function getFromThisDay(): Collection
-    {
-        return $this->where('end_time', '>=', Carbon::today())
-            ->limit(500) // To be sure that too much data will not be retrieved
-            ->get();
     }
 }
