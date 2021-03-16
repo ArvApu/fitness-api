@@ -54,7 +54,7 @@ class EventController extends Controller
     public function single(int $id): JsonResponse
     {
         return new JsonResponse(
-            $this->event->findOrFail($id)
+            $this->event->with(['attendee', 'organizer', 'workout'])->findOrFail($id)
         );
     }
 
