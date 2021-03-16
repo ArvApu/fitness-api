@@ -40,8 +40,10 @@ class EventController extends Controller
             'end_date' => ['required', 'date'],
         ]);
 
+        $user = $this->resolveUser($request);
+
         return new JsonResponse(
-            $this->event
+            $user->events()
                 ->where('start_time', '>=', $request->input('start_date'))
                 ->where('start_time', '<=', $request->input('end_date'))
                 ->get()
@@ -49,14 +51,55 @@ class EventController extends Controller
     }
 
     /**
+     * @param Request $request
      * @param int $id
      * @return JsonResponse
+     * @throws \Illuminate\Validation\ValidationException
      */
-    public function single(int $id): JsonResponse
+    public function single(Request $request, int $id): JsonResponse
     {
+        $user = $this->resolveUser($request);
+
         return new JsonResponse(
-            $this->event->with(['attendee', 'organizer', 'workout'])->findOrFail($id)
+            $user->events()->with(['attendee', 'organizer', 'workout'])->findOrFail($id)
         );
+    }
+
+    /**
+     * Export events to icalendar file
+     *
+     * @param Request $request
+     * @return Response
+     * @throws \Illuminate\Validation\ValidationException
+     */
+    public function export(Request $request): Response
+    {
+        $user = $this->resolveUser($request);
+
+        $cal = Calendar::create($user->first_name.' calendar');
+
+        $events = $user->events()->where('end_time', '>=', Carbon::today())
+            ->limit(500) // To be sure that too much data will not be retrieved
+            ->get();
+
+        /** @var Event $event */
+        foreach ($events as $event) {
+            $cal->event(
+                CEvent::create()
+                    ->name($event->title)
+                    ->description($event->information)
+                    ->createdAt($event->created_at)
+                    ->startsAt($event->start_time)
+                    ->endsAt($event->end_time)
+                    ->transparent()
+            );
+        }
+
+        return new Response($cal->get(), 200, [
+            'Content-Type' => 'text/calendar',
+            'charset' => 'utf-8',
+            'Content-Disposition' => 'attachment; filename="calendar.ics"',
+        ]);
     }
 
     /**
@@ -112,49 +155,26 @@ class EventController extends Controller
     }
 
     /**
-     * Export events to icalendar file
+     * Resolve if user is client or a trainer/admin
      *
      * @param Request $request
-     * @return Response
+     * @return User
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function export(Request $request): Response
+    protected function resolveUser(Request $request): User
     {
         /** @var User $user */
         $user = $request->user();
 
-        if($user->isTrainer() || $user->isAdmin()) {
-            $this->validate($request, [
-                'user_id' => ['required', 'exists:users,id']
-            ]);
-
-            $user = $this->getClient($request->input('user_id'), $user);
+        if(!$user->isTrainer() && !$user->isAdmin()) {
+            return $user;
         }
 
-        $cal = Calendar::create($user->first_name.' calendar');
-
-        $events = $user->events()->where('end_time', '>=', Carbon::today())
-            ->limit(500) // To be sure that too much data will not be retrieved
-            ->get();
-
-        /** @var Event $event */
-        foreach ($events as $event) {
-            $cal->event(
-                CEvent::create()
-                    ->name($event->title)
-                    ->description($event->information)
-                    ->createdAt($event->created_at)
-                    ->startsAt($event->start_time)
-                    ->endsAt($event->end_time)
-                    ->transparent()
-            );
-        }
-
-        return new Response($cal->get(), 200, [
-            'Content-Type' => 'text/calendar',
-            'charset' => 'utf-8',
-            'Content-Disposition' => 'attachment; filename="calendar.ics"',
+        $this->validate($request, [
+            'user_id' => ['required', 'exists:users,id']
         ]);
+
+        return $this->getClient($request->input('user_id'), $user);
     }
 
     /**
@@ -170,7 +190,7 @@ class EventController extends Controller
         $client = $trainer->findOrFail($clientId);
 
         if(!$trainer->isAdmin() && !$trainer->hasClient($client)) {
-            throw new AccessDeniedHttpException('Client not available');
+            throw new AccessDeniedHttpException('Client information is not available');
         }
 
         return $client;
