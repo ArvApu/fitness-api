@@ -115,7 +115,7 @@ class EventController extends Controller
             'information' => ['required', 'string', 'max:255'],
             'all_day' => ['sometimes', 'boolean'],
             'start_time' => ['required', 'date_format:Y-m-d H:i:s'],
-            'end_time' => ['required', 'date_format:Y-m-d H:i:s', 'after:start_time'],
+            'end_time' => ['required', 'date_format:Y-m-d H:i:s', 'after_or_equal:start_time'],
         ]);
 
         $day = $this->event->create($data);
