@@ -27,6 +27,17 @@ class EventFactory extends Factory
             'information' => $this->faker->words(5, true),
             'start_time' => Carbon::now(),
             'end_time' => Carbon::now()->addMinutes(60),
+            'all_day' => false
         ];
+    }
+
+    /**
+     * @return EventFactory
+     */
+    public function allDay(): EventFactory
+    {
+        return $this->state([
+            'all_day' => true,
+        ]);
     }
 }

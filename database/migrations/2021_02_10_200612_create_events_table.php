@@ -20,6 +20,7 @@ class CreateEventsTable extends Migration
             $table->unsignedBigInteger('workout_id')->nullable();
             $table->string('title', 100);
             $table->string('information');
+            $table->boolean('all_day');
             $table->datetime('start_time');
             $table->datetime('end_time');
             $table->timestamps();

@@ -113,6 +113,7 @@ class EventController extends Controller
             'attendee_id' => ['required', 'integer', 'exists:users,id'],
             'title' => ['required', 'string', 'max:100'],
             'information' => ['required', 'string', 'max:255'],
+            'all_day' => ['sometimes', 'boolean'],
             'start_time' => ['required', 'date_format:Y-m-d H:i:s'],
             'end_time' => ['required', 'date_format:Y-m-d H:i:s', 'after:start_time'],
         ]);

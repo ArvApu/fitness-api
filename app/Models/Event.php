@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property integer $workout_id
  * @property string $title
  * @property string $information
+ * @property boolean $all_day
  * @property $start_time
  * @property $end_time
  * @property $created_at
@@ -27,7 +28,7 @@ class Event extends Model
      * @inheritdoc
      */
     protected $fillable = [
-        'title', 'information', 'start_time', 'end_time', 'attendee_id', 'organizer_id', 'workout_id'
+        'title', 'information', 'all_day', 'start_time', 'end_time', 'attendee_id', 'organizer_id', 'workout_id'
     ];
 
     /**
