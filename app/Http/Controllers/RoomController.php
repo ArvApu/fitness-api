@@ -33,7 +33,7 @@ class RoomController extends Controller
         $user = Auth::user();
 
         return new JsonResponse(
-            $user->rooms()->with('users')->paginate()
+            $user->rooms()->with('users')->paginate(15)
         );
     }
 
@@ -52,7 +52,7 @@ class RoomController extends Controller
         $room = $user->rooms()->findOrFail($id);
 
         return new JsonResponse(
-            $room->messages()->orderBy('created_at', 'desc')->paginate(30)
+            $room->messages()->latest()->paginate(30)
         );
     }
 
