@@ -82,19 +82,19 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     }
 
     /**
-     * Get messages that were sent by this user.
+     * Get all rooms for this user.
      */
-    public function sentMessages(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function rooms(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
-        return $this->hasMany(Message::class, 'sender_id');
+        return $this->belongsToMany(Room::class, RoomUser::class);
     }
 
     /**
-     * Get messages that this user received.
+     * Get this user's administrated rooms.
      */
-    public function receivedMessages(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function administratedRooms(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany(Message::class, 'receiver_id');
+        return $this->hasMany(Room::class, 'admin_id');
     }
 
     /**

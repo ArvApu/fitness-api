@@ -43,8 +43,7 @@ $router->group(['middleware' => 'auth'], function () use($router) {
     $router->put('/events/{id:\d+}', 'EventController@update');
     $router->delete('/events/{id:\d+}', 'EventController@destroy');
 
-    $router->get('/messages/{id:\d+}', 'MessageController@getByUser');
-    $router->post('/messages/{to:\d+}', 'MessageController@send');
+    $router->post('/messages/{roomId:\d+}', 'MessageController@send');
 
     $router->get('/users', 'UserController@all');
 
@@ -57,4 +56,10 @@ $router->group(['middleware' => 'auth'], function () use($router) {
 
     $router->get('/exercises/logs', 'ExerciseLogController@all');
     $router->get('/exercises/logs/{id:\d+}', 'ExerciseLogController@single');
+
+    $router->get('/rooms', 'RoomController@all');
+    $router->get('/rooms/{id:\d+}/messages', 'RoomController@messages');
+    $router->post('/rooms', 'RoomController@store');
+    $router->put('/rooms/{id:\d+}', 'RoomController@update');
+    $router->delete('/rooms/{id:\d+}', 'RoomController@destroy');
 });

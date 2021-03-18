@@ -7,8 +7,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 /**
  * Class Message
  * @property integer $id
- * @property integer $sender_id
- * @property integer $receiver_id
+ * @property integer $user_id
+ * @property integer $room_id
  * @property string $message
  * @property boolean $is_seen
  * @property $created_at
@@ -27,7 +27,7 @@ class Message extends Model
      * @inheritdoc
      */
     protected $fillable = [
-        'sender_id', 'receiver_id', 'message', 'is_seen',
+        'user_id', 'room_id', 'message', 'is_seen'
     ];
 
     /**
@@ -52,16 +52,16 @@ class Message extends Model
     /**
      * Get user that sent this message.
      */
-    public function sender(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo(User::class, 'sender_id');
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     /**
-     * Get user that should receive this message.
+     * Get room where this messages is.
      */
-    public function receiver(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function room(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo(User::class, 'receiver_id');
+        return $this->belongsTo(Room::class, 'room_id');
     }
 }

@@ -4,63 +4,37 @@ namespace App\Http\Controllers;
 
 use App\Events\SendMessage;
 use App\Models\Message;
-use App\Models\User;
+use App\Models\Room;
 use App\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class MessageController extends Controller
 {
     /**
      * @param Request $request
-     * @param int $id
-     * @return JsonResponse
-     */
-    public function getByUser(Request $request, int $id): JsonResponse
-    {
-        /** @var User $user */
-        $user = $request->user();
-
-        $sent = $user->sentMessages()
-            ->where('receiver_id', '=', $id)
-            ->orderBy('created_at')
-            ->get();
-
-        $received = $user->receivedMessages()
-            ->where('sender_id', '=', $id)
-            ->orderBy('created_at')
-            ->get();
-
-        $all = $sent->merge($received);
-
-        return new JsonResponse($all->sortBy('created_at')->values());
-    }
-
-    /**
-     * @param Request $request
-     * @param Message $message
-     * @param User $user
-     * @param int $to
+     * @param Room $room
+     * @param int $roomId
      * @return JsonResponse
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function send(Request $request, Message $message, User $user, int $to): JsonResponse
+    public function send(Request $request, Room $room, int $roomId): JsonResponse
     {
         $this->validate($request, [
             'message' => ['required', 'string', 'max:255'],
         ]);
 
-        if($user->where('id', '=', $to)->doesntExist()) {
-            throw new BadRequestHttpException('User that should receive message does not exist');
-        }
+        /** @var Room $room */
+        $room = $room->findOrFail($roomId);
 
-        $message = $message->create([
-            'sender_id' => $request->user()->id,
-            'receiver_id' => $to,
+        /** @var Message $message */
+        $message = $room->messages()->create([
+            'user_id' => $request->user()->id,
             'message' => $request->input('message'),
         ]);
 
-        event(new SendMessage($message, $to));
+        foreach ($room->users as $user) {
+            event(new SendMessage($message, $user->id));
+        }
 
         return new JsonResponse($message, JsonResponse::HTTP_CREATED);
     }
