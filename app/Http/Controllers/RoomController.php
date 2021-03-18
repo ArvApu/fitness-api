@@ -33,7 +33,7 @@ class RoomController extends Controller
         $user = Auth::user();
 
         return new JsonResponse(
-            $user->rooms()->paginate()
+            $user->rooms()->with('users')->paginate()
         );
     }
 
