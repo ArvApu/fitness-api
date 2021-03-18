@@ -7,7 +7,6 @@ use App\Models\Room;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class RoomController extends Controller
 {

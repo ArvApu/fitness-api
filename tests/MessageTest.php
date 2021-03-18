@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Message;
+use App\Models\Room;
 use App\Models\User;
 use Laravel\Lumen\Testing\DatabaseMigrations;
 
@@ -29,46 +30,28 @@ class MessageTest extends TestCase
         $this->actingAs($this->user);
     }
 
-    public function test_get_by_user()
-    {
-        /** @var User $receiver */
-        $receiver = User::factory()->create();
-
-        $sent = Message::factory()
-            ->count(5)
-            ->for($this->user, 'sender')
-            ->for($receiver, 'receiver')
-            ->create();
-
-        $received = Message::factory()
-            ->count(5)
-            ->for($this->user, 'receiver')
-            ->for($receiver, 'sender')
-            ->create();
-
-        $this->get("$this->resource/$receiver->id");
-
-        $this->response->assertStatus(200);
-        $this->response->assertJson($sent->merge($received)->toArray());
-    }
-
     public function test_send()
     {
         /** @var User $receiver */
         $receiver = User::factory()->create();
 
+        /** @var Room $room */
+        $room = Room::factory()->for($this->user, 'admin')
+            ->hasAttached(collect([$this->user, $receiver]))
+            ->create();
+
         $payload = [
             'message' => 'Hello there.',
         ];
 
-        $this->post("$this->resource/$receiver->id", $payload);
+        $this->post("$this->resource/$room->id", $payload);
 
         $this->response->assertStatus(201);
         $this->response->assertJsonFragment($payload);
 
         $this->assertDatabaseHas((new Message())->getTable(), [
-            'sender_id' => $this->user->id,
-            'receiver_id' => $receiver->id,
+            'user_id' => $this->user->id,
+            'room_id' => $room->id,
             'message' => $payload['message'],
         ]);
     }

@@ -160,6 +160,7 @@ class EventTest extends TestCase
             'attendee_id' => $this->user->id,
             'title' => 'Test event',
             'information' => 'This is only for testing',
+            'all_day' => false,
             'start_time' => Carbon::now()->toDateTimeString(),
             'end_time' => Carbon::now()->addMinutes(60)->toDateTimeString(),
         ];

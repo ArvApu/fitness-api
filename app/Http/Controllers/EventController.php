@@ -109,18 +109,23 @@ class EventController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
-        $data = $this->validate($request, [
-            'attendee_id' => ['required', 'integer', 'exists:users,id'],
-            'title' => ['required', 'string', 'max:100'],
-            'information' => ['required', 'string', 'max:255'],
-            'all_day' => ['sometimes', 'boolean'],
-            'start_time' => ['required', 'date_format:Y-m-d H:i:s'],
-            'end_time' => ['required', 'date_format:Y-m-d H:i:s', 'after_or_equal:start_time'],
-        ]);
+        try {
+            $data = $this->validate($request, [
+                'attendee_id' => ['required', 'integer', 'exists:users,id'],
+                'title' => ['required', 'string', 'max:100'],
+                'information' => ['required', 'string', 'max:255'],
+                'all_day' => ['required', 'boolean'],
+                'start_time' => ['required', 'date_format:Y-m-d H:i:s'],
+                'end_time' => ['required', 'date_format:Y-m-d H:i:s', 'after_or_equal:start_time'],
+            ]);
 
-        $day = $this->event->create($data);
+            $day = $this->event->create($data);
 
-        return new JsonResponse($day, JsonResponse::HTTP_CREATED);
+            return new JsonResponse($day, JsonResponse::HTTP_CREATED);
+        } catch (\Exception $e) {
+            dd($e->getMessage());
+        }
+
     }
 
     /**
