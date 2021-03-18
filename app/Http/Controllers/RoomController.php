@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\JsonResponse;
 use App\Models\Room;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -65,17 +66,21 @@ class RoomController extends Controller
     {
         $data = $this->validate($request, [
             'name' => ['required', 'string', 'max:100'],
-            'users' => ['required', 'array', 'min:2', 'max:10'],
+            'users' => ['required', 'array', 'min:1', 'max:10'],
             'users.*' => ['required', 'distinct', 'integer', 'exists:users,id'],
         ]);
 
-        if(!in_array(Auth::user()->id, $data['users'])) {
-            throw new BadRequestHttpException('Creator must be in the room.');
+        /** @var User $user */
+        $user = $request->user();
+
+        /* If user did not add himself, lets do it automatically */
+        if(!in_array($user->id, $data['users'])) {
+            $data['users'][] = $user->id;
         }
 
         $room = $this->room->create([
             'name' => $data['name'],
-            'admin_id' => Auth::user()->id,
+            'admin_id' => $user->id,
         ]);
 
         $room->users()->attach($data['users']);
