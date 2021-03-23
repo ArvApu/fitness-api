@@ -71,4 +71,6 @@ $router->group(['middleware' => 'auth'], function () use($router) {
 
     $router->get('/exercises/logs', 'ExerciseLogController@all');
     $router->get('/exercises/logs/{id:\d+}', 'ExerciseLogController@single');
+
+    $router->get('/users/logs', 'UserLogController@all');
 });

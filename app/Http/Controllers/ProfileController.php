@@ -30,6 +30,12 @@ class ProfileController extends Controller
         /** @var User $user */
         $user = $request->user();
 
+        if(isset($data['weight']) && (double)$data['weight'] !== $user->weight) {
+            $user->logs()->create([
+                'weight' => $data['weight']
+            ]);
+        }
+
         $user->update($data);
 
         return new JsonResponse($user);

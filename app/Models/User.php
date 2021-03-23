@@ -118,7 +118,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     }
 
     /**
-     * Get this user's workout logs
+     * Get this user's workout logs.
      */
     public function workoutLogs(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
@@ -126,7 +126,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     }
 
     /**
-     * Get this user's workout logs
+     * Get this user's workout logs.
      */
     public function exerciseLogs(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
@@ -134,7 +134,15 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     }
 
     /**
-     * Get this user's events
+     * Get this user's logs.
+     */
+    public function logs(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(UserLog::class, 'user_id');
+    }
+
+    /**
+     * Get this user's events.
      */
     public function events(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
@@ -142,7 +150,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     }
 
     /**
-     * Get this user's events
+     * Get this user's events.
      */
     public function organizedEvents(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
@@ -150,7 +158,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     }
 
     /**
-     * Update user last login status
+     * Update user last login status.
      */
     public function loggedIn(): void
     {
@@ -159,7 +167,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     }
 
     /**
-     * Return list of related users
+     * Return list of related users.
      */
     public function getRelatedUsers()
     {
@@ -175,7 +183,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     }
 
     /**
-     * Get user's full name
+     * Get user's full name.
      */
     public function getFullName(): string
     {
@@ -183,7 +191,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     }
 
     /**
-     * Check if this user is trainer
+     * Check if this user is trainer.
      */
     public function isTrainer(): bool
     {
@@ -191,7 +199,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     }
 
     /**
-     * Check if this user is admin
+     * Check if this user is admin.
      */
     public function isAdmin(): bool
     {

@@ -24,7 +24,6 @@ class ExerciseController extends Controller
     }
 
     /**
-     * @param Request $request
      * @return JsonResponse
      */
     public function all(): JsonResponse
