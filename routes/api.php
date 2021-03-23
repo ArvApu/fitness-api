@@ -21,6 +21,9 @@ $router->group(['middleware' => 'auth'], function () use($router) {
     $router->get('/me', 'AuthenticationController@me');
     $router->post('/logout', 'AuthenticationController@logout');
 
+    $router->put('/profile', 'ProfileController@update');
+    $router->put('/profile/password', 'ProfileController@changePassword');
+
     $router->post('/email/verification/resend', 'EmailVerificationController@resend');
 
     $router->get('/exercises', 'ExerciseController@all');

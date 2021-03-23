@@ -19,6 +19,10 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
  * @property string $first_name
  * @property string $last_name
  * @property string $password
+ * @property $birthday
+ * @property string $about
+ * @property string $experience
+ * @property double $weight
  * @property $last_login_at
  * @property $email_verified_at
  * @property $created_at
@@ -39,7 +43,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      * @inheritdoc
      */
     protected $fillable = [
-        'email', 'first_name', 'last_name', 'password', 'role', 'trainer_id'
+        'email', 'first_name', 'last_name', 'password', 'role', 'trainer_id', 'birthday', 'about', 'experience', 'weight'
     ];
 
     /**
