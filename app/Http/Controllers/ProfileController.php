@@ -56,6 +56,6 @@ class ProfileController extends Controller
             'password' => $hasher->make($request->input('new_password')),
         ]);
 
-        return new JsonResponse($user);
+        return new JsonResponse(null, JsonResponse::HTTP_NO_CONTENT);
     }
 }

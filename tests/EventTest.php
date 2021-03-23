@@ -133,7 +133,7 @@ class EventTest extends TestCase
             Carbon::tomorrow()->toDateString().'&user_id='.$this->user->id
         );
 
-        $this->response->assertStatus(403);
+        $this->response->assertForbidden();
     }
 
     public function test_get_all_for_admin()
@@ -201,7 +201,7 @@ class EventTest extends TestCase
 
         $this->delete("$this->resource/$event->id");
 
-        $this->response->assertStatus(204);
+        $this->response->assertNoContent();
         $this->assertDatabaseMissing((new Event())->getTable(), $event->toArray());
     }
 }

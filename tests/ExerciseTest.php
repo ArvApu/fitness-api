@@ -104,7 +104,7 @@ class ExerciseTest extends TestCase
 
         $this->delete("$this->resource/$exercise->id");
 
-        $this->response->assertStatus(204);
+        $this->response->assertNoContent();
         $this->assertDatabaseMissing((new Exercise)->getTable(), $exercise->toArray());
     }
 }

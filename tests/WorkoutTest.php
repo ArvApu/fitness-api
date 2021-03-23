@@ -96,7 +96,7 @@ class WorkoutTest extends TestCase
 
         $this->post("$this->resource/$workout->id/exercises", $payload);
 
-        $this->response->assertStatus(204);
+        $this->response->assertNoContent();
 
         foreach ($payload['exercises'] as $exercise) {
             $this->assertDatabaseHas((new WorkoutExercise())->getTable(), [
@@ -142,7 +142,7 @@ class WorkoutTest extends TestCase
 
         $this->delete("$this->resource/$workout->id");
 
-        $this->response->assertStatus(204);
+        $this->response->assertNoContent();
         $this->assertDatabaseMissing((new Workout)->getTable(), $workout->toArray());
     }
 }

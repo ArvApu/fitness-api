@@ -120,7 +120,7 @@ class RoomTest extends TestCase
 
         $this->delete("$this->resource/$room->id");
 
-        $this->response->assertStatus(204);
+        $this->response->assertNoContent();
         $this->assertDatabaseMissing((new Room)->getTable(), $room->toArray());
     }
 }

@@ -158,7 +158,7 @@ class WorkoutLogTest extends TestCase
 
         $this->delete("$this->resource/$log->id");
 
-        $this->response->assertStatus(204);
+        $this->response->assertNoContent();
         $this->assertDatabaseMissing((new WorkoutLog)->getTable(), $workout->toArray());
     }
 }
