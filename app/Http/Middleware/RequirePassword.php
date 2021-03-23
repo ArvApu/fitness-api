@@ -5,29 +5,29 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
-class CheckRoleAccess
+class RequirePassword
 {
     /**
      * Handle an incoming request.
      *
      * @param Request $request
      * @param Closure $next
-     * @param string[] $roles
      * @return mixed
      */
-    public function handle(Request $request, Closure $next, string ...$roles)
+    public function handle(Request $request, Closure $next)
     {
         /** @var  \App\Models\User $user */
         $user = Auth::user();
 
-        if($user->isAdmin()) {
-            return $next($request); // Admin has full access
+        if($user === null || $request->input('password') === null) {
+            throw new AccessDeniedHttpException('Missing password.');
         }
 
-        if (!in_array($user->role, $roles)) {
-            throw new AccessDeniedHttpException('Access denied.');
+        if(!Hash::check($request->input('password'), $user->password)) {
+            throw new AccessDeniedHttpException('Bad password.');
         }
 
         return $next($request);

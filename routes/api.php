@@ -22,7 +22,7 @@ $router->group(['middleware' => 'auth'], function () use($router) {
     $router->post('/logout', 'AuthenticationController@logout');
 
     $router->put('/profile', 'ProfileController@update');
-    $router->put('/profile/password', 'ProfileController@changePassword');
+    $router->put('/profile/password', ['middleware' => 'password', 'uses' => 'ProfileController@changePassword']);
 
     $router->post('/email/verification/resend', 'EmailVerificationController@resend');
 

@@ -83,6 +83,7 @@ $app->middleware([
 $app->routeMiddleware([
     'auth' => App\Http\Middleware\Authenticate::class,
     'role' => App\Http\Middleware\CheckRoleAccess::class,
+    'password' => App\Http\Middleware\RequirePassword::class,
 ]);
 
 /*
