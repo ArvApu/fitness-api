@@ -50,8 +50,6 @@ class UserTest extends TestCase
 
         $this->get($this->resource);
 
-        $this->response->assertStatus(200);
-        $result = json_decode($this->response->getContent());
-        $this->assertEquals($trainer->id, $result->data[0]->id);
+        $this->response->assertForbidden();
     }
 }

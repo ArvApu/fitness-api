@@ -27,7 +27,7 @@ class WorkoutTest extends TestCase
     {
         parent::setUp();
 
-        $this->user = User::factory()->create();
+        $this->user = User::factory()->trainer()->create();
         $this->actingAs($this->user);
     }
 
