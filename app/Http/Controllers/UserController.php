@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class UserController extends Controller
 {
@@ -38,5 +39,23 @@ class UserController extends Controller
         $user->update($data);
 
         return new JsonResponse($user);
+    }
+
+    /**
+     * @param int $id
+     * @return JsonResponse
+     * @throws \Exception
+     */
+    public function destroy(int $id): JsonResponse
+    {
+        $user = (new User())->findOrFail($id);
+
+        if(!$user->isUser()) {
+            throw new BadRequestHttpException('Cannot delete this user');
+        }
+
+        $user->delete();
+
+        return new JsonResponse(null, JsonResponse::HTTP_NO_CONTENT);
     }
 }

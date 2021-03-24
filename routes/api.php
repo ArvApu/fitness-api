@@ -65,6 +65,7 @@ $router->group(['middleware' => 'auth'], function () use($router) {
     });
 
     $router->put('/users/{id:\d+}', ['middleware' => 'role:admin', 'uses' => 'UserController@update']);
+    $router->delete('/users/{id:\d+}', ['middleware' => 'role:trainer', 'uses' => 'UserController@destroy']);
 
     $router->get('/workouts/logs', 'WorkoutLogController@all');
     $router->get('/workouts/logs/{id:\d+}', 'WorkoutLogController@single');
