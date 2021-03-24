@@ -64,6 +64,8 @@ $router->group(['middleware' => 'auth'], function () use($router) {
         $router->post('/users/invite', 'UserInvitationController@invite');
     });
 
+    $router->put('/users/{id:\d+}', ['middleware' => 'role:admin', 'uses' => 'UserController@update']);
+
     $router->get('/workouts/logs', 'WorkoutLogController@all');
     $router->get('/workouts/logs/{id:\d+}', 'WorkoutLogController@single');
     $router->post('/workouts/logs', 'WorkoutLogController@store');
