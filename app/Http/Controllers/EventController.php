@@ -112,6 +112,7 @@ class EventController extends Controller
         $data = $this->validate($request, [
             'attendee_id' => ['required', 'integer', 'exists:users,id'],
             'title' => ['required', 'string', 'max:100'],
+            'workout_id' => ['sometimes', 'integer', 'exists:workouts,id'],
             'information' => ['required', 'string', 'max:255'],
             'all_day' => ['required', 'boolean'],
             'start_time' => ['required', 'date_format:Y-m-d H:i:s'],
