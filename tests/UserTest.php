@@ -52,4 +52,51 @@ class UserTest extends TestCase
 
         $this->response->assertForbidden();
     }
+
+    public function test_destroy_user()
+    {
+        $trainer = User::factory()->trainer()->create();
+        $user = User::factory()->for($trainer,'trainer')->create();
+        $this->actingAs($trainer);
+
+        $this->delete("$this->resource/$user->id");
+
+        $this->response->assertNoContent();
+    }
+
+    public function test_fail_to_destroy_not_trained_user()
+    {
+        $evilTrainer = User::factory()->trainer()->create();
+        $trainer = User::factory()->trainer()->create();
+        $user = User::factory()->for($trainer,'trainer')->create();
+        $this->actingAs($evilTrainer);
+
+        $this->delete("$this->resource/$user->id");
+
+        $this->response->assertStatus(400);
+    }
+
+    public function test_update_user()
+    {
+        $admin = User::factory()->admin()->create();
+        $user = User::factory()->for($admin,'trainer')->create();
+        $this->actingAs($admin);
+
+        $this->put("$this->resource/$user->id", ['email' => 'fake-test-mail@mail.com']);
+
+        $this->response->assertStatus(200);
+        $this->assertDatabaseMissing((new User())->getTable(), ['email' => $user->email]);
+        $this->assertDatabaseHas((new User())->getTable(), ['email' => 'fake-test-mail@mail.com']);
+    }
+
+    public function test_fail_to_update_user_for_not_admin()
+    {
+        $trainer = User::factory()->trainer()->create();
+        $user = User::factory()->for($trainer,'trainer')->create();
+        $this->actingAs($trainer);
+
+        $this->put("$this->resource/$user->id", ['email' => 'fake-test-mail@mail.com']);
+
+        $this->response->assertForbidden();
+    }
 }
