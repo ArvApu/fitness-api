@@ -50,7 +50,7 @@ class UserController extends Controller
     {
         $user = (new User())->findOrFail($id);
 
-        if(!$user->isUser() || (int)$user->trainer_id !== Auth::user()->id) {
+        if(!Auth::user()->isAdmin() && (!$user->isUser() || (int)$user->trainer_id !== Auth::user()->id)) {
             throw new BadRequestHttpException('Cannot delete this user');
         }
 
