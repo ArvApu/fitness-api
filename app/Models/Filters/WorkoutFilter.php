@@ -12,6 +12,6 @@ class WorkoutFilter extends ModelFilter
      */
     public function q(string $query): WorkoutFilter
     {
-        return $this->orWhere('name', 'like', "%$query%");
+        return $this->where('name', 'like', "%$query%");
     }
 }

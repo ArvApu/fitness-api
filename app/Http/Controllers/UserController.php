@@ -13,11 +13,11 @@ class UserController extends Controller
     /**
      * @return JsonResponse
      */
-    public function all(): JsonResponse
+    public function all(Request $request): JsonResponse
     {
         /** @var User $user */
         $user = Auth::user();
-        return new JsonResponse($user->getRelatedUsers()->paginate());
+        return new JsonResponse($user->getRelatedUsers()->filter($request->all())->paginate());
     }
 
     /**
