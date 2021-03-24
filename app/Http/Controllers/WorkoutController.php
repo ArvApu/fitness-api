@@ -26,9 +26,10 @@ class WorkoutController extends Controller
     }
 
     /**
+     * @param Request $request
      * @return JsonResponse
      */
-    public function all(): JsonResponse
+    public function all(Request $request): JsonResponse
     {
         /** @var \App\Models\User $user */
         $user = Auth::user();
@@ -36,7 +37,7 @@ class WorkoutController extends Controller
         $trainerId = $user->isTrainer() ? $user->id : $user->trainer_id;
 
         return new JsonResponse(
-            $this->workout->ownedBy($trainerId)->paginate()
+            $this->workout->ownedBy($trainerId)->filter($request->query())->paginate()
         );
     }
 

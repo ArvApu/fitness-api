@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Filters\Filterable;
 use App\Models\Traits\Owned;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -19,7 +20,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  */
 class Workout extends Model
 {
-    use HasFactory, Owned;
+    use HasFactory, Filterable, Owned;
 
     /**
      * @inheritdoc

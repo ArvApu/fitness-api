@@ -12,12 +12,12 @@ class ExerciseFilter extends ModelFilter
     public $relations = [];
 
     /**
-     * @param string $name
+     * @param string $query
      * @return ExerciseFilter
      */
-    public function name(string $name): ExerciseFilter
+    public function q(string $query): ExerciseFilter
     {
-        return $this->where('name', '=', $name);
+        return $this->orWhere('name', 'like', "%$query%");
     }
 
     /**
