@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\JsonResponse;
+use App\Models\NewsEvent;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
@@ -16,8 +17,12 @@ class NewsEventController extends Controller
         /** @var User $user */
         $user = Auth::user();
 
-        return new JsonResponse(
-            $user->newsEvents()->orderBy('id', 'desc')->paginate(30)
-        );
+        if($user->isAdmin()) {
+            $query = (new NewsEvent());
+        } else {
+            $query = $user->newsEvents();
+        }
+
+        return new JsonResponse($query->orderBy('id', 'desc')->paginate(20));
     }
 }
