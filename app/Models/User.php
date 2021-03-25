@@ -7,7 +7,6 @@ use Illuminate\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Support\Collection;
 use Laravel\Lumen\Auth\Authorizable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
@@ -19,6 +18,7 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
  * @property string $email
  * @property string $first_name
  * @property string $last_name
+ * @property string $full_name
  * @property string $password
  * @property $birthday
  * @property string $about
@@ -39,6 +39,11 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 class User extends Model implements AuthenticatableContract, AuthorizableContract, JWTSubject
 {
     use Authenticatable, Authorizable, HasFactory, Filterable;
+
+    /**
+     * @inheritdoc
+     */
+    protected $appends = ['full_name'];
 
     /**
      * @inheritdoc
@@ -184,9 +189,9 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     }
 
     /**
-     * Get user's full name.
+     * Get the user's full name.
      */
-    public function getFullName(): string
+    public function getFullNameAttribute(): string
     {
         return "{$this->first_name} {$this->last_name}";
     }

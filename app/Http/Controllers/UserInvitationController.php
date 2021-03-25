@@ -33,7 +33,7 @@ class UserInvitationController extends Controller
             'for' => $data['email'],
         ]));
 
-        $inviter = $user->getFullName();
+        $inviter = $user->full_name;
         $exists = $user->where('email', '=', $data['email'])->exists();
 
         try {
