@@ -53,7 +53,7 @@ class WorkoutController extends Controller
         $trainerId = $user->isTrainer() ? $user->id : $user->trainer_id;
 
         return new JsonResponse(
-            $this->workout->ownedBy($trainerId)->findOrFail($id)
+            $this->workout->ownedBy($trainerId)->with('exercises')->findOrFail($id)
         );
     }
 
