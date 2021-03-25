@@ -1,6 +1,8 @@
 <?php
 
+use App\Models\NewsEvent;
 use App\Models\User;
+use App\Models\UserLog;
 use Laravel\Lumen\Testing\DatabaseMigrations;
 
 class ProfileTest extends TestCase
@@ -14,14 +16,15 @@ class ProfileTest extends TestCase
 
     public function test_update()
     {
-        $user = User::factory()->create();
+        $trainer = User::factory()->trainer()->create();
+        $user = User::factory()->for($trainer, 'trainer')->create();
         $this->actingAs($user);
 
         $payload = [
             'first_name' => 'Johnny',
             'last_name' => 'Test',
             'birthday' => '2006-01-01',
-            'weight' => 80.5,
+            'weight' => $user->weight + 10,
             'experience' => 10,
             'about' => 'Hello there!',
         ];
@@ -34,6 +37,10 @@ class ProfileTest extends TestCase
         $table = (new User)->getTable();
 
         $this->assertDatabaseHas($table, $payload);
+
+        // Should also log
+        $this->assertDatabaseHas((new NewsEvent)->getTable(), ['user_id' => $trainer->id]);
+        $this->assertDatabaseHas((new UserLog())->getTable(), ['user_id' => $user->id]);
     }
 
     public function test_change_password()

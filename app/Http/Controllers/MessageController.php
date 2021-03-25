@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Events\SentMessage;
+use App\Events\MessageSent;
 use App\Models\Message;
 use App\Models\Room;
 use App\Http\JsonResponse;
@@ -33,7 +33,7 @@ class MessageController extends Controller
         ]);
 
         foreach ($room->users as $user) {
-            event(new SentMessage($message, $user->id));
+            event(new MessageSent($message, $user->id));
         }
 
         return new JsonResponse($message, JsonResponse::HTTP_CREATED);

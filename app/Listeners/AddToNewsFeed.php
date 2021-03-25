@@ -41,7 +41,7 @@ class AddToNewsFeed
         $user = $event->getUpdatedUser();
         $old  = $event->getOldUSer();
 
-        if(!$user->isUser()) {  // We are only interested what clients do
+        if(!$user->isUser() || $user->trainer_id === null) {  // We are only interested what trained clients do
             return;
         }
 
