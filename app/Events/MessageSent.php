@@ -7,7 +7,7 @@ use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class SendMessage extends Event implements ShouldBroadcast
+class MessageSent extends Event implements ShouldBroadcast
 {
     use InteractsWithSockets;
 

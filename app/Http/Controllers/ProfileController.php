@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\UserProfileUpdated;
 use App\Models\User;
 use App\Http\JsonResponse;
 use Illuminate\Contracts\Hashing\Hasher;
@@ -30,13 +31,10 @@ class ProfileController extends Controller
         /** @var User $user */
         $user = $request->user();
 
-        if(isset($data['weight']) && (double)$data['weight'] !== $user->weight) {
-            $user->logs()->create([
-                'weight' => $data['weight']
-            ]);
-        }
-
+        $oldUser = $user->replicate();
         $user->update($data);
+
+        event(new UserProfileUpdated($user, $oldUser));
 
         return new JsonResponse($user);
     }

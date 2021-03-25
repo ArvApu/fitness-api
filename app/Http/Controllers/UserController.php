@@ -11,6 +11,7 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 class UserController extends Controller
 {
     /**
+     * @param Request $request
      * @return JsonResponse
      */
     public function all(Request $request): JsonResponse

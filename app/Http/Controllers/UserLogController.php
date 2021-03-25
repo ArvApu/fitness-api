@@ -13,6 +13,7 @@ class UserLogController extends Controller
      */
     public function all(UserLog $userLog): JsonResponse
     {
+        // TODO: protect for user's/his trainer/admin eys only
         return new JsonResponse(
             $userLog->paginate()
         );

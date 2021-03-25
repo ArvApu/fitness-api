@@ -21,6 +21,7 @@ class AddInitialAdminUserToUsersTable extends Migration
             'email' => env('ADMIN_USER_EMAIL', 'admin@fake.mail'),
             'password' => Hash::make(env('ADMIN_USER_PASSWORD', 'admin')),
             'email_verified_at' => Carbon::now(),
+            'created_at' => Carbon::now(),
         ]);
     }
 
