@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 /**
  * Class Day
  * @property integer $id
- * @property integer
  * @property integer $organizer_id
  * @property integer $workout_id
  * @property string $title

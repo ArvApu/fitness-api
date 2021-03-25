@@ -14,7 +14,7 @@ $router->post('/email/verify/{token}', 'EmailVerificationController@verify');
 
 $router->post('/users/invite/{token}', 'UserInvitationController@confirm');
 
-$router->group(['middleware' => 'auth'], function () use($router) {
+$router->group(['middleware' => ['auth']], function () use($router) {
     $router->get('/broadcasting/auth', 'BroadcastController@authenticate');
     $router->post('/broadcasting/auth', 'BroadcastController@authenticate');
 
@@ -22,25 +22,25 @@ $router->group(['middleware' => 'auth'], function () use($router) {
     $router->post('/logout', 'AuthenticationController@logout');
 
     $router->put('/profile', 'ProfileController@update');
-    $router->put('/profile/password', ['middleware' => 'password', 'uses' => 'ProfileController@changePassword']);
+    $router->put('/profile/password', ['middleware' => ['password'], 'uses' => 'ProfileController@changePassword']);
 
     $router->post('/email/verification/resend', 'EmailVerificationController@resend');
 
     $router->get('/exercises', 'ExerciseController@all');
     $router->get('/exercises/{id:\d+}', 'ExerciseController@single');
-    $router->group(['middleware' => ['role:trainer']], function () use($router) {
-        $router->post('/exercises', 'ExerciseController@store');
-        $router->put('/exercises/{id:\d+}', 'ExerciseController@update');
-        $router->delete('/exercises/{id:\d+}', 'ExerciseController@destroy');
+    $router->group(['middleware' => ['role:trainer'], 'prefix' => 'exercises'], function () use($router) {
+        $router->post('/', 'ExerciseController@store');
+        $router->put('/{id:\d+}', 'ExerciseController@update');
+        $router->delete('/{id:\d+}', 'ExerciseController@destroy');
     });
 
     $router->get('/workouts', 'WorkoutController@all');
     $router->get('/workouts/{id:\d+}', 'WorkoutController@single');
-    $router->group(['middleware' => ['role:trainer']], function () use($router) {
-        $router->post('/workouts', 'WorkoutController@store');
-        $router->post('/workouts/{id:\d+}/exercises', 'WorkoutController@assignExercises');
-        $router->put('/workouts/{id:\d+}', 'WorkoutController@update');
-        $router->delete('/workouts/{id:\d+}', 'WorkoutController@destroy');
+    $router->group(['middleware' => ['role:trainer'], 'prefix' => 'workouts'], function () use($router) {
+        $router->post('/', 'WorkoutController@store');
+        $router->post('/{id:\d+}/exercises', 'WorkoutController@assignExercises');
+        $router->put('/{id:\d+}', 'WorkoutController@update');
+        $router->delete('/{id:\d+}', 'WorkoutController@destroy');
     });
 
     $router->get('/events', 'EventController@all');
@@ -64,8 +64,8 @@ $router->group(['middleware' => 'auth'], function () use($router) {
         $router->post('/users/invite', 'UserInvitationController@invite');
     });
 
-    $router->put('/users/{id:\d+}', ['middleware' => 'role:admin', 'uses' => 'UserController@update']);
-    $router->delete('/users/{id:\d+}', ['middleware' => 'role:trainer', 'uses' => 'UserController@destroy']);
+    $router->put('/users/{id:\d+}', ['middleware' => ['role:admin'], 'uses' => 'UserController@update']);
+    $router->delete('/users/{id:\d+}', ['middleware' => ['role:trainer'], 'uses' => 'UserController@destroy']);
 
     $router->get('/workouts/logs', 'WorkoutLogController@all');
     $router->get('/workouts/logs/{id:\d+}', 'WorkoutLogController@single');
@@ -76,4 +76,6 @@ $router->group(['middleware' => 'auth'], function () use($router) {
     $router->get('/exercises/logs/{id:\d+}', 'ExerciseLogController@single');
 
     $router->get('/users/logs', 'UserLogController@all');
+
+    $router->get('/news', ['middleware' => ['role:trainer'], 'uses' => 'NewsEventController@all']);
 });

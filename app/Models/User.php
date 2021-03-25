@@ -156,6 +156,14 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     }
 
     /**
+     * Get this user's news events.
+     */
+    public function newsEvents(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(NewsEvent::class, 'user_id');
+    }
+
+    /**
      * Get this user's events.
      */
     public function organizedEvents(): \Illuminate\Database\Eloquent\Relations\HasMany
