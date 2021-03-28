@@ -25,6 +25,7 @@ class ExerciseFactory extends Factory
             'name' => $this->faker->word,
             'description' => $this->faker->words(10, true),
             'url' => 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+            'measurement' => $this->faker->randomElement(['seconds', 'minutes', 'grams', 'kilograms']),
         ];
     }
 }

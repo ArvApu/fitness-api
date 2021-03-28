@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property string $name
  * @property string $url
  * @property string $description
+ * @property string $measurement
  * @property $created_at
  * @property $updated_at
  * @package App\Models
@@ -25,7 +26,7 @@ class Exercise extends Model
      * @inheritdoc
      */
     protected $fillable = [
-        'author_id', 'name', 'description', 'url'
+        'author_id', 'name', 'description', 'url', 'measurement'
     ];
 
     /**

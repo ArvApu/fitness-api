@@ -65,6 +65,7 @@ class ExerciseController extends Controller
         $data = $this->validate($request, [
             'name' => ['required', 'string', 'max:100'],
             'url' => ['required', 'url', 'max:100'],
+            'measurement' => ['required', 'string', 'in:seconds,minutes,grams,kilograms'],
             'description' => ['required', 'string', 'max:255'],
         ]);
 
@@ -86,6 +87,7 @@ class ExerciseController extends Controller
         $data = $this->validate($request, [
             'name' => ['sometimes', 'string', 'max:100'],
             'url' => ['sometimes', 'url', 'max:100'],
+            'measurement' => ['sometimes', 'string', 'in:seconds,minutes,grams,kilograms'],
             'description' => ['sometimes', 'string', 'max:255'],
         ]);
 

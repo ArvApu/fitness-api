@@ -63,6 +63,7 @@ class ExerciseTest extends TestCase
             'name' => 'Test exercise',
             'description' => 'This is a test exercise',
             'url' => 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+            'measurement' => 'kilograms',
         ];
 
         $this->post($this->resource, $payload);
@@ -84,6 +85,7 @@ class ExerciseTest extends TestCase
             'name' => 'Test exercise',
             'description' => 'This is a test exercise',
             'url' => 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+            'measurement' => 'seconds',
         ];
 
         $this->put("$this->resource/$exercise->id", $payload);

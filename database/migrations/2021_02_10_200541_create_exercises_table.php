@@ -19,6 +19,7 @@ class CreateExercisesTable extends Migration
             $table->string('name', 100);
             $table->string('url', 100)->nullable();
             $table->string('description');
+            $table->enum('measurement', ['seconds', 'minutes', 'grams', 'kilograms']);
             $table->timestamps();
 
             $table->foreign('author_id')->references('id')->on('users')->onDelete('cascade');
