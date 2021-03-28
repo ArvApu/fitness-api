@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\UserDeleted;
 use App\Models\User;
 use App\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -56,6 +57,12 @@ class UserController extends Controller
         }
 
         $user->delete();
+
+        try {
+            event(new UserDeleted($user));
+        } catch (\Exception $e) {
+            // Silence any exception - we do not actually care if user gets email.
+        }
 
         return new JsonResponse(null, JsonResponse::HTTP_NO_CONTENT);
     }
