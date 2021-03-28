@@ -64,9 +64,9 @@ class ExerciseController extends Controller
     {
         $data = $this->validate($request, [
             'name' => ['required', 'string', 'max:100'],
-            'url' => ['required', 'url', 'max:100'],
+            'url' => ['sometimes', 'url', 'max:150'],
             'measurement' => ['required', 'string', 'in:seconds,minutes,grams,kilograms'],
-            'description' => ['required', 'string', 'max:255'],
+            'description' => ['sometimes', 'string', 'max:255'],
         ]);
 
         $data['author_id'] = $request->user()->id;
@@ -86,7 +86,7 @@ class ExerciseController extends Controller
     {
         $data = $this->validate($request, [
             'name' => ['sometimes', 'string', 'max:100'],
-            'url' => ['sometimes', 'url', 'max:100'],
+            'url' => ['sometimes', 'url', 'max:150'],
             'measurement' => ['sometimes', 'string', 'in:seconds,minutes,grams,kilograms'],
             'description' => ['sometimes', 'string', 'max:255'],
         ]);

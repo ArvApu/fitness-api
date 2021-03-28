@@ -17,9 +17,9 @@ class CreateExercisesTable extends Migration
             $table->id();
             $table->unsignedBigInteger('author_id');
             $table->string('name', 100);
-            $table->string('url', 100)->nullable();
-            $table->string('description');
-            $table->enum('measurement', ['seconds', 'minutes', 'grams', 'kilograms']);
+            $table->string('url', 150)->nullable();
+            $table->string('description')->nullable();
+            $table->enum('measurement', ['seconds', 'minutes', 'grams', 'kilograms', 'quantity']);
             $table->timestamps();
 
             $table->foreign('author_id')->references('id')->on('users')->onDelete('cascade');
