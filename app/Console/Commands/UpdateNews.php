@@ -55,7 +55,7 @@ class UpdateNews extends Command
              $news = [
                  'content' => "Today is $user->full_name's birthday",
                  'user_id' => $user->trainer_id,
-                 'crated_at' => Carbon::now(),
+                 'created_at' => Carbon::now(),
              ];
          }
 
