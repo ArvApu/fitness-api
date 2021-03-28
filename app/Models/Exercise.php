@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property integer $id
  * @property integer $author_id
  * @property string $name
+ * @property string $url
  * @property string $description
  * @property $created_at
  * @property $updated_at
@@ -24,7 +25,7 @@ class Exercise extends Model
      * @inheritdoc
      */
     protected $fillable = [
-        'author_id', 'name', 'description'
+        'author_id', 'name', 'description', 'url'
     ];
 
     /**

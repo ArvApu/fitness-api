@@ -24,6 +24,7 @@ class ExerciseFactory extends Factory
         return [
             'name' => $this->faker->word,
             'description' => $this->faker->words(10, true),
+            'url' => 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
         ];
     }
 }
