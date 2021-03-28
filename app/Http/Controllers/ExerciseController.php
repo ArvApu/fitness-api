@@ -64,10 +64,16 @@ class ExerciseController extends Controller
     {
         $data = $this->validate($request, [
             'name' => ['required', 'string', 'max:100'],
-            'url' => ['sometimes', 'url', 'max:150'],
+            'url' => ['sometimes', 'url', 'max:150', 'regex:/https?:\/\/(?:www\.)?youtube\.com\/watch\?v=([^&]+?)/'],
             'measurement' => ['required', 'string', 'in:seconds,minutes,grams,kilograms'],
             'description' => ['sometimes', 'string', 'max:255'],
+        ], [
+            'url.regex' => 'Url must be a valid Youtube url.'
         ]);
+
+        if(isset($data['url'])) {
+            $data['url'] = get_yt_embed_url($data['url']);
+        }
 
         $data['author_id'] = $request->user()->id;
 
