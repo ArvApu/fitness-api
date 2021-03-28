@@ -14,6 +14,7 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         \App\Console\Commands\RemoveExpiredPasswordResets::class,
+        \App\Console\Commands\UpdateNews::class,
     ];
 
     /**
@@ -25,5 +26,6 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->command(\App\Console\Commands\RemoveExpiredPasswordResets::class)->daily();
+        $schedule->command(\App\Console\Commands\UpdateNews::class)->daily();
     }
 }
