@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\UserAcceptedInvitation;
 use App\Mail\InviteUser;
 use App\Models\User;
 use App\Http\JsonResponse;
@@ -62,9 +63,10 @@ class UserInvitationController extends Controller
             throw new BadRequestHttpException('Invalid token data.');
         }
 
-        $user->where('email', '=', $tokenData->for)->update([
-            'trainer_id' => $tokenData->trainer_id,
-        ]);
+        $user = $user->where('email', '=', $tokenData->for)->firstOrFail();
+        $user->update(['trainer_id' => $tokenData->trainer_id]);
+
+        event(new UserAcceptedInvitation($user));
 
         return new JsonResponse(['message' => 'Success.']);
     }

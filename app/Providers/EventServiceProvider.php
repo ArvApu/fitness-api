@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Events\UserAcceptedInvitation;
 use App\Events\UserDeleted;
 use App\Events\UserProfileUpdated;
 use App\Listeners\AddToNewsFeed;
@@ -23,6 +24,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         UserDeleted::class => [
             SendEmail::class,
+        ],
+        UserAcceptedInvitation::class => [
+            AddToNewsFeed::class,
         ],
     ];
 }

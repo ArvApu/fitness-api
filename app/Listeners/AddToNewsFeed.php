@@ -3,6 +3,7 @@
 namespace App\Listeners;
 
 use App\Events\Event;
+use App\Events\UserAcceptedInvitation;
 use App\Events\UserProfileUpdated;
 use App\Models\NewsEvent;
 
@@ -33,9 +34,14 @@ class AddToNewsFeed
     {
         if ($event instanceof UserProfileUpdated) {
            $this->handleUserProfileUpdated($event);
+        } elseif($event instanceof UserAcceptedInvitation) {
+            $this->handleUserAcceptedInvitation($event);
         }
     }
 
+    /**
+     * @param UserProfileUpdated $event
+     */
     private function handleUserProfileUpdated(UserProfileUpdated $event): void
     {
         $user = $event->getUpdatedUser();
@@ -58,5 +64,18 @@ class AddToNewsFeed
                 'user_id' => $user->trainer_id,
             ]);
         }
+    }
+
+    /**
+     * @param UserAcceptedInvitation $event
+     */
+    private function handleUserAcceptedInvitation(UserAcceptedInvitation $event): void
+    {
+        $user = $event->getUser();
+
+        $this->news->create([
+            'content' => "$user->full_name accepted your invitation.",
+            'user_id' => $user->trainer_id,
+        ]);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\UserAcceptedInvitation;
 use App\Mail\VerifyEmail;
 use App\Models\User;
 use Carbon\Carbon;
@@ -37,7 +38,7 @@ class RegistrationController extends Controller
             'token' => ['sometimes', 'string']
         ]);
 
-        $this->resolveInvitation($data['token'] ?? null, $data);
+        $wasUserInvited = $this->resolveInvitation($data['token'] ?? null, $data);
         $data['password'] = $hasher->make($data['password']);
 
         /** @var User $user */
@@ -56,6 +57,10 @@ class RegistrationController extends Controller
             throw new ServiceUnavailableHttpException(null ,'Registration is unavailable.');
         }
 
+        if($wasUserInvited) {
+            event(new UserAcceptedInvitation($user));
+        }
+
         return new JsonResponse(['message' => 'User successfully registered. Please login.'], JsonResponse::HTTP_CREATED);
     }
 
@@ -64,12 +69,13 @@ class RegistrationController extends Controller
      *
      * @param string|null $token
      * @param array $data
+     * @return bool
      */
-    protected function resolveInvitation(?string $token, array &$data): void
+    protected function resolveInvitation(?string $token, array &$data): bool
     {
         if($token === null) {
             $data['role'] = 'trainer';
-            return;
+            return false;
         }
 
         try {
@@ -89,5 +95,6 @@ class RegistrationController extends Controller
         unset($data['token']);
         $data['role'] = 'user';
         $data['trainer_id'] = $tokenData->trainer_id;
+        return true;
     }
 }
