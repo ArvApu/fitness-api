@@ -112,7 +112,7 @@ class WorkoutLogTest extends TestCase
             'exercise_logs' => [
                 [
                     'exercise_id' => $exercise->id,
-                    'weight' => 10,
+                    'measurement_value' => 10.5,
                     'sets_count' => 7,
                     'sets_done' => 7,
                 ],
@@ -137,7 +137,7 @@ class WorkoutLogTest extends TestCase
 
         $this->assertDatabaseHas((new ExerciseLog())->getTable(), [
             'exercise_id' => $exercise->id,
-            'weight' => 10,
+            'measurement_value' => 10.5,
             'sets_count' => 7,
             'sets_done' => 7,
         ]);

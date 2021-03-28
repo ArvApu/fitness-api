@@ -18,7 +18,7 @@ class CreateExerciseLogsTable extends Migration
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('workout_log_id');
             $table->unsignedBigInteger('exercise_id')->nullable();
-            $table->unsignedSmallInteger('weight');
+            $table->unsignedDouble('measurement_value');
             $table->unsignedSmallInteger('sets_count');
             $table->unsignedSmallInteger('sets_done');
             $table->timestamps();

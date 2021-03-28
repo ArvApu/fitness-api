@@ -22,7 +22,7 @@ class ExerciseLogFactory extends Factory
     public function definition()
     {
         return [
-            'weight' => $this->faker->randomNumber(2),
+            'measurement_value' => $this->faker->randomNumber(2),
             'sets_count' => 10,
             'sets_done' => 10,
         ];

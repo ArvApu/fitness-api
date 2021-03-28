@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property integer $user_id
  * @property integer $exercise_id
  * @property integer $workout_log_id
- * @property integer $weight
+ * @property double $measurement_value
  * @property integer $sets_count
  * @property integer $sets_done
  * @property string $comment
@@ -26,7 +26,7 @@ class ExerciseLog extends Model
      * @inheritdoc
      */
     protected $fillable = [
-        'user_id', 'exercise_id', 'workout_log_id', 'weight', 'sets_count', 'sets_done', 'comment'
+        'user_id', 'exercise_id', 'workout_log_id', 'measurement_value', 'sets_count', 'sets_done', 'comment'
     ];
 
     /**
