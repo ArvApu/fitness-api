@@ -4,13 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Event;
 use App\Http\JsonResponse;
-use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Spatie\IcalendarGenerator\Components\Calendar;
 use Spatie\IcalendarGenerator\Components\Event as CEvent;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 class EventController extends Controller
 {
@@ -40,7 +38,7 @@ class EventController extends Controller
             'end_date' => ['required', 'date'],
         ]);
 
-        $user = $this->resolveUser($request);
+        $user = $this->resolveDesignatedUser($request);
 
         return new JsonResponse(
             $user->events()
@@ -58,7 +56,7 @@ class EventController extends Controller
      */
     public function single(Request $request, int $id): JsonResponse
     {
-        $user = $this->resolveUser($request);
+        $user = $this->resolveDesignatedUser($request);
 
         return new JsonResponse(
             $user->events()->with(['attendee', 'organizer', 'workout'])->findOrFail($id)
@@ -74,7 +72,7 @@ class EventController extends Controller
      */
     public function export(Request $request): Response
     {
-        $user = $this->resolveUser($request);
+        $user = $this->resolveDesignatedUser($request);
 
         $cal = Calendar::create($user->first_name.' calendar');
 
@@ -154,47 +152,5 @@ class EventController extends Controller
         $this->event->findOrFail($id)->delete();
 
         return new JsonResponse(null, JsonResponse::HTTP_NO_CONTENT);
-    }
-
-    /**
-     * Resolve if user is client or a trainer/admin
-     *
-     * @param Request $request
-     * @return User
-     * @throws \Illuminate\Validation\ValidationException
-     */
-    protected function resolveUser(Request $request): User
-    {
-        /** @var User $user */
-        $user = $request->user();
-
-        if(!$user->isTrainer() && !$user->isAdmin()) {
-            return $user;
-        }
-
-        $this->validate($request, [
-            'user_id' => ['required', 'exists:users,id']
-        ]);
-
-        return $this->getClient($request->input('user_id'), $user);
-    }
-
-    /**
-     * Get trainer's client
-     *
-     * @param int $clientId
-     * @param User $trainer
-     * @return User
-     */
-    protected function getClient(int $clientId, User $trainer): User
-    {
-        /** @var User $client */
-        $client = $trainer->findOrFail($clientId);
-
-        if(!$trainer->isAdmin() && !$trainer->hasClient($client)) {
-            throw new AccessDeniedHttpException('Client information is not available');
-        }
-
-        return $client;
     }
 }

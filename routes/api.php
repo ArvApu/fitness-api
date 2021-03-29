@@ -78,4 +78,11 @@ $router->group(['middleware' => ['auth']], function () use($router) {
     $router->get('/users/logs', 'UserLogController@all');
 
     $router->get('/news', ['middleware' => ['role:trainer'], 'uses' => 'NewsEventController@all']);
+
+    $router->get('/statistics/workouts', 'StatisticsController@getWorkoutsStatistics');
+    $router->get('/statistics/exercises', 'StatisticsController@getExercisesStatistics');
+    $router->get('/statistics/workouts/{id:\d+}', 'StatisticsController@getWorkoutStatistics');
+    $router->get('/statistics/exercises/{id:\d+}', 'StatisticsController@getExerciseStatistics');
+    $router->get('/statistics/users/weight', 'StatisticsController@getUserWeightStatistics');
+
 });

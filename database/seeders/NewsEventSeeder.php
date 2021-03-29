@@ -15,7 +15,7 @@ class NewsEventSeeder extends Seeder
      */
     public function run()
     {
-        $user = (new User)->where('role', '='. 'trainer')->first();
+        $user = (new User)->where('role', '=', 'trainer')->first();
 
         if($user === null) {
             $user = User::factory()->trainer()->create();
