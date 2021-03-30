@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Traits\Owned;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * Class Message
@@ -21,6 +22,11 @@ class Room extends Model
      * @inheritdoc
      */
     public $timestamps = false;
+
+    /**
+     * @inheritdoc
+     */
+    protected $appends = ['unread_count'];
 
     /**
      * @inheritdoc
@@ -59,5 +65,16 @@ class Room extends Model
     protected function getUserIdColumn(): string
     {
         return 'admin_id';
+    }
+
+    /**
+     * Get the user's full name.
+     */
+    public function getUnreadCountAttribute(): int
+    {
+        return $this->messages()
+            ->where('is_seen', '=', false)
+            ->where('user_id', '!=', Auth::user()->id)
+            ->count();
     }
 }

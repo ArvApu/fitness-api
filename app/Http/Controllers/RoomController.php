@@ -116,4 +116,23 @@ class RoomController extends Controller
 
         return new JsonResponse(null, JsonResponse::HTTP_NO_CONTENT);
     }
+
+    /**
+     * Read all messages in the room
+     *
+     * @param int $id
+     * @return JsonResponse
+     * @throws \Exception
+     */
+    public function readMessages(int $id): JsonResponse
+    {
+        /** @var Room $room */
+        $room = $this->room->findOrFail($id);
+
+        $room->messages()->where('user_id', '!=', Auth::user()->id)->update([
+            'is_seen' => true
+        ]);
+
+        return new JsonResponse(null, JsonResponse::HTTP_NO_CONTENT);
+    }
 }

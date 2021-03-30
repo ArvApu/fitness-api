@@ -54,6 +54,7 @@ $router->group(['middleware' => ['auth']], function () use($router) {
 
     $router->get('/rooms', 'RoomController@all');
     $router->get('/rooms/{id:\d+}/messages', 'RoomController@messages');
+    $router->post('/rooms/{id:\d+}/messages/read', 'RoomController@readMessages');
 
     $router->group(['middleware' => ['role:trainer']], function () use($router) {
         $router->post('/rooms', 'RoomController@store');
