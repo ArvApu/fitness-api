@@ -19,9 +19,22 @@ class UserSeeder extends Seeder
         $t2 = User::factory()->trainer()->create();
 
         /* Create client users for first trainer */
-        User::factory()->count(10)->for($t1, 'trainer')->create();
+        $users1 = User::factory()->count(10)->for($t1, 'trainer')->create();
 
-        /* Create client users for first trainer */
-        User::factory()->count(10)->for($t2, 'trainer')->create();
+        /* Create client users for second trainer */
+        $users2 = User::factory()->count(10)->for($t2, 'trainer')->create();
+
+        /** @var User $user */
+        foreach ($users1->merge($users2) as $user) {
+            if($user->role !== 'user') {
+                continue;
+            }
+
+            $room = $user->trainer->administratedRooms()->create([
+                'name' => $user->full_name,
+            ]);
+
+            $room->users()->attach([$user->id, $user->trainer->id]);
+        }
     }
 }
