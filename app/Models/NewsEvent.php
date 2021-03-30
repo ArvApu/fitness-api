@@ -31,10 +31,8 @@ class NewsEvent extends Model
     /**
      * @inheritdoc
      */
-    public static function boot()
+    public static function booted()
     {
-        parent::boot();
-
         static::creating(function ($model) {
             $model->created_at = $model->freshTimestamp();
         });

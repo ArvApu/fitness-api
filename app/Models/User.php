@@ -62,6 +62,22 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     /**
      * @inheritdoc
      */
+    public static function booted()
+    {
+        static::created(function (User $model) {
+            if($model->role !== 'user') {
+                return;
+            }
+            $room = $model->trainer->administratedRooms()->create([
+                'name' => $model->full_name,
+            ]);
+            $room->users()->attach([$model->id, $model->trainer->id]);
+        });
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function getJWTIdentifier()
     {
         return $this->getKey();
