@@ -5,6 +5,7 @@ namespace App\Listeners;
 use App\Events\Event;
 use App\Events\UserAcceptedInvitation;
 use App\Events\UserProfileUpdated;
+use App\Events\WorkoutLogged;
 use App\Models\NewsEvent;
 
 class AddToNewsFeed
@@ -33,7 +34,9 @@ class AddToNewsFeed
     public function handle(Event $event)
     {
         if ($event instanceof UserProfileUpdated) {
-           $this->handleUserProfileUpdated($event);
+            $this->handleUserProfileUpdated($event);
+        } elseif ($event instanceof WorkoutLogged) {
+            $this->handleWorkoutLogged($event);
         } elseif($event instanceof UserAcceptedInvitation) {
             $this->handleUserAcceptedInvitation($event);
         }
@@ -76,6 +79,36 @@ class AddToNewsFeed
         $this->news->create([
             'content' => "$user->full_name accepted your invitation.",
             'user_id' => $user->trainer_id,
+        ]);
+    }
+
+    /**
+     * @param WorkoutLogged $event
+     */
+    private function handleWorkoutLogged(WorkoutLogged $event)
+    {
+        $log     = $event->getLog();
+        $content = $log->user->full_name;
+
+        if(!$log->user->isUser() || $log->user->trainer_id === null) {
+            return;
+        }
+
+        switch ($log->status) {
+            case 'missed':
+                $content .= " missed a '{$log->workout->name}' workout";
+                break;
+            case 'interrupted':
+                $content .= " did not finish a '{$log->workout->name}'  workout";
+                break;
+            case 'completed':
+                $content .= " completed a '{$log->workout->name}'  workout and marked it as {$log->difficulty}";
+                break;
+        }
+
+        $this->news->create([
+            'content' => $content,
+            'user_id' => $log->user->trainer_id,
         ]);
     }
 }

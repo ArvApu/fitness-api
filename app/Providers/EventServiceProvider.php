@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Events\UserAcceptedInvitation;
 use App\Events\UserDeleted;
 use App\Events\UserProfileUpdated;
+use App\Events\WorkoutLogged;
 use App\Listeners\AddToNewsFeed;
 use App\Listeners\LogWeight;
 use App\Listeners\SendEmail;
@@ -26,6 +27,9 @@ class EventServiceProvider extends ServiceProvider
             SendEmail::class,
         ],
         UserAcceptedInvitation::class => [
+            AddToNewsFeed::class,
+        ],
+        WorkoutLogged::class => [
             AddToNewsFeed::class,
         ],
     ];

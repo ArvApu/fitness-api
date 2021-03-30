@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\WorkoutLogged;
 use App\Http\JsonResponse;
 use App\Models\User;
 use App\Models\WorkoutLog;
@@ -52,38 +53,41 @@ class WorkoutLogController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
-            $this->validate($request, [
-                'workout_id' => ['required', 'integer', 'exists:workouts,id'],
-                'status' => ['required', 'string', 'in:missed,interrupted,completed'],
-                'comment' => ['sometimes', 'string', 'max:100'],
-                'difficulty' => ['required', 'string', 'in:easy,moderate,hard,exhausting'],
-                'exercise_logs' => ['sometimes', 'array', 'max:10'],
-                'exercise_logs.*.exercise_id' => ['required', 'integer', 'distinct', 'exists:exercises,id'],
-                'exercise_logs.*.measurement_value' => ['required', 'numeric', 'min:0', 'max:100000'],
-                'exercise_logs.*.sets_count' => ['required', 'integer', 'min:1', 'max:65000'],
-                'exercise_logs.*.sets_done' => ['required', 'integer', 'min:1', 'lte:exercise_logs.*.sets_count', 'max:65000'],
-            ]);
+        $this->validate($request, [
+            'workout_id' => ['required', 'integer', 'exists:workouts,id'],
+            'status' => ['required', 'string', 'in:missed,interrupted,completed'],
+            'comment' => ['sometimes', 'string', 'max:100'],
+            'difficulty' => ['required', 'string', 'in:easy,moderate,hard,exhausting'],
+            'exercise_logs' => ['sometimes', 'array', 'max:10'],
+            'exercise_logs.*.exercise_id' => ['required', 'integer', 'distinct', 'exists:exercises,id'],
+            'exercise_logs.*.measurement_value' => ['required', 'numeric', 'min:0', 'max:100000'],
+            'exercise_logs.*.sets_count' => ['required', 'integer', 'min:1', 'max:65000'],
+            'exercise_logs.*.sets_done' => ['required', 'integer', 'min:1', 'lte:exercise_logs.*.sets_count', 'max:65000'],
+        ]);
 
-            $log = DB::transaction(function () use($request) {
+        /** @var WorkoutLog $log */
+        $log = DB::transaction(function () use($request) {
 
-                /** @var User $user */
-                $user = $request->user();
+            /** @var User $user */
+            $user = $request->user();
 
-                $exerciseLogs = $request->input('exercise_logs', []);
+            $exerciseLogs = $request->input('exercise_logs', []);
 
-                foreach ($exerciseLogs as &$exerciseLog) {
-                    $exerciseLog['user_id'] = $user->id;
-                }
+            foreach ($exerciseLogs as &$exerciseLog) {
+                $exerciseLog['user_id'] = $user->id;
+            }
 
-                /** @var WorkoutLog $log */
-                $log = $user->workoutLogs()->create(
-                    $request->only(['workout_id', 'status', 'comment', 'difficulty'])
-                );
+            /** @var WorkoutLog $log */
+            $log = $user->workoutLogs()->create(
+                $request->only(['workout_id', 'status', 'comment', 'difficulty'])
+            );
 
-                $log->exerciseLogs()->createMany($exerciseLogs);
+            $log->exerciseLogs()->createMany($exerciseLogs);
 
-                return $log;
-            });
+            return $log;
+        });
+
+        event(new WorkoutLogged($log->replicate())); // Replicating, because otherwise eloquent returns log with used relationships
 
         return new JsonResponse($log, JsonResponse::HTTP_CREATED);
     }

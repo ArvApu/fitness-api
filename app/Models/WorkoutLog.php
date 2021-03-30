@@ -14,6 +14,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property string $difficulty
  * @property $created_at
  * @property $updated_at
+ * @property User $user
+ * @property Workout $workout
  * @package App\Models
  */
 class WorkoutLog extends Model

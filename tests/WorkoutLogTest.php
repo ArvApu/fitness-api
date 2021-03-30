@@ -22,13 +22,19 @@ class WorkoutLogTest extends TestCase
     private $user;
 
     /**
+     * @var User
+     */
+    private $trainer;
+
+    /**
      * @inheritDoc
      */
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->user = User::factory()->create();
+        $this->trainer = User::factory()->trainer()->create();
+        $this->user = User::factory()->for($this->trainer, 'trainer')->create();
         $this->actingAs($this->user);
     }
 
@@ -57,7 +63,7 @@ class WorkoutLogTest extends TestCase
     {
         /** @var Workout $workout */
         $workout = Workout::factory()
-            ->for(User::factory()->trainer()->create(), 'author')
+            ->for($this->trainer, 'author')
             ->create();
 
         /** @var WorkoutLog $log */
@@ -76,12 +82,12 @@ class WorkoutLogTest extends TestCase
     {
         /** @var Workout $workout */
         $workout = Workout::factory()
-            ->for(User::factory()->trainer()->create(), 'author')
+            ->for($this->trainer, 'author')
             ->create();
 
         $payload = [
             'workout_id' => $workout->id,
-            'status' => 'completed',
+            'status' => 'interrupted',
             'difficulty' => 'hard'
         ];
 
@@ -97,12 +103,12 @@ class WorkoutLogTest extends TestCase
     {
         /** @var Workout $workout */
         $workout = Workout::factory()
-            ->for(User::factory()->trainer()->create(), 'author')
+            ->for($this->trainer, 'author')
             ->create();
 
         /** @var Exercise $exercise */
         $exercise = Exercise::factory()
-            ->for(User::factory()->trainer()->create(), 'author')
+            ->for($this->trainer, 'author')
             ->create();
 
         $payload = [
@@ -147,7 +153,7 @@ class WorkoutLogTest extends TestCase
     {
         /** @var Workout $workout */
         $workout = Workout::factory()
-            ->for(User::factory()->trainer()->create(), 'author')
+            ->for($this->trainer, 'author')
             ->create();
 
         /** @var WorkoutLog $log */
