@@ -90,7 +90,7 @@ class RoomController extends Controller
 
         /* For now users can have only one room with other person */
         if($hasRoom) {
-            throw new BadRequestHttpException('Room exists.');
+            throw new BadRequestHttpException('Room with this user already exists.');
         }
 
         $room = $this->room->create([
@@ -98,7 +98,7 @@ class RoomController extends Controller
             'admin_id' => $user->id,
         ]);
 
-        $room->users()->attach($data['users']);
+        $room->users()->attach($users);
 
         return new JsonResponse($room, JsonResponse::HTTP_CREATED);
     }
