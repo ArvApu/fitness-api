@@ -7,6 +7,7 @@ use App\Models\Room;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class RoomController extends Controller
 {
@@ -71,10 +72,25 @@ class RoomController extends Controller
 
         /** @var User $user */
         $user = $request->user();
+        $users = $data['users'];
 
         /* If user did not add himself, lets do it automatically */
-        if(!in_array($user->id, $data['users'])) {
-            $data['users'][] = $user->id;
+        if(!in_array($user->id, $users)) {
+            $users[] = $user->id;
+        }
+
+        /* For now only 2 users can be in the room */
+        if(count($users) > 2) {
+            throw new BadRequestHttpException('Exceeded users in room quota.');
+        }
+
+        $hasRoom = $user->rooms()->whereHas('users', function ($query) use($users, $user) {
+            $query->whereIn('user_id', array_diff($users, [$user->id]));
+        })->exists();
+
+        /* For now users can have only one room with other person */
+        if($hasRoom) {
+            throw new BadRequestHttpException('Room exists.');
         }
 
         $room = $this->room->create([
