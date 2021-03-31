@@ -39,6 +39,7 @@ $router->group(['middleware' => ['auth']], function () use($router) {
     $router->group(['middleware' => ['role:trainer'], 'prefix' => 'workouts'], function () use($router) {
         $router->post('/', 'WorkoutController@store');
         $router->post('/{id:\d+}/exercises', 'WorkoutController@assignExercises');
+        $router->post('/{id:\d+}/copy', 'WorkoutController@copy');
         $router->put('/{id:\d+}', 'WorkoutController@update');
         $router->delete('/{id:\d+}', 'WorkoutController@destroy');
     });

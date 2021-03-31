@@ -102,6 +102,7 @@ class WorkoutTest extends TestCase
             $this->assertDatabaseHas((new WorkoutExercise())->getTable(), [
                 'workout_id' => $workout->id,
                 'exercise_id' => $exercise['id'],
+                'order' => $exercise['order'],
                 'sets' => $exercise['sets'],
                 'reps' => $exercise['reps'],
                 'rest' => $exercise['rest'],
@@ -116,21 +117,45 @@ class WorkoutTest extends TestCase
             ->for($this->user, 'author')
             ->create();
 
-        $payload = [
-            'name' => 'Test workout',
-            'description' => 'This is a test workout',
-            'type' => 'hiit',
+        /** @var Exercise $exercise1 */
+        $exercise1 = Exercise::factory()->for($this->user, 'author')->create();
+        /** @var Exercise $exercise2 */
+        $exercise2 = Exercise::factory()->for($this->user, 'author')->create();
+
+        $exercises = [
+            $exercise1->id => ['order' => 1, 'sets' => 5, 'reps' => 10, 'rest' => 30],
+            $exercise2->id => ['order' => 2, 'sets' => 2, 'reps' => 15, 'rest' => 45],
         ];
 
-        $this->put("$this->resource/$workout->id", $payload);
+        $workout->exercises()->attach($exercises);
 
-        $this->response->assertStatus(200);
-        $this->response->assertJsonFragment($payload);
+        $this->post("$this->resource/$workout->id/copy");
 
-        $table = (new Workout)->getTable();
+        $this->response->assertStatus(201);
 
-        $this->assertDatabaseHas($table, $payload);
-        $this->assertDatabaseMissing($table, $workout->toArray());
+        foreach ($exercises as $id => $data) {
+            $this->assertDatabaseHas((new WorkoutExercise())->getTable(), [
+                'workout_id' => $workout->id,
+                'exercise_id' => $id,
+                'order' => $data['order'],
+                'sets' => $data['sets'],
+                'reps' => $data['reps'],
+                'rest' => $data['rest'],
+            ]);
+        }
+    }
+
+    public function test_copy()
+    {
+        /** @var Workout $workout */
+        $workout = Workout::factory()
+            ->for($this->user, 'author')
+            ->create();
+
+        $this->delete("$this->resource/$workout->id");
+
+        $this->response->assertNoContent();
+        $this->assertDatabaseMissing((new Workout)->getTable(), $workout->toArray());
     }
 
     public function test_delete()

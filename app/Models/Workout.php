@@ -52,7 +52,7 @@ class Workout extends Model
     public function exercises(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
         return $this->belongsToMany(Exercise::class, WorkoutExercise::class)->withPivot([
-            'reps', 'sets', 'rest'
+            'order', 'reps', 'sets', 'rest'
         ]);
     }
 
@@ -78,5 +78,29 @@ class Workout extends Model
     protected function getUserIdColumn(): string
     {
         return 'author_id';
+    }
+
+
+    /**
+     * Copy a workout with his assigned exercises list
+     */
+    public function copy(): Workout
+    {
+        $copy = $this->replicate();
+
+        $copy->name = strlen($copy->name) > 90 ? $copy->id . ' (copy)' : $copy->name . ' (copy)';
+
+        /* Saving model before recreation of relations so it would have an id */
+        $copy->push();
+
+        $keyed = $this->exercises()->get()->mapWithKeys(function ($exercise) {
+            $data = $exercise->pivot->toArray();
+            unset($data['workout_id']);
+            return [take($data, 'exercise_id') => $data];
+        });
+
+        $copy->exercises()->attach($keyed);
+
+        return $copy;
     }
 }

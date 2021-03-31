@@ -119,6 +119,19 @@ class WorkoutController extends Controller
     }
 
     /**
+     * Copy a workout
+     *
+     * @param int $id
+     * @return JsonResponse
+     */
+    public function copy(int $id): JsonResponse
+    {
+        /** @var Workout $workout */
+        $workout = $this->workout->owned()->with('exercises')->findOrFail($id);
+        return new JsonResponse($workout->copy(), JsonResponse::HTTP_CREATED);
+    }
+
+    /**
      * @param Request $request
      * @param int $id
      * @return JsonResponse
