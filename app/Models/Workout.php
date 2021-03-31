@@ -22,6 +22,8 @@ class Workout extends Model
 {
     use HasFactory, Filterable, Owned;
 
+    const MAX_NUMBER_OF_EXERCISES_ASSIGNED = 10;
+
     /**
      * @inheritdoc
      */

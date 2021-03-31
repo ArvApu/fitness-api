@@ -89,8 +89,8 @@ class WorkoutTest extends TestCase
 
         $payload = [
             'exercises' => [
-                ['id' => $exercise1->id, 'sets' => 5, 'reps' => 10, 'rest' => 30],
-                ['id' => $exercise2->id, 'sets' => 2, 'reps' => 15, 'rest' => 45],
+                ['id' => $exercise1->id, 'order' => 1, 'sets' => 5, 'reps' => 10, 'rest' => 30],
+                ['id' => $exercise2->id, 'order' => 2, 'sets' => 2, 'reps' => 15, 'rest' => 45],
             ]
         ];
 

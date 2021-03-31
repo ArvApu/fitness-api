@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Events\WorkoutLogged;
 use App\Http\JsonResponse;
 use App\Models\User;
+use App\Models\Workout;
 use App\Models\WorkoutLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -58,7 +59,7 @@ class WorkoutLogController extends Controller
             'status' => ['required', 'string', 'in:missed,interrupted,completed'],
             'comment' => ['sometimes', 'string', 'max:100'],
             'difficulty' => ['required', 'string', 'in:easy,moderate,hard,exhausting'],
-            'exercise_logs' => ['sometimes', 'array', 'max:10'],
+            'exercise_logs' => ['sometimes', 'array', 'max:'.Workout::MAX_NUMBER_OF_EXERCISES_ASSIGNED],
             'exercise_logs.*.exercise_id' => ['required', 'integer', 'distinct', 'exists:exercises,id'],
             'exercise_logs.*.measurement_value' => ['required', 'numeric', 'min:0', 'max:100000'],
             'exercise_logs.*.sets_count' => ['required', 'integer', 'min:1', 'max:65000'],

@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
  * Class WorkoutExercise
  * @property integer $workout_id
  * @property integer $exercise_id
+ * @property integer $order
  * @property integer $reps
  * @property integer $sets
  * @property integer $rest
