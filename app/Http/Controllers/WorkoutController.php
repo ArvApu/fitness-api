@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Workout;
 use App\Http\JsonResponse;
+use App\Models\WorkoutExercise;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
@@ -87,7 +88,8 @@ class WorkoutController extends Controller
      */
     public function assignExercises(Request $request, int $id): JsonResponse
     {
-        $workout = $this->workout->findOrFail($id);
+        /** @var Workout $workout */
+        $workout = $this->workout->owned()->findOrFail($id);
 
         $data = $this->validate($request, [
             'exercises' => ['required', 'array', 'max:' . Workout::MAX_NUMBER_OF_EXERCISES_ASSIGNED],
@@ -152,6 +154,46 @@ class WorkoutController extends Controller
     }
 
     /**
+     * Reassign exercises to a workout
+     *
+     * @param Request $request
+     * @param WorkoutExercise $workoutExercise
+     * @param int $id
+     * @param int $assignedId
+     * @return JsonResponse
+     * @throws \Illuminate\Validation\ValidationException
+     */
+    public function reassignExercises(Request $request, WorkoutExercise $workoutExercise, int $id, int $assignedId): JsonResponse
+    {
+        /** @var Workout $workout */
+        $workout = $this->workout->owned()->findOrFail($id);
+
+        $data = $this->validate($request, [
+            'order' => ['sometimes', 'integer', 'min:1', 'max:65000'],
+            'reps' => ['sometimes', 'integer', 'min:1', 'max:65000'],
+            'sets' => ['sometimes', 'integer', 'min:1', 'max:65000'],
+            'rest' => ['sometimes', 'integer', 'min:0', 'max:65000'],
+        ]);
+
+        $hasOrderConflicts = $workoutExercise
+            ->where('workout_id', '=', $workout->id)
+            ->where('id','!=', $assignedId)
+            ->where('order', '=', $data['order'])
+            ->exists();
+
+        if ($hasOrderConflicts) {
+            throw new ConflictHttpException('Exercise have order conflict.');
+        }
+
+        $workoutExercise
+            ->where('workout_id', '=', $workout->id)
+            ->where('id','=', $assignedId)
+            ->update($data);
+
+        return new JsonResponse(null, JsonResponse::HTTP_NO_CONTENT);
+    }
+
+    /**
      * @param int $id
      * @return JsonResponse
      * @throws \Exception
@@ -159,6 +201,27 @@ class WorkoutController extends Controller
     public function destroy(int $id): JsonResponse
     {
         $this->workout->owned()->findOrFail($id)->delete();
+
+        return new JsonResponse(null, JsonResponse::HTTP_NO_CONTENT);
+    }
+
+    /**
+     * Unassign exercise from a workout
+     *
+     * @param WorkoutExercise $workoutExercise
+     * @param int $id
+     * @param int $assignedId
+     * @return JsonResponse
+     */
+    public function unassignExercise(WorkoutExercise $workoutExercise, int $id, int $assignedId): JsonResponse
+    {
+        /** @var Workout $workout */
+        $workout = $this->workout->owned()->findOrFail($id);
+
+        $workoutExercise
+            ->where('workout_id', '=', $workout->id)
+            ->where('id','=', $assignedId)
+            ->delete();
 
         return new JsonResponse(null, JsonResponse::HTTP_NO_CONTENT);
     }

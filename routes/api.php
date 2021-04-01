@@ -41,7 +41,9 @@ $router->group(['middleware' => ['auth']], function () use($router) {
         $router->post('/{id:\d+}/exercises', 'WorkoutController@assignExercises');
         $router->post('/{id:\d+}/copy', 'WorkoutController@copy');
         $router->put('/{id:\d+}', 'WorkoutController@update');
+        $router->put('/{id:\d+}/exercises/{assignedId:\d+}', 'WorkoutController@reassignExercises');
         $router->delete('/{id:\d+}', 'WorkoutController@destroy');
+        $router->delete('/{id:\d+}/exercises/{assignedId:\d+}', 'WorkoutController@unassignExercise');
     });
 
     $router->get('/events', 'EventController@all');
@@ -86,5 +88,4 @@ $router->group(['middleware' => ['auth']], function () use($router) {
     $router->get('/statistics/workouts/{id:\d+}', 'StatisticsController@getWorkoutStatistics');
     $router->get('/statistics/exercises/{id:\d+}', 'StatisticsController@getExerciseStatistics');
     $router->get('/statistics/users/weight', 'StatisticsController@getUserWeightStatistics');
-
 });

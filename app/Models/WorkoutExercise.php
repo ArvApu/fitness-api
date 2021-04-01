@@ -18,5 +18,8 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
  */
 class WorkoutExercise extends Pivot
 {
-    //
+    /**
+     * @inheritdoc
+     */
+    public $timestamps = false;
 }

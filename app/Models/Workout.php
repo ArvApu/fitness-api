@@ -76,7 +76,7 @@ class Workout extends Model
 
         $keyed = $this->exercises()->get()->mapWithKeys(function ($exercise) {
             $data = $exercise->pivot->toArray();
-            unset($data['workout_id']);
+            unset($data['workout_id'], $data['id']);
             return [take($data, 'exercise_id') => $data];
         });
 
@@ -91,7 +91,7 @@ class Workout extends Model
     public function exercises(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
         return $this->belongsToMany(Exercise::class, WorkoutExercise::class)->withPivot([
-            'order', 'reps', 'sets', 'rest'
+            'id', 'order', 'reps', 'sets', 'rest'
         ]);
     }
 

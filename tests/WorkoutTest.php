@@ -110,7 +110,7 @@ class WorkoutTest extends TestCase
         }
     }
 
-    public function test_update()
+    public function test_copy()
     {
         /** @var Workout $workout */
         $workout = Workout::factory()
@@ -145,16 +145,23 @@ class WorkoutTest extends TestCase
         }
     }
 
-    public function test_copy()
+    public function test_update()
     {
         /** @var Workout $workout */
         $workout = Workout::factory()
             ->for($this->user, 'author')
             ->create();
 
-        $this->delete("$this->resource/$workout->id");
+        $payload = [
+            'name' => 'Test workout',
+            'description' => 'This is a test workout',
+            'type' => 'hiit',
+        ];
 
-        $this->response->assertNoContent();
+        $this->put("$this->resource/$workout->id", $payload);
+
+        $this->response->assertStatus(200);
+        $this->assertDatabaseHas((new Workout)->getTable(), $payload);
         $this->assertDatabaseMissing((new Workout)->getTable(), $workout->toArray());
     }
 
