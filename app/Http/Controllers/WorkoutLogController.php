@@ -69,8 +69,7 @@ class WorkoutLogController extends Controller
         /** @var WorkoutLog $log */
         $log = DB::transaction(function () use($request) {
 
-            /** @var User $user */
-            $user = $request->user();
+            $user = $this->resolveDesignatedUser($request);
 
             $exerciseLogs = $request->input('exercise_logs', []);
 
