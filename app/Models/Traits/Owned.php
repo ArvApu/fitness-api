@@ -15,6 +15,17 @@ use Illuminate\Support\Facades\Auth;
 trait Owned
 {
     /**
+     * Alias method for owned by
+     *
+     * @param Builder $query
+     * @return Builder
+     */
+    public function scopeOwned(Builder $query): Builder
+    {
+        return $this->scopeOwnedBy($query);
+    }
+
+    /**
      * Scope a query to only include user's models (possessions).
      *
      * @param Builder $query
@@ -26,7 +37,7 @@ trait Owned
         /** @var \App\Models\User $user */
         $user = Auth::user();
 
-        if($user->isAdmin()) {
+        if ($user->isAdmin()) {
             return $query;
         }
 
@@ -34,17 +45,6 @@ trait Owned
         $userId = is_null($userId) ? $user->id : $userId;
 
         return $query->where($column, '=', $userId);
-    }
-
-    /**
-     * Alias method for owned by
-     *
-     * @param Builder $query
-     * @return Builder
-     */
-    public function scopeOwned(Builder $query): Builder
-    {
-        return $this->scopeOwnedBy($query);
     }
 
     /**

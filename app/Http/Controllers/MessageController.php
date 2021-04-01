@@ -35,7 +35,7 @@ class MessageController extends Controller
         $sender = $request->user();
 
         foreach ($room->users as $user) {
-            if($user->id === $sender->id) {
+            if ($user->id === $sender->id) {
                 continue;
             }
             event(new MessageSent($message, $user->id));

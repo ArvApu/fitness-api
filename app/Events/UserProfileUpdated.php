@@ -28,6 +28,14 @@ class UserProfileUpdated extends Event
     }
 
     /**
+     * @return bool
+     */
+    public function wasWeightUpdated(): bool
+    {
+        return $this->getUpdatedUser()->weight !== $this->getOldUser()->weight;
+    }
+
+    /**
      * @return User
      */
     public function getUpdatedUser(): User
@@ -41,14 +49,6 @@ class UserProfileUpdated extends Event
     public function getOldUser(): User
     {
         return $this->old;
-    }
-
-    /**
-     * @return bool
-     */
-    public function wasWeightUpdated(): bool
-    {
-        return $this->getUpdatedUser()->weight !== $this->getOldUser()->weight;
     }
 
     /**

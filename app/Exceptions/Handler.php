@@ -29,7 +29,7 @@ class Handler extends ExceptionHandler
      *
      * This is a great spot to send exceptions to Sentry, Bugsnag, etc.
      *
-     * @param  \Throwable  $exception
+     * @param \Throwable $exception
      * @return void
      *
      * @throws \Exception
@@ -42,8 +42,8 @@ class Handler extends ExceptionHandler
     /**
      * Render an exception into an HTTP response.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Throwable  $exception
+     * @param \Illuminate\Http\Request $request
+     * @param \Throwable $exception
      * @return \Illuminate\Http\Response|\App\Http\JsonResponse;
      *
      * @throws \Throwable
@@ -59,7 +59,7 @@ class Handler extends ExceptionHandler
         }
 
         if ($exception instanceof ModelNotFoundException) {
-            $model = str_replace('App\\Models\\','', $exception->getModel());
+            $model = str_replace('App\\Models\\', '', $exception->getModel());
             return new JsonResponse(['error' => "$model resource not found."], JsonResponse::HTTP_NOT_FOUND);
         }
 
@@ -94,13 +94,13 @@ class Handler extends ExceptionHandler
      */
     private function resolveErrorMessage(?string $error, string $classname): string
     {
-        if(!empty($error)) {
+        if (!empty($error)) {
             return $error;
         }
 
-        $exception = str_replace('HttpException','', $classname);
+        $exception = str_replace('HttpException', '', $classname);
         $default = preg_replace('/(?<!^)[A-Z]/', ' $0', $exception);
 
-        return ucfirst(strtolower($default)).'.';
+        return ucfirst(strtolower($default)) . '.';
     }
 }

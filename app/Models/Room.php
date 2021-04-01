@@ -44,27 +44,11 @@ class Room extends Model
     }
 
     /**
-     * Get all room messages.
-     */
-    public function messages(): \Illuminate\Database\Eloquent\Relations\HasMany
-    {
-        return $this->hasMany(Message::class, 'room_id');
-    }
-
-    /**
      * Get this room admin user.
      */
     public function admin(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(User::class, 'admin_id');
-    }
-
-    /**
-     * @inheritdoc
-     */
-    protected function getUserIdColumn(): string
-    {
-        return 'admin_id';
     }
 
     /**
@@ -76,5 +60,21 @@ class Room extends Model
             ->where('is_seen', '=', false)
             ->where('user_id', '!=', Auth::user()->id)
             ->count();
+    }
+
+    /**
+     * Get all room messages.
+     */
+    public function messages(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Message::class, 'room_id');
+    }
+
+    /**
+     * @inheritdoc
+     */
+    protected function getUserIdColumn(): string
+    {
+        return 'admin_id';
     }
 }

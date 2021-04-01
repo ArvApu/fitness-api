@@ -29,11 +29,11 @@ class EmailVerificationController extends Controller
             throw new BadRequestHttpException('Bad token.');
         }
 
-        if($data === null) {
+        if ($data === null) {
             throw new BadRequestHttpException('Invalid token data.');
         }
 
-        if(Carbon::now()->greaterThan($data->expires_at)) {
+        if (Carbon::now()->greaterThan($data->expires_at)) {
             throw new BadRequestHttpException('Email verification is expired.');
         }
 

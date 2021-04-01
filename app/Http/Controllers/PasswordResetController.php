@@ -30,11 +30,11 @@ class PasswordResetController extends Controller
     public function send(Request $request, PasswordReset $passwordReset, Mailer $mailer): JsonResponse
     {
         $this->validate($request, [
-           'email' => ['required', 'email']
+            'email' => ['required', 'email']
         ]);
 
         $token = Str::random(32);
-        $expiration = config('auth.passwords.'.config('auth.defaults.passwords').'.expire');
+        $expiration = config('auth.passwords.' . config('auth.defaults.passwords') . '.expire');
 
         $passwordReset->updateOrCreate(['email' => $request->input('email')], [
             'token' => hash('sha256', $token),
@@ -70,13 +70,13 @@ class PasswordResetController extends Controller
         $passwordReset = $passwordReset->where('token', '=', hash('sha256', $token))
             ->where('expires_at', '>', Carbon::now())->first();
 
-        if($passwordReset == null) {
+        if ($passwordReset == null) {
             throw new BadRequestHttpException('Password reset is expired.');
         }
 
         $password = $hasher->make($request->input('password'));
 
-        DB::transaction(function () use($user, $passwordReset, $password) {
+        DB::transaction(function () use ($user, $passwordReset, $password) {
             $user->where('email', '=', $passwordReset->email)->update([
                 'password' => $password,
             ]);

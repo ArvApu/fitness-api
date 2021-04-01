@@ -108,22 +108,6 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     }
 
     /**
-     * Get clients of this user (trainer).
-     */
-    public function clients(): \Illuminate\Database\Eloquent\Relations\HasMany
-    {
-        return $this->hasMany(User::class, 'trainer_id');
-    }
-
-    /**
-     * Get trainer of this user (client).
-     */
-    public function trainer(): \Illuminate\Database\Eloquent\Relations\BelongsTo
-    {
-        return $this->belongsTo(User::class, 'trainer_id');
-    }
-
-    /**
      * Get this user's workout logs.
      */
     public function workoutLogs(): \Illuminate\Database\Eloquent\Relations\HasMany
@@ -185,15 +169,31 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      */
     public function getRelatedUsers()
     {
-        if($this->role === 'admin') {
+        if ($this->role === 'admin') {
             return $this->where('id', '!=', $this->id);
         }
 
-        if($this->role === 'trainer') {
+        if ($this->role === 'trainer') {
             return $this->clients();
         }
 
         return $this->trainer();
+    }
+
+    /**
+     * Get clients of this user (trainer).
+     */
+    public function clients(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(User::class, 'trainer_id');
+    }
+
+    /**
+     * Get trainer of this user (client).
+     */
+    public function trainer(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(User::class, 'trainer_id');
     }
 
     /**
@@ -221,14 +221,6 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     }
 
     /**
-     * Check if this user's role is 'user'.
-     */
-    public function isUser(): bool
-    {
-        return $this->role === 'user';
-    }
-
-    /**
      * Check if trainer has client.
      * @param User $client
      * @return bool
@@ -237,5 +229,13 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     {
         return !$this->isUser() && // Simple user can't have a client
             $this->clients()->where('id', '=', $client->id)->exists();
+    }
+
+    /**
+     * Check if this user's role is 'user'.
+     */
+    public function isUser(): bool
+    {
+        return $this->role === 'user';
     }
 }

@@ -30,7 +30,7 @@ class MessageSent extends Event implements ShouldBroadcast
     public function broadcastOn()
     {
         return [
-            new PrivateChannel('user.'.$this->channel),
+            new PrivateChannel('user.' . $this->channel),
         ];
     }
 

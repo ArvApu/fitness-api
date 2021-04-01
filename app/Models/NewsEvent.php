@@ -19,14 +19,14 @@ class NewsEvent extends Model
     /**
      * @inheritdoc
      */
-    protected $fillable = [
-        'content', 'user_id'
-    ];
+    public $timestamps = false;
 
     /**
      * @inheritdoc
      */
-    public $timestamps = false;
+    protected $fillable = [
+        'content', 'user_id'
+    ];
 
     /**
      * @inheritdoc

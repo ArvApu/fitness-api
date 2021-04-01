@@ -21,7 +21,7 @@ class CreateRoom
     {
         $user = $event->getUser();
 
-        if($user->role !== 'user') {
+        if ($user->role !== 'user') {
             return;
         }
 

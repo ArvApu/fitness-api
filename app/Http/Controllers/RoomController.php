@@ -75,21 +75,21 @@ class RoomController extends Controller
         $users = $data['users'];
 
         /* If user did not add himself, lets do it automatically */
-        if(!in_array($user->id, $users)) {
+        if (!in_array($user->id, $users)) {
             $users[] = $user->id;
         }
 
         /* For now only 2 users can be in the room */
-        if(count($users) > 2) {
+        if (count($users) > 2) {
             throw new BadRequestHttpException('Exceeded users in room quota.');
         }
 
-        $hasRoom = $user->rooms()->whereHas('users', function ($query) use($users, $user) {
+        $hasRoom = $user->rooms()->whereHas('users', function ($query) use ($users, $user) {
             $query->whereIn('user_id', array_diff($users, [$user->id]));
         })->exists();
 
         /* For now users can have only one room with other person */
-        if($hasRoom) {
+        if ($hasRoom) {
             throw new BadRequestHttpException('Room with this user already exists.');
         }
 

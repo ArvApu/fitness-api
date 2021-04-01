@@ -37,7 +37,7 @@ class AddToNewsFeed
             $this->handleUserProfileUpdated($event);
         } elseif ($event instanceof WorkoutLogged) {
             $this->handleWorkoutLogged($event);
-        } elseif($event instanceof UserAcceptedInvitation) {
+        } elseif ($event instanceof UserAcceptedInvitation) {
             $this->handleUserAcceptedInvitation($event);
         }
     }
@@ -48,20 +48,20 @@ class AddToNewsFeed
     private function handleUserProfileUpdated(UserProfileUpdated $event): void
     {
         $user = $event->getUpdatedUser();
-        $old  = $event->getOldUSer();
+        $old = $event->getOldUSer();
 
-        if(!$user->isUser() || $user->trainer_id === null) {  // We are only interested what trained clients do
+        if (!$user->isUser() || $user->trainer_id === null) {  // We are only interested what trained clients do
             return;
         }
 
-        if($event->wasWeightUpdated()) {
+        if ($event->wasWeightUpdated()) {
             $this->news->create([
                 'content' => "$user->full_name updated his weight from $old->weight to $user->weight",
                 'user_id' => $user->trainer_id, // Because we want to inform this person's trainer
             ]);
         }
 
-        if($event->wasNameChanged()) {
+        if ($event->wasNameChanged()) {
             $this->news->create([
                 'content' => "$old->full_name change his name to $user->full_name",
                 'user_id' => $user->trainer_id,
@@ -70,27 +70,14 @@ class AddToNewsFeed
     }
 
     /**
-     * @param UserAcceptedInvitation $event
-     */
-    private function handleUserAcceptedInvitation(UserAcceptedInvitation $event): void
-    {
-        $user = $event->getUser();
-
-        $this->news->create([
-            'content' => "$user->full_name accepted your invitation.",
-            'user_id' => $user->trainer_id,
-        ]);
-    }
-
-    /**
      * @param WorkoutLogged $event
      */
     private function handleWorkoutLogged(WorkoutLogged $event)
     {
-        $log     = $event->getLog();
+        $log = $event->getLog();
         $content = $log->user->full_name;
 
-        if(!$log->user->isUser() || $log->user->trainer_id === null) {
+        if (!$log->user->isUser() || $log->user->trainer_id === null) {
             return;
         }
 
@@ -109,6 +96,19 @@ class AddToNewsFeed
         $this->news->create([
             'content' => $content,
             'user_id' => $log->user->trainer_id,
+        ]);
+    }
+
+    /**
+     * @param UserAcceptedInvitation $event
+     */
+    private function handleUserAcceptedInvitation(UserAcceptedInvitation $event): void
+    {
+        $user = $event->getUser();
+
+        $this->news->create([
+            'content' => "$user->full_name accepted your invitation.",
+            'user_id' => $user->trainer_id,
         ]);
     }
 }

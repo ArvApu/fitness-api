@@ -54,10 +54,10 @@ class RegistrationController extends Controller
             $mailer->to($data['email'])->send(new VerifyEmail($token));
         } catch (\Swift_SwiftException $e) {
             $user->delete();
-            throw new ServiceUnavailableHttpException(null ,'Registration is unavailable.');
+            throw new ServiceUnavailableHttpException(null, 'Registration is unavailable.');
         }
 
-        if($wasUserInvited) {
+        if ($wasUserInvited) {
             event(new UserAcceptedInvitation($user));
         }
 
@@ -73,7 +73,7 @@ class RegistrationController extends Controller
      */
     protected function resolveInvitation(?string $token, array &$data): bool
     {
-        if($token === null) {
+        if ($token === null) {
             $data['role'] = 'trainer';
             return false;
         }
@@ -84,11 +84,11 @@ class RegistrationController extends Controller
             throw new BadRequestHttpException('Bad token.');
         }
 
-        if(!isset($tokenData->trainer_id) || !isset($tokenData->for)) {
+        if (!isset($tokenData->trainer_id) || !isset($tokenData->for)) {
             throw new BadRequestHttpException('Invalid token data.');
         }
 
-        if($data['email'] !== $tokenData->for) {
+        if ($data['email'] !== $tokenData->for) {
             throw new BadRequestHttpException('Invitation is intended for other user.');
         }
 

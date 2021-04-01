@@ -22,7 +22,7 @@ class CheckRoleAccess
         /** @var  \App\Models\User $user */
         $user = Auth::user();
 
-        if($user->isAdmin()) {
+        if ($user->isAdmin()) {
             return $next($request); // Admin has full access
         }
 

@@ -40,7 +40,7 @@ class UserInvitationController extends Controller
         try {
             $mailer->to($data['email'])->send(new InviteUser($token, $inviter, $exists));
         } catch (\Swift_SwiftException $e) {
-            throw new ServiceUnavailableHttpException(null ,'Can not invite user at this moment.');
+            throw new ServiceUnavailableHttpException(null, 'Can not invite user at this moment.');
         }
 
         return new JsonResponse(['message' => 'Invitation sent.']);
@@ -59,7 +59,7 @@ class UserInvitationController extends Controller
             throw new BadRequestHttpException('Bad token.');
         }
 
-        if(!isset($tokenData->trainer_id) || !isset($tokenData->for)) {
+        if (!isset($tokenData->trainer_id) || !isset($tokenData->for)) {
             throw new BadRequestHttpException('Invalid token data.');
         }
 

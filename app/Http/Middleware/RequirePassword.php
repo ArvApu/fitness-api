@@ -22,11 +22,11 @@ class RequirePassword
         /** @var  \App\Models\User $user */
         $user = Auth::user();
 
-        if($user === null || $request->input('password') === null) {
+        if ($user === null || $request->input('password') === null) {
             throw new AccessDeniedHttpException('Missing password.');
         }
 
-        if(!Hash::check($request->input('password'), $user->password)) {
+        if (!Hash::check($request->input('password'), $user->password)) {
             throw new AccessDeniedHttpException('Bad password.');
         }
 

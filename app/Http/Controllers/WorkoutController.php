@@ -90,7 +90,7 @@ class WorkoutController extends Controller
         $workout = $this->workout->findOrFail($id);
 
         $data = $this->validate($request, [
-            'exercises' => [ 'required', 'array', 'max:' . Workout::MAX_NUMBER_OF_EXERCISES_ASSIGNED],
+            'exercises' => ['required', 'array', 'max:' . Workout::MAX_NUMBER_OF_EXERCISES_ASSIGNED],
             'exercises.*.id' => ['required', 'integer', 'distinct', 'exists:exercises'],
             'exercises.*.order' => ['required', 'integer', 'min:1', 'max:65000', 'distinct'],
             'exercises.*.reps' => ['required', 'integer', 'min:1', 'max:65000'],
@@ -100,11 +100,11 @@ class WorkoutController extends Controller
 
         $exercises = new Collection($data['exercises']);
 
-        if($workout->exercises()->count() + $exercises->count() > Workout::MAX_NUMBER_OF_EXERCISES_ASSIGNED) {
-            throw new ConflictHttpException('Workout can only have '.Workout::MAX_NUMBER_OF_EXERCISES_ASSIGNED.' exercises assigned.');
+        if ($workout->exercises()->count() + $exercises->count() > Workout::MAX_NUMBER_OF_EXERCISES_ASSIGNED) {
+            throw new ConflictHttpException('Workout can only have ' . Workout::MAX_NUMBER_OF_EXERCISES_ASSIGNED . ' exercises assigned.');
         }
 
-        if($workout->exercises()->whereIn('order', $exercises->pluck('order'))->exists()) {
+        if ($workout->exercises()->whereIn('order', $exercises->pluck('order'))->exists()) {
             throw new ConflictHttpException('Exercises have order conflict.');
         }
 

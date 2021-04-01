@@ -17,22 +17,21 @@ class PasswordReset extends Model
     use HasFactory;
 
     /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
+     * @inheritdoc
+     */
+    public $timestamps = false;
+
+    /**
+     * @inheritdoc
      */
     protected $fillable = [
         'email', 'token', 'expires_at',
     ];
 
     /**
-     * The attributes excluded from the model's JSON form.
-     *
-     * @var array
+     * @inheritdoc
      */
     protected $hidden = [
         'token',
     ];
-
-    public $timestamps = false;
 }

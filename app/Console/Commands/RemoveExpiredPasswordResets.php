@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Models\PasswordReset;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Console\Command;
 
 class RemoveExpiredPasswordResets extends Command
@@ -42,7 +43,7 @@ class RemoveExpiredPasswordResets extends Command
      * Execute the console command.
      *
      * @return void
-     * @throws \Exception
+     * @throws Exception
      */
     public function handle(): void
     {

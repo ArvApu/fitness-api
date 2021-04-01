@@ -17,7 +17,7 @@ class UserFilter extends ModelFilter
      */
     public function q(string $query): UserFilter
     {
-        return $this->where(function($q) use ($query) {
+        return $this->where(function ($q) use ($query) {
             return $q->where('first_name', 'LIKE', "%$query%")->orWhere('last_name', 'LIKE', "%$query%");
         });
     }

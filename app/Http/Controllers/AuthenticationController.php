@@ -40,7 +40,7 @@ class AuthenticationController extends Controller
             'password' => ['required', 'string',],
         ]);
 
-        if (! $token = $this->guard->attempt($credentials)) {
+        if (!$token = $this->guard->attempt($credentials)) {
             throw new HttpException(JsonResponse::HTTP_UNAUTHORIZED, 'Bad credentials.');
         }
 

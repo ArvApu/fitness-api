@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Models\NewsEvent;
 use App\Models\User;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Console\Command;
 
 class UpdateNews extends Command
@@ -27,7 +28,7 @@ class UpdateNews extends Command
      * Execute the console command.
      *
      * @return void
-     * @throws \Exception
+     * @throws Exception
      */
     public function handle(): void
     {
@@ -40,26 +41,26 @@ class UpdateNews extends Command
      */
     private function addBirthdays(): void
     {
-         $users = (new User)->whereNotNull('birthday')
-             ->whereMonth('birthday', '=', Carbon::now()->format('m'))
-             ->whereDay('birthday', '=', Carbon::now()->format('d'))
-             ->get();
+        $users = (new User)->whereNotNull('birthday')
+            ->whereMonth('birthday', '=', Carbon::now()->format('m'))
+            ->whereDay('birthday', '=', Carbon::now()->format('d'))
+            ->get();
 
-         $news = [];
+        $news = [];
 
-         /** @var User $user */
-         foreach ($users as $user) {
-             if($user->trainer_id === null) {
-                 continue;
-             }
-             $news = [
-                 'content' => "Today is $user->full_name's birthday",
-                 'user_id' => $user->trainer_id,
-                 'created_at' => Carbon::now(),
-             ];
-         }
+        /** @var User $user */
+        foreach ($users as $user) {
+            if ($user->trainer_id === null) {
+                continue;
+            }
+            $news = [
+                'content' => "Today is $user->full_name's birthday",
+                'user_id' => $user->trainer_id,
+                'created_at' => Carbon::now(),
+            ];
+        }
 
-         (new NewsEvent())->insert($news);
-         $this->comment('Birthdays added.');
+        (new NewsEvent())->insert($news);
+        $this->comment('Birthdays added.');
     }
 }

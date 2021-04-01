@@ -71,7 +71,7 @@ class ExerciseController extends Controller
             'url.regex' => 'Url must be a valid Youtube url.'
         ]);
 
-        if(isset($data['url'])) {
+        if (isset($data['url'])) {
             $data['url'] = get_yt_embed_url($data['url']);
         }
 

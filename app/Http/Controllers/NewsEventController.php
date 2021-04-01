@@ -17,7 +17,7 @@ class NewsEventController extends Controller
         /** @var User $user */
         $user = Auth::user();
 
-        if($user->isAdmin()) {
+        if ($user->isAdmin()) {
             $query = (new NewsEvent());
         } else {
             $query = $user->newsEvents();

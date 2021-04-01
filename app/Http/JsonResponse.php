@@ -9,7 +9,7 @@ class JsonResponse extends \Illuminate\Http\JsonResponse
 {
     public function __construct($data = null, $status = 200, $headers = [], $options = 0)
     {
-        if($data instanceof Paginator) {
+        if ($data instanceof Paginator) {
             $data = $this->convertPaginatorData($data);
         }
 

@@ -32,7 +32,7 @@ class SendEmail
      */
     public function handle(Event $event)
     {
-        if($event instanceof UserDeleted) {
+        if ($event instanceof UserDeleted) {
             $this->handleUserDeleted($event);
         }
     }

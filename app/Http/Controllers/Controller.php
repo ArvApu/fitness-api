@@ -22,7 +22,7 @@ abstract class Controller extends BaseController
         /** @var User $user */
         $user = $request->user();
 
-        if(!$user->isTrainer() && !$user->isAdmin()) {
+        if (!$user->isTrainer() && !$user->isAdmin()) {
             return $user; // Currently authenticated user is client (simple user role)
         }
 
@@ -47,7 +47,7 @@ abstract class Controller extends BaseController
         $client = $trainer->findOrFail($clientId); // Bit hacky but reusing trainer's user model to fetch client's instance
 
         /* Non admin users can only access their clients only */
-        if(!$trainer->isAdmin() && !$trainer->hasClient($client)) {
+        if (!$trainer->isAdmin() && !$trainer->hasClient($client)) {
             throw new AccessDeniedHttpException('Client information is not available');
         }
 

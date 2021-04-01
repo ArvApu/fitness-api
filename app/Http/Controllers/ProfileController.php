@@ -47,7 +47,7 @@ class ProfileController extends Controller
      * @return JsonResponse
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function changePassword(Request $request,  Hasher $hasher): JsonResponse
+    public function changePassword(Request $request, Hasher $hasher): JsonResponse
     {
         $this->validate($request, [
             'new_password' => ['required', 'string', 'min:8', 'confirmed'],

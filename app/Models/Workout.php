@@ -47,16 +47,6 @@ class Workout extends Model
     }
 
     /**
-     * The exercises that belong to the workout.
-     */
-    public function exercises(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
-    {
-        return $this->belongsToMany(Exercise::class, WorkoutExercise::class)->withPivot([
-            'order', 'reps', 'sets', 'rest'
-        ]);
-    }
-
-    /**
      * Days that this workout has assigned.
      */
     public function events(): \Illuminate\Database\Eloquent\Relations\HasMany
@@ -71,15 +61,6 @@ class Workout extends Model
     {
         return $this->hasMany(WorkoutLog::class, 'workout_id');
     }
-
-    /**
-     * @inheritdoc
-     */
-    protected function getUserIdColumn(): string
-    {
-        return 'author_id';
-    }
-
 
     /**
      * Copy a workout with his assigned exercises list
@@ -102,5 +83,23 @@ class Workout extends Model
         $copy->exercises()->attach($keyed);
 
         return $copy;
+    }
+
+    /**
+     * The exercises that belong to the workout.
+     */
+    public function exercises(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(Exercise::class, WorkoutExercise::class)->withPivot([
+            'order', 'reps', 'sets', 'rest'
+        ]);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    protected function getUserIdColumn(): string
+    {
+        return 'author_id';
     }
 }

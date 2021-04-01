@@ -19,9 +19,9 @@ class StatisticsController extends Controller
         $user = $this->resolveDesignatedUser($request);
 
         return new JsonResponse([
-            'missed'      => $user->workoutLogs()->where('status', '=', 'missed')->count(),
+            'missed' => $user->workoutLogs()->where('status', '=', 'missed')->count(),
             'interrupted' => $user->workoutLogs()->where('status', '=', 'interrupted')->count(),
-            'completed'   => $user->workoutLogs()->where('status', '=', 'completed')->count(),
+            'completed' => $user->workoutLogs()->where('status', '=', 'completed')->count(),
         ]);
     }
 
@@ -40,9 +40,9 @@ class StatisticsController extends Controller
         $workout = $workout->ownedBy($user->trainer_id)->findOrFail($id);
 
         return new JsonResponse([
-            'missed'      => $workout->logs()->where('user_id', '=', $user->id)->where('status', '=', 'missed')->count(),
+            'missed' => $workout->logs()->where('user_id', '=', $user->id)->where('status', '=', 'missed')->count(),
             'interrupted' => $workout->logs()->where('user_id', '=', $user->id)->where('status', '=', 'interrupted')->count(),
-            'completed'   => $workout->logs()->where('user_id', '=', $user->id)->where('status', '=', 'completed')->count(),
+            'completed' => $workout->logs()->where('user_id', '=', $user->id)->where('status', '=', 'completed')->count(),
         ]);
     }
 

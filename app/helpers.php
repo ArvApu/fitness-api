@@ -1,7 +1,6 @@
 <?php
 
-if ( ! function_exists('take'))
-{
+if (!function_exists('take')) {
     /**
      * Take element out from array or object by key or property name
      *
@@ -12,13 +11,13 @@ if ( ! function_exists('take'))
      */
     function take(&$from, string $by)
     {
-        if(is_array($from)) {
+        if (is_array($from)) {
             $temp = $from[$by] ?? null;
             unset($from[$by]);
             return $temp;
         }
 
-        if(is_object($from)) {
+        if (is_object($from)) {
             $temp = $from->{$by} ?? null;
             unset($from->{$by});
             return $temp;
@@ -29,8 +28,7 @@ if ( ! function_exists('take'))
 }
 
 
-if ( ! function_exists('ui_url'))
-{
+if (!function_exists('ui_url')) {
     /**
      * Generate a url for the application's ui.
      *
@@ -49,15 +47,14 @@ if ( ! function_exists('ui_url'))
         if (null !== $path) {
             $url .= '/' . ltrim($path, '/');
         }
-        if (! empty($query)) {
+        if (!empty($query)) {
             $url .= '?' . http_build_query($query);
         }
         return (null === $schema ? $url : ($schema . '://' . $url));
     }
 }
 
-if ( ! function_exists('get_yt_embed_url'))
-{
+if (!function_exists('get_yt_embed_url')) {
     /**
      * Generate a embed youtube url.
      *
@@ -66,9 +63,9 @@ if ( ! function_exists('get_yt_embed_url'))
      */
     function get_yt_embed_url(string $url): string
     {
-        $urlParts   = explode('/', $url);
-        $vidid      = explode( '&', str_replace('watch?v=', '', end($urlParts) ) );
+        $urlParts = explode('/', $url);
+        $vidId = explode('&', str_replace('watch?v=', '', end($urlParts)));
 
-        return 'https://www.youtube.com/embed/' . $vidid[0] ;
+        return 'https://www.youtube.com/embed/' . $vidId[0];
     }
 }

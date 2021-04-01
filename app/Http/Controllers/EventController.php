@@ -74,7 +74,7 @@ class EventController extends Controller
     {
         $user = $this->resolveDesignatedUser($request);
 
-        $cal = Calendar::create($user->first_name.' calendar');
+        $cal = Calendar::create($user->first_name . ' calendar');
 
         $events = $user->events()->where('end_time', '>=', Carbon::today())
             ->limit(500) // To be sure that too much data will not be retrieved

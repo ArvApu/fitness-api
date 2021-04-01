@@ -32,7 +32,7 @@ class LogWeight
     {
         $user = $event->getUpdatedUser();
 
-        if($event->wasWeightUpdated()) {
+        if ($event->wasWeightUpdated()) {
             $user->logs()->create([
                 'weight' => $user->weight
             ]);

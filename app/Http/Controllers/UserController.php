@@ -31,7 +31,7 @@ class UserController extends Controller
     public function update(Request $request, int $id): JsonResponse
     {
         $data = $this->validate($request, [
-            'email' => ['sometimes', 'email', 'unique:users,email,'.$id],
+            'email' => ['sometimes', 'email', 'unique:users,email,' . $id],
         ]);
 
         // TODO: send verification email
@@ -52,7 +52,7 @@ class UserController extends Controller
     {
         $user = (new User())->findOrFail($id);
 
-        if(!Auth::user()->isAdmin() && (!$user->isUser() || (int)$user->trainer_id !== Auth::user()->id)) {
+        if (!Auth::user()->isAdmin() && (!$user->isUser() || (int)$user->trainer_id !== Auth::user()->id)) {
             throw new BadRequestHttpException('Cannot delete this user');
         }
 
