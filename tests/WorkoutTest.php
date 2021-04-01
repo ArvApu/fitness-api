@@ -177,4 +177,90 @@ class WorkoutTest extends TestCase
         $this->response->assertNoContent();
         $this->assertDatabaseMissing((new Workout)->getTable(), $workout->toArray());
     }
+
+    public function test_reassign_exercises()
+    {
+        /** @var Workout $workout */
+        $workout = Workout::factory()
+            ->for($this->user, 'author')
+            ->create();
+
+        /** @var Exercise $exercise1 */
+        $exercise1 = Exercise::factory()->for($this->user, 'author')->create();
+        /** @var Exercise $exercise2 */
+        $exercise2 = Exercise::factory()->for($this->user, 'author')->create();
+
+        $exercises = [
+            $exercise1->id => ['order' => 1, 'sets' => 5, 'reps' => 10, 'rest' => 30],
+            $exercise2->id => ['order' => 2, 'sets' => 2, 'reps' => 15, 'rest' => 45],
+        ];
+
+        $workout->exercises()->attach($exercises);
+
+        $pivot = $workout->exercises()->first()->pivot;
+
+        $payload = ['order' => 10, 'sets' => 50, 'reps' => 100, 'rest' => 300];
+
+        $this->put("$this->resource/$workout->id/exercises/$pivot->id", $payload);
+
+        $this->response->assertNoContent();
+        $this->assertDatabaseMissing((new WorkoutExercise())->getTable(), $pivot->toArray());
+        $this->assertDatabaseHas((new WorkoutExercise())->getTable(), ['id' => $pivot->id] + $payload);
+    }
+
+    public function test_reassign_exercises_with_empty_payload()
+    {
+        /** @var Workout $workout */
+        $workout = Workout::factory()
+            ->for($this->user, 'author')
+            ->create();
+
+        /** @var Exercise $exercise1 */
+        $exercise1 = Exercise::factory()->for($this->user, 'author')->create();
+        /** @var Exercise $exercise2 */
+        $exercise2 = Exercise::factory()->for($this->user, 'author')->create();
+
+        $exercises = [
+            $exercise1->id => ['order' => 1, 'sets' => 5, 'reps' => 10, 'rest' => 30],
+            $exercise2->id => ['order' => 2, 'sets' => 2, 'reps' => 15, 'rest' => 45],
+        ];
+
+        $workout->exercises()->attach($exercises);
+
+        $pivot = $workout->exercises()->first()->pivot;
+
+        $payload = [];
+
+        $this->put("$this->resource/$workout->id/exercises/$pivot->id", $payload);
+
+        $this->response->assertNoContent();
+    }
+
+    public function test_unassign_exercises()
+    {
+        /** @var Workout $workout */
+        $workout = Workout::factory()
+            ->for($this->user, 'author')
+            ->create();
+
+        /** @var Exercise $exercise1 */
+        $exercise1 = Exercise::factory()->for($this->user, 'author')->create();
+        /** @var Exercise $exercise2 */
+        $exercise2 = Exercise::factory()->for($this->user, 'author')->create();
+
+        $exercises = [
+            $exercise1->id => ['order' => 1, 'sets' => 5, 'reps' => 10, 'rest' => 30],
+            $exercise2->id => ['order' => 2, 'sets' => 2, 'reps' => 15, 'rest' => 45],
+        ];
+
+        $workout->exercises()->attach($exercises);
+
+        $pivot = $workout->exercises()->first()->pivot;
+
+        $this->delete("$this->resource/$workout->id/exercises/$pivot->id");
+
+        $this->response->assertNoContent();
+
+        $this->assertDatabaseMissing((new WorkoutExercise())->getTable(), ['id' => $pivot->id]);
+    }
 }

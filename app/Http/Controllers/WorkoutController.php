@@ -175,7 +175,11 @@ class WorkoutController extends Controller
             'rest' => ['sometimes', 'integer', 'min:0', 'max:65000'],
         ]);
 
-        $hasOrderConflicts = $workoutExercise
+        if(empty($data)) {
+            return new JsonResponse(null, JsonResponse::HTTP_NO_CONTENT);
+        }
+
+        $hasOrderConflicts = isset($data['order']) && $workoutExercise
             ->where('workout_id', '=', $workout->id)
             ->where('id','!=', $assignedId)
             ->where('order', '=', $data['order'])
