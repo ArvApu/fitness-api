@@ -43,14 +43,14 @@ class EventController extends Controller
         /** @var User $user */
         $user = $request->user();
 
-        $shouldGetEventsForTrainer = $request->input('all_trainer_events', false);
+        $shouldGetEventsForTrainer = (bool) $request->input('all_trainer_events', false);
 
         if($shouldGetEventsForTrainer && $user->isAdmin()) {
-            $query = $this->event->with('attendee')->getQuery();
+            $query = $this->event->with('attendee');
         } elseif ($shouldGetEventsForTrainer && $user->isTrainer()) {
-            $query = $user->organizedEvents()->with('attendee')->getQuery();
+            $query = $user->organizedEvents()->with('attendee');
         } else {
-            $query = $this->resolveDesignatedUser($request)->events()->getQuery();
+            $query = $this->resolveDesignatedUser($request)->events();
         }
 
         return new JsonResponse(
