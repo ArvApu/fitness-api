@@ -12,6 +12,7 @@ class RegistrationTest extends TestCase
         $this->post('/register', [
             'first_name' => 'John',
             'last_name' => 'Doe',
+            'gender' => 'male',
             'email' => 'john.doe@fake.mail.com',
             'password' => 'password123',
             'password_confirmation' => 'password123',
@@ -39,6 +40,7 @@ class RegistrationTest extends TestCase
         $this->post('/register', [
             'first_name' => 'Doe',
             'last_name' => 'John',
+            'gender' => 'male',
             'email' => 'doe.john.user@fake.mail.com',
             'password' => 'password123',
             'password_confirmation' => 'password123',
@@ -51,6 +53,7 @@ class RegistrationTest extends TestCase
             'role' => 'user',
             'first_name' => 'Doe',
             'last_name' => 'John',
+            'gender' => 'male',
             'email' => 'doe.john.user@fake.mail.com',
         ]);
     }
@@ -67,6 +70,7 @@ class RegistrationTest extends TestCase
         $this->post('/register', [
             'first_name' => 'Doe',
             'last_name' => 'John',
+            'gender' => 'male',
             'email' => 'intended.doe.john.user@fake.mail.com',
             'password' => 'password123',
             'password_confirmation' => 'password123',
@@ -89,6 +93,7 @@ class RegistrationTest extends TestCase
         $this->post('/register', [
             'first_name' => 'Doe',
             'last_name' => 'John',
+            'gender' => 'male',
             'email' => 'doe.john.f@fake.mail.com',
             'password' => 'password123',
             'password_confirmation' => 'password123',
@@ -107,6 +112,7 @@ class RegistrationTest extends TestCase
         $this->post('/register', [
             'first_name' => 'Doe',
             'last_name' => 'John',
+            'gender' => 'male',
             'email' => 'doe.john.f@fake.mail.com',
             'password' => 'password123',
             'password_confirmation' => 'password123',

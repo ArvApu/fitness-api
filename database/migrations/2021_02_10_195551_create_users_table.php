@@ -19,12 +19,14 @@ class CreateUsersTable extends Migration
             $table->unsignedBigInteger('trainer_id')->nullable();
             $table->string('first_name', 64);
             $table->string('last_name', 64);
+            $table->enum('gender', ['male', 'female']);
             $table->string('email', '128')->unique();
             $table->string('password');
             $table->date('birthday')->nullable();
             $table->string('about', 250)->nullable();
             $table->unsignedTinyInteger('experience')->nullable();
             $table->unsignedDouble('weight')->nullable();
+            $table->unsignedInteger('height')->nullable();
             $table->timestamp('last_login_at')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->timestamps();

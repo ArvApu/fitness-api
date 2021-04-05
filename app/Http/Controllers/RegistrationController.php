@@ -33,6 +33,7 @@ class RegistrationController extends Controller
         $data = $this->validate($request, [
             'first_name' => ['required', 'string', 'between:3,64'],
             'last_name' => ['required', 'string', 'between:3,64'],
+            'gender' => ['required', 'string', 'in:male,female'],
             'email' => ['required', 'email', 'max:64', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             'token' => ['sometimes', 'string']

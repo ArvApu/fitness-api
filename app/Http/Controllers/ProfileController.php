@@ -24,6 +24,7 @@ class ProfileController extends Controller
             'last_name' => ['sometimes', 'string', 'between:3,64'],
             'birthday' => ['sometimes', 'date', 'before:today'],
             'weight' => ['sometimes', 'numeric', 'between:0,500'],
+            'height' => ['sometimes', 'integer', 'between:0,300'],
             'experience' => ['sometimes', 'integer', 'between:0,100'],
             'about' => ['sometimes', 'string', 'max:250'],
         ]);
