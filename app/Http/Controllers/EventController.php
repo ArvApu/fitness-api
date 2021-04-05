@@ -35,7 +35,7 @@ class EventController extends Controller
     public function all(Request $request): JsonResponse
     {
         $this->validate($request, [
-            'start_date' => ['required','before:end_date','date'],
+            'start_date' => ['required','before_or_equal:end_date','date'],
             'end_date' => ['required','date'],
             'all_trainer_events' => ['sometimes', 'boolean'],
         ]);
@@ -46,17 +46,17 @@ class EventController extends Controller
         $shouldGetEventsForTrainer = $request->input('all_trainer_events', false);
 
         if($shouldGetEventsForTrainer && $user->isAdmin()) {
-            $query = $this->event->getQuery();
+            $query = $this->event->with('attendee')->getQuery();
         } elseif ($shouldGetEventsForTrainer && $user->isTrainer()) {
-            $query = $user->organizedEvents()->getQuery();
+            $query = $user->organizedEvents()->with('attendee')->getQuery();
         } else {
             $query = $this->resolveDesignatedUser($request)->events()->getQuery();
         }
 
         return new JsonResponse(
             $query
-                ->where('start_time', '>=', $request->input('start_date'))
-                ->where('start_time', '<=', $request->input('end_date'))
+                ->whereDate('start_time', '>=', $request->input('start_date'))
+                ->whereDate('start_time', '<=', $request->input('end_date'))
                 ->get()
         );
     }
