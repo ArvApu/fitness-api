@@ -23,6 +23,6 @@ class NewsEventController extends Controller
             $query = $user->newsEvents();
         }
 
-        return new JsonResponse($query->orderBy('id', 'desc')->paginate(20));
+        return new JsonResponse($query->orderBy('id', 'desc')->paginate(10));
     }
 }
