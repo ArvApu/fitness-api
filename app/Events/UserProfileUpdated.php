@@ -32,7 +32,7 @@ class UserProfileUpdated extends Event
      */
     public function wasWeightUpdated(): bool
     {
-        return $this->getUpdatedUser()->weight !== $this->getOldUser()->weight;
+        return $this->getUpdatedUser()->weight !== $this->getOldUser()->weight && $this->getOldUser()->weight !== null;
     }
 
     /**

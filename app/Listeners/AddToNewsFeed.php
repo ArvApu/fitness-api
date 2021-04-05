@@ -56,14 +56,14 @@ class AddToNewsFeed
 
         if ($event->wasWeightUpdated()) {
             $this->news->create([
-                'content' => "$user->full_name updated his weight from $old->weight to $user->weight",
+                'content' => "$user->full_name changed weight from {$old->weight}kg to {$user->weight}kg",
                 'user_id' => $user->trainer_id, // Because we want to inform this person's trainer
             ]);
         }
 
         if ($event->wasNameChanged()) {
             $this->news->create([
-                'content' => "$old->full_name change his name to $user->full_name",
+                'content' => "$old->full_name changed name to $user->full_name",
                 'user_id' => $user->trainer_id,
             ]);
         }

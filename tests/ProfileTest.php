@@ -17,7 +17,9 @@ class ProfileTest extends TestCase
     public function test_update()
     {
         $trainer = User::factory()->trainer()->create();
-        $user = User::factory()->for($trainer, 'trainer')->create();
+        $user = User::factory()->for($trainer, 'trainer')->create([
+            'weight' => 85
+        ]);
         $this->actingAs($user);
 
         $payload = [
