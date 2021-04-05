@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Event;
 use App\Http\JsonResponse;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -34,14 +35,26 @@ class EventController extends Controller
     public function all(Request $request): JsonResponse
     {
         $this->validate($request, [
-            'start_date' => ['required', 'before:end_date', 'date'],
-            'end_date' => ['required', 'date'],
+            'start_date' => ['required','before:end_date','date'],
+            'end_date' => ['required','date'],
+            'all_trainer_events' => ['sometimes', 'boolean'],
         ]);
 
-        $user = $this->resolveDesignatedUser($request);
+        /** @var User $user */
+        $user = $request->user();
+
+        $shouldGetEventsForTrainer = $request->input('all_trainer_events', false);
+
+        if($shouldGetEventsForTrainer && $user->isAdmin()) {
+            $query = $this->event->getQuery();
+        } elseif ($shouldGetEventsForTrainer && $user->isTrainer()) {
+            $query = $user->organizedEvents()->getQuery();
+        } else {
+            $query = $this->resolveDesignatedUser($request)->events()->getQuery();
+        }
 
         return new JsonResponse(
-            $user->events()
+            $query
                 ->where('start_time', '>=', $request->input('start_date'))
                 ->where('start_time', '<=', $request->input('end_date'))
                 ->get()
@@ -116,6 +129,8 @@ class EventController extends Controller
             'start_time' => ['required', 'date_format:Y-m-d H:i:s'],
             'end_time' => ['required', 'date_format:Y-m-d H:i:s', 'after_or_equal:start_time'],
         ]);
+
+        $data['organizer_id'] = $request->user()->id;
 
         $day = $this->event->create($data);
 
