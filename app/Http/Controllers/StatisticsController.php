@@ -56,6 +56,7 @@ class StatisticsController extends Controller
         $user = $this->resolveDesignatedUser($request);
 
         return new JsonResponse([
+            'total_exercises_done' => $user->exerciseLogs()->count(),
             'total_sets_done' => $user->exerciseLogs()->sum('sets_count'),
         ]);
     }
