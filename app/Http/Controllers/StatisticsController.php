@@ -78,8 +78,10 @@ class StatisticsController extends Controller
         return new JsonResponse([
             'measurement_unit' => $exercise->measurement,
             'measurement_values' => $exercise->logs()
+                ->selectRaw('ROUND(AVG(measurement_value), 2) as measurement_value, DATE(created_at) as created_at')
                 ->where('user_id', '=', $user->id)
-                ->get(['measurement_value', 'created_at']),
+                ->groupByRaw('DATE(created_at)')
+                ->get(),
         ]);
     }
 
