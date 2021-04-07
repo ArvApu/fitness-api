@@ -1,10 +1,28 @@
-<h1>
-    Password reset
-</h1>
+@extends('layouts.mail')
 
-You are receiving this email because we received a password reset request for your account.
+@section('content')
+<div class="content">
 
-<a href="{{ $url }}"><h3>Reset Password</h3></a>
+    <div class="header">
+        Password reset
+    </div>
 
-This password reset link will expire in {{ $expiration }} minutes.
-If you did not request a password reset, no further action is required.
+    <div class="text">
+        <span>
+            You recently requested to reset the password for your {{ $app }} account. Click the button below to proceed.
+        </span>
+
+            <span class="button-box">
+            <a class="button" href="{{ $url }}">
+                Reset my password
+            </a>
+        </span>
+
+        <span class="meta-text">
+        <span>If you did not request a password reset, please ignore this email.</span>
+        <span>This password reset link is only valid for the next {{ $expiration }} minutes.</span>
+    </span>
+
+    </div>
+</div>
+@endsection

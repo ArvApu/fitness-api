@@ -1,6 +1,7 @@
 <?php
 
-if (!function_exists('take')) {
+if (!function_exists('take'))
+{
     /**
      * Take element out from array or object by key or property name
      *
@@ -28,7 +29,8 @@ if (!function_exists('take')) {
 }
 
 
-if (!function_exists('ui_url')) {
+if (!function_exists('ui_url'))
+{
     /**
      * Generate a url for the application's ui.
      *
@@ -54,7 +56,8 @@ if (!function_exists('ui_url')) {
     }
 }
 
-if (!function_exists('get_yt_embed_url')) {
+if (!function_exists('get_yt_embed_url'))
+{
     /**
      * Generate a embed youtube url.
      *

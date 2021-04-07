@@ -42,6 +42,7 @@ class ResetPassword extends Mailable
         return $this->subject('Password reset')
             ->view('emails.reset_password')
             ->with([
+                'app' => config('app.name'),
                 'expiration' => $this->expiration,
                 'url' => ui_url('password/reset/' . $this->token),
             ]);
