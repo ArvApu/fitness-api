@@ -1,8 +1,23 @@
-<h1>
-    Invitation
-</h1>
+@extends('layouts.mail')
 
-You have been invited by {{ $inviter }} to train. Press button below to join.
+@section('content')
+<div class="content">
 
-<a href="{{ $url }}"><h3> Join </h3></a>
+    <div class="header">
+        An invitation
+    </div>
 
+    <div class="text">
+    <span>
+        You have been invited by {{ $inviter }} to train using our app. Press button below to join.
+    </span>
+
+        <span class="button-box">
+        <a class="button" href="{{ $url }}">
+            Join!
+        </a>
+    </span>
+
+    </div>
+</div>
+@endsection

@@ -50,9 +50,10 @@ class InviteUser extends Mailable
             ui_url('register?token=' . $this->token) :
             ui_url('users/invite/' . $this->token);
 
-        return $this->subject('Invitation to use "' . config('app.name') . '"')
+        return $this->subject('Invitation')
             ->view('emails.invite_user')
             ->with([
+                'app' => config('app.name'),
                 'url' => $url,
                 'inviter' => $this->inviter,
             ]);

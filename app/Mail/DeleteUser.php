@@ -17,7 +17,10 @@ class DeleteUser extends Mailable
      */
     public function build(): DeleteUser
     {
-        return $this->subject('Your account was deleted.')
-            ->view('emails.delete_user');
+        return $this->subject('Your account was deleted')
+            ->view('emails.delete_user')
+            ->with([
+                'app' => config('app.name'),
+            ]);
     }
 }

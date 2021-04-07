@@ -1,5 +1,17 @@
-<h1>
-    Your account has been deleted.
-</h1>
+@extends('layouts.mail')
 
-Hello, we inform you that you can no longer use {{ config('app.name') }}, because your account has been deleted.
+@section('content')
+<div class="content">
+
+    <div class="header">
+        Account deleted
+    </div>
+
+    <div class="text">
+        <span>
+            We inform you that you can no longer use {{ $app }}, because your account has been deleted.
+        </span>
+    </div>
+
+</div>
+@endsection
