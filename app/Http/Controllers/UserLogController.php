@@ -3,19 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Http\JsonResponse;
-use App\Models\UserLog;
+use Illuminate\Http\Request;
 
 class UserLogController extends Controller
 {
     /**
-     * @param UserLog $userLog
+     * @param Request $request
      * @return JsonResponse
+     * @throws \Illuminate\Validation\ValidationException
      */
-    public function all(UserLog $userLog): JsonResponse
+    public function all(Request $request): JsonResponse
     {
-        // TODO: protect for user's/his trainer/admin eys only
-        return new JsonResponse(
-            $userLog->paginate()
-        );
+        $user = $this->resolveDesignatedUser($request);
+        return new JsonResponse($user->logs()->paginate());
     }
 }

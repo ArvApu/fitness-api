@@ -4,6 +4,7 @@ namespace App\Listeners;
 
 use App\Events\UserProfileUpdated;
 use App\Models\UserLog;
+use Carbon\Carbon;
 
 class LogWeight
 {
@@ -32,10 +33,22 @@ class LogWeight
     {
         $user = $event->getUpdatedUser();
 
-        if ($event->wasWeightUpdated()) {
+        if (!$event->wasWeightUpdated()) {
+            return;
+        }
+
+        $log = $user->logs()->whereDate('created_at', '=', Carbon::now())->first();
+
+        if($log === null) {
             $user->logs()->create([
                 'weight' => $user->weight
             ]);
+        } else {
+            $log->update([
+                'weight' => $user->weight
+            ]);
         }
+
     }
+
 }

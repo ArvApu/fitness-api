@@ -104,18 +104,20 @@ class StatisticsTest extends TestCase
 
     public function test_get_exercise_statistics()
     {
-        $timestamp = Carbon::now();
+        $timestamp1 = Carbon::yesterday()->startOfDay();
+        $timestamp2 = Carbon::today()->startOfDay();
+        $timestamp3 = Carbon::tomorrow()->startOfDay();
 
         /** @var Exercise $exercise */
         $exercise = Exercise::factory()->for($this->trainer, 'author')->create();
         $workoutLog = WorkoutLog::factory()->for($this->user, 'user')->create();
 
         ExerciseLog::factory()->for($this->user, 'user')->for($workoutLog, 'workoutLog')
-            ->for($exercise, 'exercise')->create(['measurement_value' => 15, 'created_at' => $timestamp]);
+            ->for($exercise, 'exercise')->create(['measurement_value' => 15, 'created_at' => $timestamp1]);
         ExerciseLog::factory()->for($this->user, 'user')->for($workoutLog, 'workoutLog')
-            ->for($exercise, 'exercise')->create(['measurement_value' => 25, 'created_at' => $timestamp]);
+            ->for($exercise, 'exercise')->create(['measurement_value' => 25, 'created_at' => $timestamp2]);
         ExerciseLog::factory()->for($this->user, 'user')->for($workoutLog, 'workoutLog')
-            ->for($exercise, 'exercise')->create(['measurement_value' => 30.5, 'created_at' => $timestamp]);
+            ->for($exercise, 'exercise')->create(['measurement_value' => 30.5, 'created_at' => $timestamp3]);
 
         $this->get("$this->resource/exercises/$exercise->id");
 
@@ -126,15 +128,15 @@ class StatisticsTest extends TestCase
             'measurement_values' => [
                 [
                     'measurement_value' => 15,
-                    'created_at' => $timestamp,
+                    'created_at' => $timestamp1,
                 ],
                 [
                     'measurement_value' => 25,
-                    'created_at' => $timestamp,
+                    'created_at' => $timestamp2,
                 ],
                 [
                     'measurement_value' => 30.5,
-                    'created_at' => $timestamp,
+                    'created_at' => $timestamp3,
                 ],
             ],
         ]);
