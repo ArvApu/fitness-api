@@ -46,6 +46,22 @@ class WorkoutTest extends TestCase
         ]);
     }
 
+    public function test_get_all_filtered_by_q()
+    {
+        $workouts = Workout::factory()
+            ->count(10)
+            ->for($this->user, 'author')
+            ->create();
+
+        $this->get("$this->resource?q={$workouts->first()->name}");
+
+        $this->response->assertStatus(200);
+
+        $this->response->assertJson([
+            'data' => [$workouts->first()->toArray()]
+        ]);
+    }
+
     public function test_get_single()
     {
         /** @var Workout $workout */

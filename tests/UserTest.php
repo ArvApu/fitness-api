@@ -42,6 +42,23 @@ class UserTest extends TestCase
         $this->assertEquals($u2->id, $result->data[1]->id);
     }
 
+    public function test_get_all_filtered_by_q()
+    {
+        $user = User::factory()->admin()->create();
+        $this->actingAs($user);
+
+        $users = User::factory()
+            ->count(10)
+            ->create();
+
+        $this->get("$this->resource?q={$users->first()->first_name}");
+
+        $this->response->assertStatus(200);
+        $this->response->assertJson([
+            'data' => [$users->first()->toArray()]
+        ]);
+    }
+
     public function test_get_all_for_user()
     {
         $trainer = User::factory()->trainer()->create();

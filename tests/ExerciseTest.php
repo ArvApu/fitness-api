@@ -44,6 +44,37 @@ class ExerciseTest extends TestCase
         ]);
     }
 
+    public function test_get_all_filtered_by_author()
+    {
+        $exercises = Exercise::factory()
+            ->count(10)
+            ->for($this->user, 'author')
+            ->create();
+
+        $this->get("$this->resource?author={$this->user->id}");
+
+        $this->response->assertStatus(200);
+        $this->response->assertJson([
+            'data' => $exercises->toArray()
+        ]);
+    }
+
+    public function test_get_all_filtered_by_q()
+    {
+        $exercises = Exercise::factory()
+            ->count(10)
+            ->for($this->user, 'author')
+            ->create();
+
+        $this->get("$this->resource?q={$exercises->first()->name}");
+
+        $this->response->assertStatus(200);
+
+        $this->response->assertJson([
+            'data' => [$exercises->first()->toArray()]
+        ]);
+    }
+
     public function test_get_single()
     {
         /** @var Exercise $exercise */

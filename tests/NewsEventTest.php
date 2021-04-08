@@ -41,7 +41,18 @@ class NewsEventTest extends TestCase
 
         $this->assertEquals(
             $events->sortByDesc('created_at')->pluck('id')->values(),
-            collect(json_decode($this->response->getContent())->data)->pluck('id')->values())
-        ;
+            collect(json_decode($this->response->getContent())->data)->pluck('id')->values());
+    }
+
+    public function test_get_fo_admin_all()
+    {
+        NewsEvent::factory()
+            ->for(User::factory()->admin()->create(), 'user')
+            ->count(10)
+            ->create();
+
+        $this->get($this->resource);
+
+        $this->response->assertStatus(200);
     }
 }
