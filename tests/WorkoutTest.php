@@ -203,7 +203,7 @@ class WorkoutTest extends TestCase
 
         $this->put("$this->resource/$workout->id/exercises/$pivot->id", $payload);
 
-        $this->response->assertNoContent();
+        $this->response->assertStatus(200);
         $this->assertDatabaseMissing((new WorkoutExercise())->getTable(), $pivot->toArray());
         $this->assertDatabaseHas((new WorkoutExercise())->getTable(), ['id' => $pivot->id] + $payload);
     }

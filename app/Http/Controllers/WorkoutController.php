@@ -189,12 +189,14 @@ class WorkoutController extends Controller
             throw new ConflictHttpException('Exercise have order conflict.');
         }
 
-        $workoutExercise
+        $workoutExercise = $workoutExercise
             ->where('workout_id', '=', $workout->id)
             ->where('id','=', $assignedId)
-            ->update($data);
+            ->firstOrFail();
 
-        return new JsonResponse(null, JsonResponse::HTTP_NO_CONTENT);
+        $workoutExercise->update($data);
+
+        return new JsonResponse($workoutExercise);
     }
 
     /**
