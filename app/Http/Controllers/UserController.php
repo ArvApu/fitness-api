@@ -34,8 +34,6 @@ class UserController extends Controller
             'email' => ['sometimes', 'email', 'unique:users,email,' . $id],
         ]);
 
-        // TODO: send verification email
-
         $user = (new User())->findOrFail($id);
 
         $user->update($data);

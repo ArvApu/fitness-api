@@ -111,7 +111,6 @@ class WorkoutController extends Controller
         }
 
         $keyed = $exercises->mapWithKeys(function ($exercise) {
-            // TODO: check if exercises belongs to user assigning them
             return [take($exercise, 'id') => $exercise];
         });
 
