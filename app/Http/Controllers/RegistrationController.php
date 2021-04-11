@@ -51,15 +51,15 @@ class RegistrationController extends Controller
             'expires_at' => Carbon::now()->addMinutes(config('auth.email_verification_timeout'))->toDateTimeString(),
         ]));
 
-        try {
-            $mailer->to($data['email'])->send(new VerifyEmail($token));
-        } catch (\Swift_SwiftException $e) {
-            $user->delete();
-            throw new ServiceUnavailableHttpException(null, 'Registration is unavailable.');
-        }
-
         if ($wasUserInvited) {
             event(new UserAcceptedInvitation($user));
+        } else {
+            try {
+                $mailer->to($data['email'])->send(new VerifyEmail($token));
+            } catch (\Swift_SwiftException $e) {
+                $user->delete();
+                throw new ServiceUnavailableHttpException(null, 'Registration is unavailable.');
+            }
         }
 
         return new JsonResponse(['message' => 'User successfully registered. Please login.'], JsonResponse::HTTP_CREATED);
@@ -96,6 +96,7 @@ class RegistrationController extends Controller
         unset($data['token']);
         $data['role'] = 'user';
         $data['trainer_id'] = $tokenData->trainer_id;
+        $data['email_verified_at'] = Carbon::now();
         return true;
     }
 }

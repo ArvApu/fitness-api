@@ -47,7 +47,7 @@ class InviteUser extends Mailable
     public function build(): InviteUser
     {
         $url = $this->isNewUser ?
-            ui_url('register?token=' . $this->token) :
+            ui_url('register?token=' . $this->token . '&email=' . $this->to[0]['address']) :
             ui_url('users/invite/' . $this->token);
 
         return $this->subject('Invitation')
