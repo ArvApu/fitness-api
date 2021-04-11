@@ -7,14 +7,14 @@ use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class MessageSent extends Event implements ShouldBroadcast
+class MessagesRead extends Event implements ShouldBroadcast
 {
     use InteractsWithSockets;
 
     /**
-     * @var Message
+     * @var Message[]
      */
-    public $message;
+    public $messages;
 
     /**
      * @var string
@@ -22,13 +22,13 @@ class MessageSent extends Event implements ShouldBroadcast
     private $channel;
 
     /**
-     * MessageSent constructor.
-     * @param Message $message
+     * MessagesRead constructor.
+     * @param Message[] $messages
      * @param string $channel
      */
-    public function __construct(Message $message, string $channel)
+    public function __construct(array $messages, string $channel)
     {
-        $this->message = $message;
+        $this->messages = $messages;
         $this->channel = $channel;
     }
 
@@ -41,6 +41,6 @@ class MessageSent extends Event implements ShouldBroadcast
 
     public function broadcastAs()
     {
-        return 'send.message';
+        return 'read.messages';
     }
 }

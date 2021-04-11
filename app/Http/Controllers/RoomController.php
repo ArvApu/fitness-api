@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\MessagesRead;
 use App\Http\JsonResponse;
 use App\Models\Room;
 use App\Models\User;
@@ -145,9 +146,23 @@ class RoomController extends Controller
         /** @var Room $room */
         $room = $this->room->findOrFail($id);
 
-        $room->messages()->where('user_id', '!=', Auth::user()->id)->update([
-            'is_seen' => true
-        ]);
+        $messages = $room->messages()
+            ->where('user_id', '!=', Auth::user()->id)
+            ->where('is_seen' , '=', false)
+            ->get();
+
+        if($messages->isEmpty()) {
+            return new JsonResponse(null, JsonResponse::HTTP_NO_CONTENT);
+        }
+
+        $room->messages()
+            ->where('user_id', '!=', Auth::user()->id)
+            ->where('is_seen' , '=', false)
+            ->update(['is_seen' => true]);
+
+        $userId = $messages->first()->user_id;
+
+        event(new MessagesRead($messages->toArray(), $userId));
 
         return new JsonResponse(null, JsonResponse::HTTP_NO_CONTENT);
     }

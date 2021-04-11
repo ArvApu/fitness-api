@@ -123,4 +123,59 @@ class RoomTest extends TestCase
         $this->response->assertNoContent();
         $this->assertDatabaseMissing((new Room)->getTable(), $room->toArray());
     }
+
+    public function test_read_room_messages()
+    {
+        /** @var User $receiver */
+        $receiver = User::factory()->create();
+
+        $this->actingAs($receiver);
+
+        /** @var Room $room */
+        $room = Room::factory()
+            ->hasAttached($this->user)
+            ->hasAttached($receiver)
+            ->for($this->user, 'admin')
+            ->create();
+
+        $messages = Message::factory()
+            ->count(2)
+            ->for($this->user, 'user')
+            ->for($room, 'room')
+            ->create();
+
+        $this->post("$this->resource/$room->id/messages/read");
+
+        $this->response->assertNoContent();
+        $this->assertDatabaseHas((new Message())->getTable(), ['id' => $messages->get(0)->id, 'is_seen' => true]);
+        $this->assertDatabaseHas((new Message())->getTable(), ['id' => $messages->get(1)->id, 'is_seen' => true]);
+    }
+
+    public function test_read_room_messages_that_has_been_seen()
+    {
+        /** @var User $receiver */
+        $receiver = User::factory()->create();
+
+        $this->actingAs($receiver);
+
+        /** @var Room $room */
+        $room = Room::factory()
+            ->hasAttached($this->user)
+            ->hasAttached($receiver)
+            ->for($this->user, 'admin')
+            ->create();
+
+        $messages = Message::factory()
+            ->count(2)
+            ->for($this->user, 'user')
+            ->for($room, 'room')
+            ->seen()
+            ->create();
+
+        $this->post("$this->resource/$room->id/messages/read");
+
+        $this->response->assertNoContent();
+        $this->assertDatabaseHas((new Message())->getTable(), ['id' => $messages->get(0)->id, 'is_seen' => true]);
+        $this->assertDatabaseHas((new Message())->getTable(), ['id' => $messages->get(1)->id, 'is_seen' => true]);
+    }
 }
