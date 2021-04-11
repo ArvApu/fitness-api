@@ -63,7 +63,10 @@ class UserInvitationController extends Controller
             throw new BadRequestHttpException('Invalid token data.');
         }
 
-        $user = $user->where('email', '=', $tokenData->for)->firstOrFail();
+        $user = $user->where('email', '=', $tokenData->for)
+            ->where('role', '=', 'user')        // To guarantee, that only users can be invited
+            ->firstOrFail();
+
         $user->update(['trainer_id' => $tokenData->trainer_id]);
 
         event(new UserAcceptedInvitation($user));
