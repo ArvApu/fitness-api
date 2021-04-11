@@ -15,6 +15,7 @@ class Kernel extends ConsoleKernel
     protected $commands = [
         \App\Console\Commands\RemoveExpiredPasswordResets::class,
         \App\Console\Commands\UpdateNews::class,
+        \App\Console\Commands\SendEventReminders::class,
     ];
 
     /**
@@ -27,5 +28,6 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command(\App\Console\Commands\RemoveExpiredPasswordResets::class)->daily();
         $schedule->command(\App\Console\Commands\UpdateNews::class)->daily();
+        $schedule->command(\App\Console\Commands\SendEventReminders::class)->dailyAt('12:00');;
     }
 }
