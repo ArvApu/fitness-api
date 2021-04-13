@@ -29,41 +29,41 @@ class Handler extends ExceptionHandler
      *
      * This is a great spot to send exceptions to Sentry, Bugsnag, etc.
      *
-     * @param \Throwable $exception
+     * @param Throwable $e
      * @return void
      *
      * @throws \Exception
      */
-    public function report(Throwable $exception)
+    public function report(Throwable $e)
     {
-        parent::report($exception);
+        parent::report($e);
     }
 
     /**
      * Render an exception into an HTTP response.
      *
      * @param \Illuminate\Http\Request $request
-     * @param \Throwable $exception
+     * @param Throwable $e
      * @return \Illuminate\Http\Response|\App\Http\JsonResponse;
      *
-     * @throws \Throwable
+     * @throws Throwable
      */
-    public function render($request, Throwable $exception)
+    public function render($request, Throwable $e)
     {
         if (config('app.debug')) {
-            return parent::render($request, $exception);
+            return parent::render($request, $e);
         }
 
-        if ($exception instanceof HttpException) {
-            return $this->renderHttpException($exception);
+        if ($e instanceof HttpException) {
+            return $this->renderHttpException($e);
         }
 
-        if ($exception instanceof ModelNotFoundException) {
-            $model = str_replace('App\\Models\\', '', $exception->getModel());
+        if ($e instanceof ModelNotFoundException) {
+            $model = str_replace('App\\Models\\', '', $e->getModel());
             return new JsonResponse(['error' => "$model resource not found."], JsonResponse::HTTP_NOT_FOUND);
         }
 
-        return parent::render($request, $exception);
+        return parent::render($request, $e);
     }
 
     /**
