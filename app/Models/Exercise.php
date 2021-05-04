@@ -25,6 +25,11 @@ class Exercise extends Model
     /**
      * @inheritdoc
      */
+    protected $appends = ['url_embedded'];
+
+    /**
+     * @inheritdoc
+     */
     protected $fillable = [
         'author_id', 'name', 'description', 'url', 'measurement'
     ];
@@ -58,6 +63,18 @@ class Exercise extends Model
     public function logs(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(ExerciseLog::class, 'exercise_id');
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getUrlEmbeddedAttribute(): ?string
+    {
+        if(is_null($this->url)) {
+            return null;
+        }
+
+        return get_yt_embed_url($this->url);
     }
 
     /**

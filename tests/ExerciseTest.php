@@ -99,8 +99,6 @@ class ExerciseTest extends TestCase
 
         $this->post($this->resource, $payload);
 
-        $payload['url'] = 'https://www.youtube.com/embed/dQw4w9WgXcQ'; // We convert videos to embed format
-
         $this->response->assertStatus(201);
         $this->response->assertJsonFragment($payload);
 
