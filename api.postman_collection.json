@@ -1,0 +1,2017 @@
+{
+	"info": {
+		"_postman_id": "0ffd49ac-fe9f-4586-86fe-6198898951c4",
+		"name": "fitness api",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"pm.environment.set(\"token\", jsonData.access_token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"admin@fake.mail\",\n    \"password\": \"admin\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/login",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/logout",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"logout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Refresh login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"pm.environment.set(\"token\", jsonData.access_token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/refresh",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"refresh"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Current user info",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/me",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"me"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Password reset",
+			"item": [
+				{
+					"name": "Send",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"ponasblynas@mailinator.com\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/password/reset",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"password",
+								"reset"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Change",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"password\": \"123456789\",\n    \"password_confirmation\": \"123456789\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/password/reset/:token",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"password",
+								"reset",
+								":token"
+							],
+							"variable": [
+								{
+									"key": "token",
+									"value": "KYw0F9CWTj8f5I18cuiKgSFgLTLFlv1g"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Email verification",
+			"item": [
+				{
+					"name": "Verify email",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/email/verify/:token",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"email",
+								"verify",
+								":token"
+							],
+							"variable": [
+								{
+									"key": "token",
+									"value": "eyJpdiI6IlRITEhCS09saW4zL1dPQk52cWhXMXc9PSIsInZhbHVlIjoieW1pOHpmblQxdWszZHZJZDVGOU1jQWRXeGthSDRueStmRzhKbHU5bi95SlpmRHprL2plR2hpTWFDbXlrVzB0NHpVS1RDSU94SHU3LzdpMEdUOFNvRnJzajZvTXIzYkh4MGRMNXhpNUtaRkpKVTlmTnBiekZOSTNqVEJ0MEx6bm0iLCJtYWMiOiIxMTg3ZjdkZjk3YjQzYzZhNWNhMzQwZDg0ZjJlZmQwZGQzN2VmMTJjMTU2YzcwZTQ0YzkxMDU3MDA0OGFiNWJkIn0="
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Resend email verification",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/email/verification/resend",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"email",
+								"verification",
+								"resend"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Exercises",
+			"item": [
+				{
+					"name": "All",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/exercises",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"exercises"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Single",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/exercises/:id",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"exercises",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Store",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"E1\",\n    \"description\": \"Some good excerise, do this, do that...\",\n    \"url\": \"https://www.youtube.com/watch?v=BIjqw7zuEVE\",\n    \"is_private\": false,\n    \"measurement\": \"kilograms\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/exercises",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"exercises"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"E1 - updated\",\n    \"description\": \"Some good excerise, do this, do that!\",\n    \"is_private\": false,\n    \"url\": \"https://www.youtube.com/watch?v=BIjqw7zuEVE\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/exercises/:id",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"exercises",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Destroy",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/exercises/:id",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"exercises",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Workouts",
+			"item": [
+				{
+					"name": "All",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/workouts?page=2",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"workouts"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Single",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/workouts/:id",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"workouts",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Store",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Workout1\",\n    \"description\": \"Some good workout, do this, do that...\",\n    \"type\": \"hiit\",\n    \"is_private\": false\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/workouts",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"workouts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Assign exercises",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"exercises\": [\n        {\n            \"id\": 1,\n            \"order\": 1,\n            \"reps\": 10,\n            \"sets\": 5,\n            \"rest\": 2\n        },\n        {\n            \"id\": 2,\n            \"order\": 2,\n            \"reps\": 5,\n            \"sets\": 3,\n            \"rest\": 1\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/workouts/:id/exercises",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"workouts",
+								":id",
+								"exercises"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Copy",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/workouts/1/copy",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"workouts",
+								"1",
+								"copy"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Workout1 - updated\",\n    \"description\": \"Some good workout, do this, do that!\",\n    \"type\": \"recovery\",\n    \"is_private\": false\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/workouts/:id",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"workouts",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Reassign exercises",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"order\": 1,\n    \"reps\": 10,\n    \"sets\": 50,\n    \"rest\": 20\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/workouts/:id/exercises/:assigned_id",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"workouts",
+								":id",
+								"exercises",
+								":assigned_id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								},
+								{
+									"key": "assigned_id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Destroy",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/workouts/:id",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"workouts",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Unassign exercises",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/workouts/:id/exercises/:assigned_id",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"workouts",
+								":id",
+								"exercises",
+								":assigned_id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								},
+								{
+									"key": "assigned_id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{token}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Events",
+			"item": [
+				{
+					"name": "All",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/events?start_date=2021-04-01&end_date=2021-04-02&user_id=4",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"events"
+							],
+							"query": [
+								{
+									"key": "start_date",
+									"value": "2021-04-01"
+								},
+								{
+									"key": "end_date",
+									"value": "2021-04-02"
+								},
+								{
+									"key": "all_trainer_events",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "user_id",
+									"value": "4"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Single",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/events/:id",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"events",
+								":id"
+							],
+							"query": [
+								{
+									"key": "user_id",
+									"value": "20",
+									"disabled": true
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Export",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/events/export",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"events",
+								"export"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Store",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"attendee_id\": 8,\n    \"title\": \"leg day\",\n    \"information\": \"going to do some legggss\",\n    \"start_time\": \"2021-03-25 10:00:50\",\n    \"end_time\": \"2021-03-26 11:00:50\",\n    \"all_day\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/events",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"events"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Press day\",\n    \"information\": \"going to do some legggss\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/events/:id",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"events",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Destroy",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/events/:id",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"events",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Messages",
+			"item": [
+				{
+					"name": "Send",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"message\": \"Hello world\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/messages/:room_id",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"messages",
+								":room_id"
+							],
+							"variable": [
+								{
+									"key": "room_id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Read",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/rooms/:id/messages/read",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"rooms",
+								":id",
+								"messages",
+								"read"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User invite",
+			"item": [
+				{
+					"name": "Invite",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"vardenis@pavardenis.com\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/users/invite",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"users",
+								"invite"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register invited",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"first_name\": \"Vardenis\",\n    \"last_name\": \"Pavardenis\",\n    \"email\": \"vardenis@pavardenis.com\",\n    \"password\": \"123456789\",\n    \"password_confirmation\": \"123456789\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}register?token=eyJpdiI6IjZGT2YvazdxSS95a29HZ1dMQy95VXc9PSIsInZhbHVlIjoiNG5ybzV0T2ozOSs2a0t4Tjg0S2VFS3FKek45bytKMmJXMHJvL2xLaE82SzcwQkF5TzZoU0FFaThCcXQvVXk4Q2gxbHVzb0dDTVpQeVBvN2NpN0RQeWc9PSIsIm1hYyI6IjI0YWIwZWRmMGVjZDg1MDZhOGEyNWU5Yzk2ZWEzNTQyMDk2YWUxY2FjNzMxM2Q3NzNiYmI4ZjE4OTgzY2FjMDYifQ===",
+							"host": [
+								"{{url}}register"
+							],
+							"query": [
+								{
+									"key": "token",
+									"value": "eyJpdiI6IjZGT2YvazdxSS95a29HZ1dMQy95VXc9PSIsInZhbHVlIjoiNG5ybzV0T2ozOSs2a0t4Tjg0S2VFS3FKek45bytKMmJXMHJvL2xLaE82SzcwQkF5TzZoU0FFaThCcXQvVXk4Q2gxbHVzb0dDTVpQeVBvN2NpN0RQeWc9PSIsIm1hYyI6IjI0YWIwZWRmMGVjZDg1MDZhOGEyNWU5Yzk2ZWEzNTQyMDk2YWUxY2FjNzMxM2Q3NzNiYmI4ZjE4OTgzY2FjMDYifQ==="
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Confirm invitation",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/users/invite/eyJpdiI6IjM5MnhaMmZnMWF0RFlFc2RzTk13dGc9PSIsInZhbHVlIjoiazlSRWpOb05KR3B3YmJHak11blArUzdEU3BKbFlUWVdEU1Nzdmtrd05qSkNWZ3paQXFkR09KdVJId2JCUkg2dGpieTF5SWpEMy9HN0c3SHgwMlBLNGc9PSIsIm1hYyI6Ijc3M2JjZGZiMTNjYjE4MTA4ZDRhZmUwN2JkMmI2N2JhMDQwNjc0MDU5ZmE1YmNiNTFkOTM0Njc2YmQ0ZTUxN2YifQ==",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"users",
+								"invite",
+								"eyJpdiI6IjM5MnhaMmZnMWF0RFlFc2RzTk13dGc9PSIsInZhbHVlIjoiazlSRWpOb05KR3B3YmJHak11blArUzdEU3BKbFlUWVdEU1Nzdmtrd05qSkNWZ3paQXFkR09KdVJId2JCUkg2dGpieTF5SWpEMy9HN0c3SHgwMlBLNGc9PSIsIm1hYyI6Ijc3M2JjZGZiMTNjYjE4MTA4ZDRhZmUwN2JkMmI2N2JhMDQwNjc0MDU5ZmE1YmNiNTFkOTM0Njc2YmQ0ZTUxN2YifQ=="
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Workout logs",
+			"item": [
+				{
+					"name": "Get all",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/workouts/logs",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"workouts",
+								"logs"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Single",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/workouts/logs/:id",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"workouts",
+								"logs",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "27"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Store",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"workout_id\": 1,\n    \"status\": \"completed\",\n    \"difficulty\": \"hard\",\n    \"exercise_logs\": [\n        {\n            \"exercise_id\": 1,\n            \"measurement_value\": 10.5,\n            \"sets_count\": 7,\n            \"sets_done\": 7\n        },\n        {\n            \"exercise_id\": 2,\n            \"measurement_value\": 150,\n            \"sets_count\": 2,\n            \"sets_done\": 2\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/workouts/logs",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"workouts",
+								"logs"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Destroy",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/workouts/logs/:id",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"workouts",
+								"logs",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Rooms",
+			"item": [
+				{
+					"name": "All",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/rooms",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"rooms"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Messages",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/rooms/:id/messages",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"rooms",
+								":id",
+								"messages"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Store",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Chat room 1\",\n    \"users\": [\n        1,2\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/rooms",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"rooms"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Chat room 1 updated\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/rooms/:id",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"rooms",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Destroy",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/rooms/:id",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"rooms",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Profile",
+			"item": [
+				{
+					"name": "Update ",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"first_name\": \"Vardenis\",\n    \"last_name\": \"Pavardenis\",\n    \"birthday\": \"2000-01-20\",\n    \"weight\": 119,\n    \"height\": 91,\n    \"experience\": 10,\n    \"about\": \"Me good\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/profile",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Change password",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"password\": \"123456789\",\n    \"new_password\": \"123456789\",\n    \"new_password_confirmation\": \"123456789\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/profile/password",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"profile",
+								"password"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "Users list",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/users",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"reeeeeee@mail.com\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/users/:id",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"users",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "3"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Destroy",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/users/:id",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"users",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Statistics",
+			"item": [
+				{
+					"name": "Exercise",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/statistics/exercises/:id?user_id=27",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"statistics",
+								"exercises",
+								":id"
+							],
+							"query": [
+								{
+									"key": "user_id",
+									"value": "27"
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "14"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Workout",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/statistics/workouts/:id?user_id=27",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"statistics",
+								"workouts",
+								":id"
+							],
+							"query": [
+								{
+									"key": "user_id",
+									"value": "27"
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "11"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Workouts",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/statistics/workouts/?user_id=27",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"statistics",
+								"workouts",
+								""
+							],
+							"query": [
+								{
+									"key": "user_id",
+									"value": "27"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Exercises",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{url}}/statistics/exercises?user_id=27",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"statistics",
+								"exercises"
+							],
+							"query": [
+								{
+									"key": "user_id",
+									"value": "27"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Weight",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/statistics/users/weight?user_id=27",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"statistics",
+								"users",
+								"weight"
+							],
+							"query": [
+								{
+									"key": "user_id",
+									"value": "27"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Register",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"first_name\": \"Vardenis\",\n    \"last_name\": \"Pavardenis\",\n    \"gender\": \"male\",\n    \"email\": \"vardenis@pavardenis.com\",\n    \"password\": \"123456789\",\n    \"password_confirmation\": \"123456789\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/register",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"register"
+					],
+					"query": [
+						{
+							"key": "first_name",
+							"value": null,
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User logs",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/users/logs?user_id=7",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"users",
+						"logs"
+					],
+					"query": [
+						{
+							"key": "user_id",
+							"value": "7"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "News",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/news",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"news"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"value": "",
+			"disabled": true
+		}
+	]
+}
