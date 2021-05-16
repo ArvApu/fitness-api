@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\ExerciseLog;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class ExerciseLogFactory extends Factory
@@ -25,6 +26,7 @@ class ExerciseLogFactory extends Factory
             'measurement_value' => $this->faker->randomNumber(2),
             'sets_count' => 10,
             'sets_done' => 10,
+            'log_date' => Carbon::now(),
         ];
     }
 }

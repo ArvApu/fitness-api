@@ -6,6 +6,7 @@ use App\Events\WorkoutLogged;
 use App\Http\JsonResponse;
 use App\Models\Workout;
 use App\Models\WorkoutLog;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -63,22 +64,27 @@ class WorkoutLogController extends Controller
             'exercise_logs.*.measurement_value' => ['required', 'numeric', 'min:0', 'max:100000'],
             'exercise_logs.*.sets_count' => ['required', 'integer', 'min:1', 'max:65000'],
             'exercise_logs.*.sets_done' => ['required', 'integer', 'min:1', 'lte:exercise_logs.*.sets_count', 'max:65000'],
+            'log_date' => ['sometimes', 'date', 'before:today'],
         ]);
 
+        $logDate = $request->input('log_date', Carbon::now()->toDateTimeString());
+
         /** @var WorkoutLog $log */
-        $log = DB::transaction(function () use ($request) {
+        $log = DB::transaction(function () use ($request, $logDate) {
 
             $user = $this->resolveDesignatedUser($request);
 
             $exerciseLogs = $request->input('exercise_logs', []);
 
             foreach ($exerciseLogs as &$exerciseLog) {
-                $exerciseLog['user_id'] = $user->id;
+                $exerciseLog['user_id']  = $user->id;
+                $exerciseLog['log_date'] = $logDate;
             }
 
             /** @var WorkoutLog $log */
             $log = $user->workoutLogs()->create(
-                $request->only(['workout_id', 'status', 'comment', 'difficulty'])
+                $request->only(['workout_id', 'status', 'comment', 'difficulty']) +
+                ['log_date' => $logDate]
             );
 
             $log->exerciseLogs()->createMany($exerciseLogs);

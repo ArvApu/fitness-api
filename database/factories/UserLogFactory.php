@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\UserLog;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class UserLogFactory extends Factory
@@ -23,6 +24,7 @@ class UserLogFactory extends Factory
     {
         return [
             'weight' => $this->faker->numberBetween(0, 100),
+            'log_date' => Carbon::now(),
         ];
     }
 }

@@ -20,6 +20,7 @@ class CreateWorkoutLogsTable extends Migration
             $table->enum('status', ['missed', 'interrupted', 'completed']);
             $table->string('comment', 100)->nullable();
             $table->enum('difficulty', ['easy', 'moderate', 'hard', 'exhausting'])->nullable();
+            $table->dateTime('log_date');
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

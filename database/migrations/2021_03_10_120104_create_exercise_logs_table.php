@@ -21,6 +21,7 @@ class CreateExerciseLogsTable extends Migration
             $table->unsignedDouble('measurement_value');
             $table->unsignedSmallInteger('sets_count');
             $table->unsignedSmallInteger('sets_done');
+            $table->dateTime('log_date');
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

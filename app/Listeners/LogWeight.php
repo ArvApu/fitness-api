@@ -41,11 +41,12 @@ class LogWeight
 
         if($log === null) {
             $user->logs()->create([
-                'weight' => $user->weight
+                'weight' => $user->weight,
+                'log_date' => Carbon::now(),
             ]);
         } else {
             $log->update([
-                'weight' => $user->weight
+                'weight' => $user->weight,
             ]);
         }
 

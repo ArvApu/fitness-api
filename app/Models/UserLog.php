@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property integer $id
  * @property integer $user_id
  * @property double $weight
+ * @property $log_date
  * @property $created_at
  * @package App\Models
  */
@@ -25,7 +26,7 @@ class UserLog extends Model
      * @inheritdoc
      */
     protected $fillable = [
-        'user_id', 'weight'
+        'user_id', 'weight', 'log_date'
     ];
 
     /**

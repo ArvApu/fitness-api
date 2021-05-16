@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\WorkoutLog;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class WorkoutLogFactory extends Factory
@@ -25,6 +26,7 @@ class WorkoutLogFactory extends Factory
             'status' => $this->faker->randomElement(['missed', 'interrupted', 'completed']),
             'comment' => $this->faker->words(10, true),
             'difficulty' => $this->faker->randomElement(['easy', 'moderate', 'hard', 'exhausting']),
+            'log_date' => Carbon::now(),
         ];
     }
 

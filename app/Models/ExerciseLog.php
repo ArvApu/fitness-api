@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property integer $sets_count
  * @property integer $sets_done
  * @property string $comment
+ * @property $log_date
  * @property $created_at
  * @property $updated_at
  * @package App\Models
@@ -26,7 +27,7 @@ class ExerciseLog extends Model
      * @inheritdoc
      */
     protected $fillable = [
-        'user_id', 'exercise_id', 'workout_log_id', 'measurement_value', 'sets_count', 'sets_done', 'comment'
+        'user_id', 'exercise_id', 'workout_log_id', 'measurement_value', 'sets_count', 'sets_done', 'comment', 'log_date'
     ];
 
     /**
