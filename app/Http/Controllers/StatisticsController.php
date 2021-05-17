@@ -78,9 +78,9 @@ class StatisticsController extends Controller
         return new JsonResponse([
             'measurement_unit' => $exercise->measurement,
             'measurement_values' => $exercise->logs()
-                ->selectRaw('ROUND(AVG(measurement_value), 2) as measurement_value, DATE(created_at) as created_at')
+                ->selectRaw('ROUND(AVG(measurement_value), 2) as measurement_value, DATE(log_date) as created_at')
                 ->where('user_id', '=', $user->id)
-                ->groupByRaw('DATE(created_at)')
+                ->groupByRaw('DATE(log_date)')
                 ->get(),
         ]);
     }
@@ -95,7 +95,7 @@ class StatisticsController extends Controller
         $user = $this->resolveDesignatedUser($request);
 
         return new JsonResponse([
-            'data' => $user->logs()->get(['weight', 'created_at']),
+            'data' => $user->logs()->get(['weight', 'log_date as created_at']),
         ]);
     }
 }
