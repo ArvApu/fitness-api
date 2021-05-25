@@ -95,15 +95,20 @@ class EventController extends Controller
 
         /** @var Event $event */
         foreach ($events as $event) {
-            $cal->event(
-                CEvent::create()
-                    ->name($event->title)
-                    ->description($event->information)
-                    ->createdAt($event->created_at)
-                    ->startsAt($event->start_time)
-                    ->endsAt($event->end_time)
-                    ->transparent()
-            );
+
+            $cEvent = CEvent::create()
+                ->name($event->title)
+                ->description($event->information)
+                ->createdAt($event->created_at)
+                ->startsAt($event->start_time)
+                ->endsAt($event->end_time)
+                ->transparent();
+
+            if($event->all_day) {
+                $cEvent->fullDay();
+            }
+
+            $cal->event($cEvent);
         }
 
         return new Response($cal->get(), 200, [
