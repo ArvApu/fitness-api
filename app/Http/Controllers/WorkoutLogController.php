@@ -64,7 +64,7 @@ class WorkoutLogController extends Controller
             'exercise_logs.*.measurement_value' => ['required', 'numeric', 'min:0', 'max:100000'],
             'exercise_logs.*.sets_count' => ['required', 'integer', 'min:1', 'max:65000'],
             'exercise_logs.*.sets_done' => ['required', 'integer', 'min:1', 'lte:exercise_logs.*.sets_count', 'max:65000'],
-            'log_date' => ['sometimes', 'date', 'before:today'],
+            'log_date' => ['sometimes', 'date', 'before:tomorrow'],
         ]);
 
         $logDate = $request->input('log_date', Carbon::now()->toDateTimeString());
